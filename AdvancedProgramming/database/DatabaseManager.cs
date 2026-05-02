@@ -1,11 +1,15 @@
+using System;
 using System.Data.SQLite;
 using System.IO;
+using System.Reflection;
 
 namespace AdvancedProgramming
 {
     public static class DatabaseManager
     {
-        private static readonly string DbPath = Path.Combine(Directory.GetCurrentDirectory(), "database", "app.db");
+        private static readonly string DbPath = Path.GetFullPath(Path.Combine(
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+            "..", "..", "database", "app.db"));
         private static readonly string ConnectionString = $"Data Source={DbPath};Version=3;";
 
         public static SQLiteConnection GetConnection() => new SQLiteConnection(ConnectionString);
