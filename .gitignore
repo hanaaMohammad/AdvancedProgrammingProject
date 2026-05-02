@@ -1,0 +1,21 @@
+# Visual Studio and IDE files
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Build outputs
+bin/
+obj/
+
+# NuGet packages (packages.config projects)
+packages/
+*.nupkg
+*.nuspec
+
+# Windows system files
+Thumbs.db
+Desktop.ini
+
+# Publish profiles
+PublishProfiles/
