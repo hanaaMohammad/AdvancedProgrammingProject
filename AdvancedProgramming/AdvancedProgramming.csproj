@@ -52,8 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="database\DatabaseManager.cs" />
-    <Compile Include="database\UserManagement.cs" />
+    <Compile Include="Database\DatabaseManager.cs" />
+    <Compile Include="Database\UserManagement.cs" />
     <Compile Include="Forms\StartupForm.cs">
       <SubType>Form</SubType>
     </Compile>
