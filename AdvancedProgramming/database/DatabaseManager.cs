@@ -5,29 +5,15 @@ namespace AdvancedProgramming
 {
     public static class DatabaseManager
     {
-        private static readonly string DatabaseFolder;
-        private static readonly string DbPath;
-        private static readonly string ConnectionString;
+        private static readonly string DbPath = Path.Combine(Directory.GetCurrentDirectory(), "database", "app.db");
+        private static readonly string ConnectionString = $"Data Source={DbPath};Version=3;";
 
-        static DatabaseManager()
-        {
-            var projectDir = Directory.GetCurrentDirectory();
-            while (!File.Exists(Path.Combine(projectDir, "AdvancedProgramming.csproj")) && projectDir != Path.GetPathRoot(projectDir))
-            {
-                projectDir = Path.GetDirectoryName(projectDir);
-            }
-            DatabaseFolder = Path.Combine(projectDir, "database");
-            DbPath = Path.Combine(DatabaseFolder, "app.db");
-            ConnectionString = $"Data Source={DbPath};Version=3;";
-        }
-
-        public static SQLiteConnection GetConnection()
-        {
-            return new SQLiteConnection(ConnectionString);
-        }
+        public static SQLiteConnection GetConnection() => new SQLiteConnection(ConnectionString);
 
         public static void InitializeDatabase()
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(DbPath));
+            
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
