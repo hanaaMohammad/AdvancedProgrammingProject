@@ -60,7 +60,13 @@
     <Compile Include="Forms\StartupForm.Designer.cs">
       <DependentUpon>StartupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Theme\ITheme.cs" />
+    <Compile Include="Theme\DarkTheme.cs" />
+    <Compile Include="Theme\LightTheme.cs" />
     <Compile Include="Theme\Theme.cs" />
+    <Compile Include="Components\Toolbar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Forms\SignUpForm.cs">
       <SubType>Form</SubType>
