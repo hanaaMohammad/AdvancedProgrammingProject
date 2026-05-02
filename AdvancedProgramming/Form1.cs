@@ -6,6 +6,7 @@ namespace AdvancedProgramming
     {
         public Form1()
         {
+            DatabaseManager.InitializeDatabase();
             InitializeComponent();
         }
     }
