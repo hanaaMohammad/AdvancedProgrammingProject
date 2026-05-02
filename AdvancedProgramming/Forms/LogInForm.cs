@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
+using AdvancedProgramming;
 
 namespace AdvancedProgramming.Forms
 {
@@ -18,33 +13,41 @@ namespace AdvancedProgramming.Forms
         private Button passwordTaggel;
         private bool passwordVasibilty = false;
         private Label Massage;
-        public LogInForm() {
-        
+        private Toolbar toolbar;
+
+        public LogInForm()
+        {
             InitializeLogInComponents();
-           
         }
 
-       private void  InitializeLogInComponents(){
-            this.Size = new Size(400, 400);
+        private void InitializeLogInComponents()
+        {
+            this.Size = new Size(400, 440);
             this.Text = "Log In";
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = FormBorderStyle.None;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
-            var userNameLabel = new Label { Text = "Username:", Location = new Point(30, 30), Size = new Size(100, 20) };
-            userNmaseTextBox = new TextBox { Location = new Point(140, 28), Size = new Size(200, 20) };
 
-            var  passwordLabel= new Label { Text = "Password:", Location = new Point(30, 70), Size = new Size(100, 20) };
+            // Add toolbar
+            toolbar = new Toolbar(this, "Log In");
+            this.Controls.Add(toolbar);
 
-            passwordTextBox = new TextBox { Location = new Point(140, 68), Size = new Size(160, 20), PasswordChar = '*' };
+            // Adjust controls position to account for toolbar (toolbar height is 40)
+            var userNameLabel = new Label { Text = "Username:", Location = new Point(30, 70), Size = new Size(100, 20) };
+            userNmaseTextBox = new TextBox { Location = new Point(140, 68), Size = new Size(200, 20) };
 
-            passwordTaggel = new Button { Text = "👁", Location = new Point(305, 66), Size = new Size(30, 23), FlatStyle = FlatStyle.Flat };
+            var passwordLabel = new Label { Text = "Password:", Location = new Point(30, 110), Size = new Size(100, 20) };
 
-            logInButton = new Button { Text = "log in", Location = new Point(140, 160), Size = new Size(100, 30) };
+            passwordTextBox = new TextBox { Location = new Point(140, 108), Size = new Size(160, 20), PasswordChar = '*' };
+
+            passwordTaggel = new Button { Text = "👁", Location = new Point(305, 106), Size = new Size(30, 23), FlatStyle = FlatStyle.Flat };
+
+            logInButton = new Button { Text = "log in", Location = new Point(140, 200), Size = new Size(100, 30) };
             passwordTaggel.Click += PasswordTaggel_Click;
             logInButton.Click += LogInButton_Click;
 
+            Massage = new Label { Text = "", Location = new Point(30, 290), Size = new Size(320, 60), FlatStyle = FlatStyle.Flat };
 
-            Massage =new Label {Text="Masseg from App",Location = new Point(30,250) ,Size = new Size(320, 60) ,FlatStyle = FlatStyle.Flat  };
             Controls.Add(Massage);
             Controls.Add(passwordTaggel);
             Controls.Add(logInButton);
@@ -52,21 +55,16 @@ namespace AdvancedProgramming.Forms
             Controls.Add(userNmaseTextBox);
             Controls.Add(userNameLabel);
             Controls.Add(passwordLabel);
-     
 
-
-
+            // Apply theme
+            Theme.Apply(this);
         }
 
         private void PasswordTaggel_Click(object sender, EventArgs e)
         {
-         
-
-
             passwordVasibilty = !passwordVasibilty;
-            passwordTextBox.PasswordChar = passwordVasibilty? '\0' : '*';
-            passwordTaggel.Text=passwordVasibilty? "🙈" : "👁";
-
+            passwordTextBox.PasswordChar = passwordVasibilty ? '\0' : '*';
+            passwordTaggel.Text = passwordVasibilty ? "🙈" : "👁";
         }
 
         private void LogInButton_Click(object sender, EventArgs e)
@@ -74,17 +72,31 @@ namespace AdvancedProgramming.Forms
             string password = passwordTextBox.Text;
             string username = userNmaseTextBox.Text;
             var user = new UserManagement();
-           if(string.IsNullOrEmpty(username)) 
-                Massage.Text = "UserName is requierd pealse enter it !!";
-           if(string.IsNullOrEmpty(password)) 
-                Massage.Text= "Password is requierd pealse enter it !!";
-           
-            if (user.SignIn(username,password))
-                Massage.Text = "Registration successful ";
+
+            Massage.Text = "";
+
+            if (string.IsNullOrEmpty(username))
+            {
+                Massage.Text = "UserName is required, please enter it !!";
+                return;
+            }
+            if (string.IsNullOrEmpty(password))
+            {
+                Massage.Text = "Password is required, please enter it !!";
+                return;
+            }
+
+            if (user.SignIn(username, password))
+                Massage.Text = "Log in successful!";
             else
-                Massage.Text = "0oops!! Registration failed ";
+                Massage.Text = "Oops!! Log in failed. Invalid username or password.";
+        }
 
-
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            if (toolbar != null)
+                toolbar.UpdateTheme();
         }
     }
 }
