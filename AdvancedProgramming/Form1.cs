@@ -7,6 +7,7 @@ namespace AdvancedProgramming
         public Form1()
         {
             InitializeComponent();
+            Theme.Apply(this);
         }
     }
 }
