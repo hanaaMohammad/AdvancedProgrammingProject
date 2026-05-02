@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using AdvancedProgramming.Forms;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AdvancedProgramming
@@ -16,14 +17,24 @@ namespace AdvancedProgramming
         private void InitializeMainForm()
         {
             this.Text = "Main Form";
-            var btnSignUp = new Button
+            var signUpBitton = new Button
             {
                 Text = "Sign Up",
                 Location = new Point(350, 210),
                 Size = new Size(100, 30)
             };
-            btnSignUp.Click += (s, e) => new SignUpForm().ShowDialog();
-            this.Controls.Add(btnSignUp);
+            var logInButton = new Button
+            {
+                Text = "Log in",
+                Location = new Point(150, 210),
+                Size = new Size(100, 30)
+
+            }
+            ;
+            logInButton.Click += (s, e) => new LogInForm().ShowDialog();
+            signUpBitton.Click += (s, e) => new SignUpForm().ShowDialog();
+            this.Controls.Add(signUpBitton);
+            this.Controls.Add(logInButton);
         }
     }
 }
