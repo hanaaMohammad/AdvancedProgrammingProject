@@ -57,14 +57,10 @@
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-<<<<<<< HEAD
     <Compile Include="Forms\Form1.Designer.cs">
-=======
-    <Compile Include="Theme.cs" />
-    <Compile Include="Form1.Designer.cs">
->>>>>>> 6c0943a03de8c647ab0953520b528b604729dd6a
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Theme\Theme.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Forms\SignUpForm.cs">
       <SubType>Form</SubType>

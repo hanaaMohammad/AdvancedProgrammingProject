@@ -20,6 +20,7 @@ namespace AdvancedProgramming
         public SignUpForm()
         {
             InitializeSignUpComponents();
+            Theme.Apply(this);
             userManager = new UserManagement();
             DatabaseManager.InitializeDatabase();
         }
