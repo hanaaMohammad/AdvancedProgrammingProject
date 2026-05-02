@@ -1,14 +1,19 @@
 using System.Data.SQLite;
+using System.IO;
 
 namespace AdvancedProgramming
 {
     public static class DatabaseManager
     {
-        private static readonly string DbPath = "app.db";
+        private static readonly string DbPath = Path.Combine(Directory.GetCurrentDirectory(), "database", "app.db");
         private static readonly string ConnectionString = $"Data Source={DbPath};Version=3;";
+
+        public static SQLiteConnection GetConnection() => new SQLiteConnection(ConnectionString);
 
         public static void InitializeDatabase()
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(DbPath));
+            
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();

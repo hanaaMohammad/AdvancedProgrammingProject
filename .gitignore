@@ -19,3 +19,9 @@ Desktop.ini
 
 # Publish profiles
 PublishProfiles/
+
+# Database files (persist locally, not in git)
+**/database/*.db
+**/database/*.db-journal
+**/database/*.db-shm
+**/database/*.db-wal
