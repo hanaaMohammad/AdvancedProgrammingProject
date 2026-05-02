@@ -10,6 +10,7 @@ namespace AdvancedProgramming
             InitializeComponent();
             DatabaseManager.InitializeDatabase();
             InitializeMainForm();
+            Theme.Apply(this);
         }
 
         private void InitializeMainForm()
