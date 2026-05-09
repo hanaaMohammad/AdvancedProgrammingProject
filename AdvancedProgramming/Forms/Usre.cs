@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AdvancedProgramming.Session;
 namespace AdvancedProgramming.Forms
 {
     internal class Usre : Form
@@ -108,7 +110,10 @@ namespace AdvancedProgramming.Forms
 
         private void Usre_Load(object sender, EventArgs e)
         {
-
+            string fileName = CurrentUser.Gender == "Female" ? "Fmale.jpg" : "Male.jpg";
+            string imagePath = Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\..\Image\", fileName));
+            if (File.Exists(imagePath))
+                pictureBox1.Image = Image.FromFile(imagePath);
         }
 
         private void label1_Click(object sender, EventArgs e)

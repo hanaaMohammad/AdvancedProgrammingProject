@@ -22,9 +22,12 @@ namespace AdvancedProgramming
             {
                 connection.Open();
                 using (var command = new SQLiteCommand(
-                    "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR NOT NULL UNIQUE, password VARCHAR NOT NULL )",
+                    "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR NOT NULL UNIQUE, password VARCHAR NOT NULL, Country VARCHAR, Gender VARCHAR )",
                     connection))
                     command.ExecuteNonQuery();
+
+                try { new SQLiteCommand("ALTER TABLE users ADD COLUMN Country VARCHAR", connection).ExecuteNonQuery(); } catch { }
+                try { new SQLiteCommand("ALTER TABLE users ADD COLUMN gender VARCHAR", connection).ExecuteNonQuery(); } catch { }
 
                 using (var checkCmd = new SQLiteCommand("SELECT COUNT(*) FROM users WHERE username = 'admin'", connection))
                 {

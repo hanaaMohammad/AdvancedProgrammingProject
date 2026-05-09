@@ -40,6 +40,24 @@ namespace AdvancedProgramming
             }
         }
 
+        public (string Country, string Gender) GetUserDetails(string username)
+        {
+            using (var conn = DatabaseManager.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SQLiteCommand("SELECT Country, Gender FROM users WHERE username = @username", conn))
+                {
+                    cmd.Parameters.AddWithValue("@username", username);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                            return (reader["Country"].ToString(), reader["Gender"].ToString());
+                    }
+                }
+            }
+            return (null, null);
+        }
+
         public bool UsernameExists(string username)
         {
             using (var conn = DatabaseManager.GetConnection())

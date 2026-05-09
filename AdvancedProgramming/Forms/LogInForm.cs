@@ -62,6 +62,16 @@ namespace AdvancedProgramming.Forms
             Controls.Add(userNameLabel);
             Controls.Add(passwordLabel);
 
+            var btnHome = new Button
+            {
+                Text = "🏠",
+                Location = new Point(270, 200),
+                Size = new Size(60, 30),
+                FlatStyle = FlatStyle.Flat
+            };
+            btnHome.Click += (s, e) => this.Close();
+            Controls.Add(btnHome);
+
             // Apply theme
             Theme.Apply(this);
         }
