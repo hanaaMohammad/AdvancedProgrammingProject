@@ -22,7 +22,7 @@ namespace AdvancedProgramming
             {
                 connection.Open();
                 using (var command = new SQLiteCommand(
-                    "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR NOT NULL UNIQUE, password VARCHAR NOT NULL)",
+                    "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR NOT NULL UNIQUE, password VARCHAR NOT NULL )",
                     connection))
                     command.ExecuteNonQuery();
 
