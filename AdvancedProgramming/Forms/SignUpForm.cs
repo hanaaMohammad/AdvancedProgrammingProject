@@ -20,13 +20,7 @@ namespace AdvancedProgramming
         private UserManagement userManager;
         private Toolbar toolbar;
         private HomeFarme homeFarme;
-        private GroupBox GroupCountry;
-        private RadioButton Pelstine;
-        private RadioButton jordan;
-        private RadioButton lebnan;
-        private RadioButton Egypt;
-        private RadioButton US;
-        private RadioButton UK;
+        private ComboBox CountryCombo;
         private GroupBox GroupGender;
         private RadioButton MaleRadio;
         private RadioButton FmaleRadio;
@@ -72,27 +66,11 @@ namespace AdvancedProgramming
                 confirmLabel, confirmPasswordTextBox, confirmPasswordButtonToggle, signUpButton, messageLabel });
             /////////////////////////////////////////////////////////////////////////
             var countryLabel = new Label { Text = "Country: ", Location = new Point(30, 190), Size = new Size(100, 20) };
-            GroupCountry = new GroupBox {  Location = new Point(30, 210), Size = new Size(200, 130) };
-            Pelstine = new RadioButton { Text = "Pelstine", Location = new Point(10, 25), Size = new Size(100, 20), Image = Image.FromFile(@"C:\Users\hana_\AdvancedProgramming\Image\Plestine.jpg") };
-            jordan = new RadioButton { Text = "Jordan", Location = new Point(10, 50), Size = new Size(100, 20), Image = Image.FromFile(@"C:\Users\hana_\AdvancedProgramming\Image\Jordan.jpg") };
-            lebnan = new RadioButton { Text = "Lebnan", Location = new Point(10, 75), Size = new Size(100, 20), Image = Image.FromFile(@"C:\Users\hana_\AdvancedProgramming\Image\Lebnan.png") };
-            Egypt = new RadioButton { Text = "Egypt", Location = new Point(10, 100), Size = new Size(100, 20), Image = Image.FromFile(@"C:\Users\hana_\AdvancedProgramming\Image\Egypt.jpg" )};
-            US = new RadioButton { Text = "US", Location = new Point(10, 125), Size = new Size(100, 20), Image = Image.FromFile(@"C:\Users\hana_\AdvancedProgramming\Image\Us.png") };
-            UK = new RadioButton
-            {
-                Text = "Uk",
-                Location = new Point(100, 25),
-                Size = new Size(90, 20),
-                Image = Image.FromFile(@"C:\Users\hana_\AdvancedProgramming\Image\Uk.png")
-            };
-            GroupCountry.Controls.Add(Pelstine);
-            GroupCountry.Controls.Add(jordan);
-            GroupCountry.Controls.Add(lebnan);
-            GroupCountry.Controls.Add(US);
-            GroupCountry.Controls.Add(UK);
-            GroupCountry.Controls.Add(Egypt);
+            CountryCombo = new ComboBox { Location = new Point(30, 210), Size = new Size(200, 25), DropDownStyle = ComboBoxStyle.DropDownList };
+            CountryCombo.Items.AddRange(new object[] { "Palestine", "Jordan", "Lebanon", "Egypt", "US", "UK" });
+            CountryCombo.SelectedIndex = 0;
             this.Controls.Add(countryLabel);
-            this.Controls.Add(GroupCountry);
+            this.Controls.Add(CountryCombo);
             var genderLabel = new Label { Text = "Gender:", Location = new Point(245, 190), Size = new Size(100, 20) };
             GroupGender = new GroupBox { Location = new Point(245, 210), Size = new Size(130, 100) };
             MaleRadio = new RadioButton { Text = "Male", Location = new Point(10, 25), Size = new Size(110, 20) };
@@ -186,5 +164,6 @@ namespace AdvancedProgramming
             this.ResumeLayout(false);
 
         }
+
     }
 }
