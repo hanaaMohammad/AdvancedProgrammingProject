@@ -2,6 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 using AdvancedProgramming;
+using AdvancedProgramming.Session;
+
+
 
 namespace AdvancedProgramming.Forms
 {
@@ -14,6 +17,8 @@ namespace AdvancedProgramming.Forms
         private bool passwordVasibilty = false;
         private Label Massage;
         private Toolbar toolbar;
+        private HomeFarme homeFarme;
+        
 
         public LogInForm()
         {
@@ -27,6 +32,7 @@ namespace AdvancedProgramming.Forms
             this.FormBorderStyle = FormBorderStyle.None;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.homeFarme = new HomeFarme();
 
             // Add toolbar
             toolbar = new Toolbar(this, "Log In");
@@ -87,7 +93,15 @@ namespace AdvancedProgramming.Forms
             }
 
             if (user.SignIn(username, password))
+            {
                 Massage.Text = "Log in successful!";
+                CurrentUser.Username = username;
+                homeFarme.Show();
+                this.Close();
+
+
+
+            }
             else
                 Massage.Text = "Oops!! Log in failed. Invalid username or password.";
         }
@@ -98,5 +112,17 @@ namespace AdvancedProgramming.Forms
             if (toolbar != null)
                 toolbar.UpdateTheme();
         }
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     }
 }

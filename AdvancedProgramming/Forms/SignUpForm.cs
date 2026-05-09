@@ -1,3 +1,5 @@
+using AdvancedProgramming.Forms;
+using AdvancedProgramming.Session;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -17,6 +19,7 @@ namespace AdvancedProgramming
         private bool confirmPasswordVisible = false;
         private UserManagement userManager;
         private Toolbar toolbar;
+        private HomeFarme homeFarme;
 
         public SignUpForm()
         {
@@ -117,6 +120,11 @@ namespace AdvancedProgramming
                 userNameTextBox.Text = "";
                 passwordTextBox.Text = "";
                 confirmPasswordTextBox.Text = "";
+                CurrentUser.Username = username;
+                homeFarme = new HomeFarme();
+                homeFarme.Show();
+                this.Close();
+
             }
         }
 

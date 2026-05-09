@@ -54,6 +54,9 @@
   <ItemGroup>
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\UserManagement.cs" />
+    <Compile Include="Forms\HomeFarme.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\LogInForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +69,7 @@
     <Compile Include="Forms\Usre.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Session\CurrentUser.cs" />
     <Compile Include="Theme\ITheme.cs" />
     <Compile Include="Theme\DarkTheme.cs" />
     <Compile Include="Theme\LightTheme.cs" />
@@ -78,6 +82,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\HomeFarme.resx">
+      <DependentUpon>HomeFarme.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\StartupForm.resx">
       <DependentUpon>StartupForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -109,6 +116,10 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Service\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
