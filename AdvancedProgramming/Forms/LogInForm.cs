@@ -14,6 +14,7 @@ namespace AdvancedProgramming.Forms
         private bool passwordVasibilty = false;
         private Label Massage;
         private Toolbar toolbar;
+        
 
         public LogInForm()
         {
