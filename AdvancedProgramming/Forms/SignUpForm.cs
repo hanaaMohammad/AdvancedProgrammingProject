@@ -20,6 +20,8 @@ namespace AdvancedProgramming
         private UserManagement userManager;
         private Toolbar toolbar;
         private HomeFarme homeFarme;
+        private TextBox countryTextBox;
+        private RadioButton GenderRadio;
 
         public SignUpForm()
         {
@@ -133,6 +135,18 @@ namespace AdvancedProgramming
             base.OnResize(e);
             if (toolbar != null)
                 toolbar.UpdateTheme();
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // SignUpForm
+            // 
+            this.ClientSize = new System.Drawing.Size(1772, 244);
+            this.Name = "SignUpForm";
+            this.ResumeLayout(false);
+
         }
     }
 }
