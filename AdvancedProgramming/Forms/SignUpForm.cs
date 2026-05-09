@@ -65,12 +65,16 @@ namespace AdvancedProgramming
             this.Controls.AddRange(new Control[] { usernameLabel, userNameTextBox, passwordLabel, passwordTextBox, passwordButtonToggle,
                 confirmLabel, confirmPasswordTextBox, confirmPasswordButtonToggle, signUpButton, messageLabel });
             /////////////////////////////////////////////////////////////////////////
+            ///
             var countryLabel = new Label { Text = "Country: ", Location = new Point(30, 190), Size = new Size(100, 20) };
-            CountryCombo = new ComboBox { Location = new Point(30, 210), Size = new Size(200, 25), DropDownStyle = ComboBoxStyle.DropDownList };
+            CountryCombo = new ComboBox { Location = new Point(30, 210), Size = new Size(200, 25), DropDownStyle = ComboBoxStyle.DropDown,Sorted=true};
             CountryCombo.Items.AddRange(new object[] { "Palestine", "Jordan", "Lebanon", "Egypt", "US", "UK" });
             CountryCombo.SelectedIndex = 0;
             this.Controls.Add(countryLabel);
             this.Controls.Add(CountryCombo);
+          
+            /////////////////////////////////////////////////////////////////////////////
+            ///
             var genderLabel = new Label { Text = "Gender:", Location = new Point(245, 190), Size = new Size(100, 20) };
             GroupGender = new GroupBox { Location = new Point(245, 210), Size = new Size(130, 100) };
             MaleRadio = new RadioButton { Text = "Male", Location = new Point(10, 25), Size = new Size(110, 20) };
@@ -79,6 +83,12 @@ namespace AdvancedProgramming
             GroupGender.Controls.Add(FmaleRadio);
             this.Controls.Add(genderLabel);
             this.Controls.Add(GroupGender);
+
+        }
+        private void CountryCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string country = CountryCombo.SelectedItem.ToString();
+
         }
         private void TogglePasswordVisibility(object sender, EventArgs e)
         {
@@ -131,7 +141,7 @@ namespace AdvancedProgramming
                 return;
             }
 
-            if (userManager.SignUp(username, password))
+            if (userManager.SignUp(username, password ,CountryCombo.SelectedItem.ToString(),MaleRadio.Checked? "Male" : "Female"))
             {
                 messageLabel.ForeColor = Color.Green;
                 messageLabel.Text = "Sign up successful!";
@@ -139,6 +149,8 @@ namespace AdvancedProgramming
                 passwordTextBox.Text = "";
                 confirmPasswordTextBox.Text = "";
                 CurrentUser.Username = username;
+                CurrentUser.Country = CountryCombo.SelectedItem.ToString();
+                CurrentUser.Gender = MaleRadio.Checked?"Male" : "Female";
                 homeFarme = new HomeFarme();
                 homeFarme.Show();
                 this.Close();

@@ -5,7 +5,7 @@ namespace AdvancedProgramming
 {
     public class UserManagement
     {
-        public bool SignUp(string username, string password)
+        public bool SignUp(string username, string password ,string Country,string Gender)
         {
             if (UsernameExists(username))
                 return false;
@@ -13,10 +13,13 @@ namespace AdvancedProgramming
             using (var conn = DatabaseManager.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SQLiteCommand("INSERT INTO users (username, password) VALUES (@username, @password)", conn))
+                using (var cmd = new SQLiteCommand("INSERT INTO users (username, password ,Country , Gender ) VALUES (@username, @password, @Country, @Gender)", conn))
                 {
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@password", password);
+                    cmd.Parameters.AddWithValue("@Country", Country);
+                    cmd.Parameters.AddWithValue("@Gender", Gender);
+                    cmd.Parameters.AddWithValue("@score", 0);
                     cmd.ExecuteNonQuery();
                 }
             }
