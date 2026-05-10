@@ -89,6 +89,12 @@ namespace AdvancedProgramming.Forms
             this.IconUser.TabIndex = 1;
             this.IconUser.Text = "👤";
             this.IconUser.UseVisualStyleBackColor = false;
+            this.IconUser.Click += (s, e) =>
+            {
+                var usre = new Usre();
+                usre.Show();
+                this.Hide();
+            };
 
             // GridLayoutPages
             this.GridLayoutPages.ColumnCount = 4;

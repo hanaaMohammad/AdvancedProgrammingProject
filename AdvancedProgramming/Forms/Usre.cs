@@ -16,13 +16,45 @@ namespace AdvancedProgramming.Forms
         private PictureBox pictureBox1;
         private Panel panel1;
         private Label label1;
+        private Button btnHome;
         public Usre()
         {
-
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.StartPosition = FormStartPosition.CenterScreen;
             label1.TextAlign = ContentAlignment.MiddleCenter;
             label2.TextAlign = ContentAlignment.MiddleCenter;
             label3.TextAlign = ContentAlignment.MiddleCenter;
+            AddHomeButton();
+            Theme.Apply(this);
+            label2.BackColor = Color.FromArgb(50, 40, 80);
+            label1.BackColor = Color.FromArgb(28, 28, 44);
+            label3.BackColor = Color.FromArgb(28, 28, 44);
+        }
+
+        private void AddHomeButton()
+        {
+            btnHome = new Button
+            {
+                Text = "🏠",
+                Location = new Point(10, 10),
+                Size = new Size(50, 40),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 16F),
+                BackColor = Color.FromArgb(108, 99, 255),
+                ForeColor = Color.White
+            };
+            btnHome.FlatAppearance.BorderSize = 0;
+            btnHome.Click += BtnHome_Click;
+            this.Controls.Add(btnHome);
+            btnHome.BringToFront();
+        }
+
+        private void BtnHome_Click(object sender, EventArgs e)
+        {
+            var home = new HomeFarme();
+            home.Show();
+            this.Close();
         }
         private void InitializeComponent()
         {

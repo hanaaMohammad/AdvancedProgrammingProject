@@ -84,6 +84,16 @@ namespace AdvancedProgramming
             this.Controls.Add(genderLabel);
             this.Controls.Add(GroupGender);
 
+            var btnHome = new Button
+            {
+                Text = "🏠",
+                Location = new Point(270, 350),
+                Size = new Size(60, 30),
+                FlatStyle = FlatStyle.Flat
+            };
+            btnHome.Click += (s, e) => this.Close();
+            this.Controls.Add(btnHome);
+
         }
         private void CountryCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
