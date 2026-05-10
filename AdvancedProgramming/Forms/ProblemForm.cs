@@ -19,6 +19,10 @@ namespace AdvancedProgramming.Forms
         private ComboBox comboBox1;
         private Toolbar toolbar;
         private string currentDifficulty = "";
+        private Label ColorDiscrip;
+        private Label ColorRed;
+        private Label ColorGreen;
+        private Label ColorYellow;
 
         public ProblemForm()
         {
@@ -91,6 +95,53 @@ namespace AdvancedProgramming.Forms
                 DrawMode = DrawMode.OwnerDrawFixed };
             this.comboBox1.SelectedIndexChanged += new EventHandler(this.comboBox1_SelectedIndexChanged);
             this.comboBox1.DrawItem += new DrawItemEventHandler(this.comboBox1_DrawItem);
+            ColorDiscrip = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Location = new Point(50, 250),
+                Name = "ColorDiscrip",
+                Size = new Size(150, 25),
+                TabIndex = 8,
+                Text = "Color Description:"
+            };
+
+            ColorRed = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                Location = new Point(50, 330),
+                Name = "ColorRed",
+                Size = new Size(150, 25),
+                TabIndex = 9,
+                Text = "Red: Hard level"
+            };
+
+            ColorGreen = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                Location = new Point(50, 400),
+                Name = "ColorGreen",
+                Size = new Size(150, 25),
+                TabIndex = 10,
+                Text = "Green: Easy level"
+            };
+
+            ColorYellow = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                Location = new Point(50,500),
+                Name = "ColorYellow",
+                Size = new Size(150, 25),
+                TabIndex = 11,
+                Text = "Yellow: Medium level"
+            };
+
+
+
+
 
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -98,11 +149,19 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
+            this.Controls.Add(ColorDiscrip);
+            this.Controls.Add(ColorRed);
+            this.Controls.Add(ColorGreen);
+            this.Controls.Add(ColorYellow);
+         
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
        
 
             Theme.Apply(this);
+            ColorRed.ForeColor = Color.Red;
+            ColorGreen.ForeColor = Color.Green;
+            ColorYellow.ForeColor = Color.Yellow;
             this.ResumeLayout(false);
         }
 

@@ -15,10 +15,7 @@ namespace AdvancedProgramming.Forms
         private Label feedbackLabel;
         private string problemName;
         private Toolbar toolbar;
-        private Label ColorDiscrip;
-        private Label ColorRed;
-        private Label ColorGreen;
-        private Label ColorYellow;
+   
 
 
         public ProblemDetailsForm(string problem)
@@ -81,53 +78,7 @@ namespace AdvancedProgramming.Forms
                 ScrollBars = ScrollBars.Vertical
             };
 
-            ColorDiscrip = new Label()
-            {
-                AutoSize = true,
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Location = new Point(50, 380),
-                Name = "ColorDiscrip",
-                Size = new Size(150, 25),
-                TabIndex = 8,
-                Text = "Color Description:"
-            };
-
-            ColorRed = new Label()
-            {
-                AutoSize = true,
-                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                ForeColor = Color.Red,
-                Location = new Point(50, 410),
-                Name = "ColorRed",
-                Size = new Size(150, 25),
-                TabIndex = 9,
-                Text = "Red: Hard level"
-            };
-
-            ColorGreen = new Label()
-            {
-                AutoSize = true,
-                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                ForeColor = Color.Green,
-                Location = new Point(50, 440),
-                Name = "ColorGreen",
-                Size = new Size(150, 25),
-                TabIndex = 10,
-                Text = "Green: Easy level"
-            };
-
-            ColorYellow = new Label()
-            {
-                AutoSize = true,
-                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                ForeColor = Color.Yellow,
-                Location = new Point(50, 470),
-                Name = "ColorYellow",
-                Size = new Size(150, 25),
-                TabIndex = 11,
-                Text = "Yellow: Medium level"
-            };
-
+          
             solveButton = new Button()
             {
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
@@ -168,15 +119,14 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(headerPanel);
             this.Controls.Add(descriptionLabel);
             this.Controls.Add(descriptionBox);
-            this.Controls.Add(ColorDiscrip);
-            this.Controls.Add(ColorRed);
-            this.Controls.Add(ColorGreen);
-            this.Controls.Add(ColorYellow);
+            
             this.Controls.Add(solveButton);
             this.Controls.Add(backButton);
             this.Controls.Add(feedbackLabel);
 
             Theme.Apply(this);
+
+           
         }
 
         protected override void OnResize(EventArgs e)
