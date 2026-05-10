@@ -20,8 +20,10 @@ namespace AdvancedProgramming
         private UserManagement userManager;
         private Toolbar toolbar;
         private HomeFarme homeFarme;
-        private TextBox countryTextBox;
-        private RadioButton GenderRadio;
+        private ComboBox CountryCombo;
+        private GroupBox GroupGender;
+        private RadioButton MaleRadio;
+        private RadioButton FmaleRadio;
 
         public SignUpForm()
         {
@@ -37,13 +39,13 @@ namespace AdvancedProgramming
         private void InitializeSignUpComponents()
         {
             this.Text = "Sign Up";
-            this.Size = new Size(400, 350);
+            this.Size = new Size(400, 550);
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
 
             var usernameLabel = new Label { Text = "Username:", Location = new Point(30, 70), Size = new Size(100, 20) };
             userNameTextBox = new TextBox { Location = new Point(140, 68), Size = new Size(200, 20) };
-            
+
 
             var passwordLabel = new Label { Text = "Password:", Location = new Point(30, 110), Size = new Size(100, 20) };
             passwordTextBox = new TextBox { Location = new Point(140, 108), Size = new Size(160, 20), PasswordChar = '*' };
@@ -55,15 +57,49 @@ namespace AdvancedProgramming
             confirmPasswordButtonToggle = new Button { Text = "👁", Location = new Point(305, 146), Size = new Size(30, 23), FlatStyle = FlatStyle.Flat };
             confirmPasswordButtonToggle.Click += confirmPasswordVisibilityTaggel;
 
-            signUpButton = new Button { Text = "Sign Up", Location = new Point(140, 200), Size = new Size(100, 30) };
+            signUpButton = new Button { Text = "Sign Up", Location = new Point(140, 350), Size = new Size(100, 30) };
             signUpButton.Click += signUpButton_Click;
 
-            messageLabel = new Label { Location = new Point(30, 250), Size = new Size(320, 60), ForeColor = Color.Red };
+            messageLabel = new Label { Location = new Point(30, 390), Size = new Size(320, 60), ForeColor = Color.Red };
 
             this.Controls.AddRange(new Control[] { usernameLabel, userNameTextBox, passwordLabel, passwordTextBox, passwordButtonToggle,
                 confirmLabel, confirmPasswordTextBox, confirmPasswordButtonToggle, signUpButton, messageLabel });
-        }
+            /////////////////////////////////////////////////////////////////////////
+            ///
+            var countryLabel = new Label { Text = "Country: ", Location = new Point(30, 190), Size = new Size(100, 20) };
+            CountryCombo = new ComboBox { Location = new Point(30, 210), Size = new Size(200, 25), DropDownStyle = ComboBoxStyle.DropDown,Sorted=true};
+            CountryCombo.Items.AddRange(new object[] { "Palestine", "Jordan", "Lebanon", "Egypt", "US", "UK" });
+            CountryCombo.SelectedIndex = 0;
+            this.Controls.Add(countryLabel);
+            this.Controls.Add(CountryCombo);
+          
+            /////////////////////////////////////////////////////////////////////////////
+            ///
+            var genderLabel = new Label { Text = "Gender:", Location = new Point(245, 190), Size = new Size(100, 20) };
+            GroupGender = new GroupBox { Location = new Point(245, 210), Size = new Size(130, 100) };
+            MaleRadio = new RadioButton { Text = "Male", Location = new Point(10, 25), Size = new Size(110, 20) };
+            FmaleRadio = new RadioButton { Text = "Female", Location = new Point(10, 50), Size = new Size(110, 20) };
+            GroupGender.Controls.Add(MaleRadio);
+            GroupGender.Controls.Add(FmaleRadio);
+            this.Controls.Add(genderLabel);
+            this.Controls.Add(GroupGender);
 
+            var btnHome = new Button
+            {
+                Text = "🏠",
+                Location = new Point(270, 350),
+                Size = new Size(60, 30),
+                FlatStyle = FlatStyle.Flat
+            };
+            btnHome.Click += (s, e) => this.Close();
+            this.Controls.Add(btnHome);
+
+        }
+        private void CountryCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string country = CountryCombo.SelectedItem.ToString();
+
+        }
         private void TogglePasswordVisibility(object sender, EventArgs e)
         {
             passwordVisible = !passwordVisible;
@@ -115,7 +151,7 @@ namespace AdvancedProgramming
                 return;
             }
 
-            if (userManager.SignUp(username, password))
+            if (userManager.SignUp(username, password ,CountryCombo.SelectedItem.ToString(),MaleRadio.Checked? "Male" : "Female"))
             {
                 messageLabel.ForeColor = Color.Green;
                 messageLabel.Text = "Sign up successful!";
@@ -123,6 +159,8 @@ namespace AdvancedProgramming
                 passwordTextBox.Text = "";
                 confirmPasswordTextBox.Text = "";
                 CurrentUser.Username = username;
+                CurrentUser.Country = CountryCombo.SelectedItem.ToString();
+                CurrentUser.Gender = MaleRadio.Checked?"Male" : "Female";
                 homeFarme = new HomeFarme();
                 homeFarme.Show();
                 this.Close();
@@ -148,5 +186,6 @@ namespace AdvancedProgramming
             this.ResumeLayout(false);
 
         }
+
     }
 }
