@@ -16,8 +16,9 @@ namespace AdvancedProgramming.Forms
         private Button button2;
         private Button button3;
         private Label label1;
-        private ListBox ListBox1;
+        private ComboBox comboBox1;
         private Toolbar toolbar;
+        private string currentDifficulty = "";
 
         public ProblemForm()
         {
@@ -33,6 +34,8 @@ namespace AdvancedProgramming.Forms
             this.button3 = new Button();
            
             this.SuspendLayout();
+
+            this.ClientSize = new Size(755, 619);
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
@@ -79,18 +82,22 @@ namespace AdvancedProgramming.Forms
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new EventHandler(this.button3_Click);
 
-           ListBox1 = new ListBox{
-             Location = new Point(50, 220),
-                Size = new Size(180, 250) };
-            this.ListBox1.SelectedIndexChanged += new EventHandler(this.listBox1_SelectedIndexChanged);
+           comboBox1 = new ComboBox{
+             Location = new Point(490, 220),
+                Size = new Size(250, 30),
+                Font = new Font("Segoe UI", 10F, FontStyle.Regular),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Visible = false,
+                DrawMode = DrawMode.OwnerDrawFixed };
+            this.comboBox1.SelectedIndexChanged += new EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboBox1.DrawItem += new DrawItemEventHandler(this.comboBox1_DrawItem);
 
-            this.ClientSize = new Size(755, 619);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.ListBox1);
+            this.Controls.Add(this.comboBox1);
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
        
@@ -119,35 +126,61 @@ namespace AdvancedProgramming.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ListBox1.Items.Clear();
-            ListBox1.Items.Add("Program to Print Full Pyramid Pattern (Star Pattern)");
-            ListBox1.Items.Add("Program to find if a character is vowel or Consonant");
-            ListBox1.Items.Add("Print Fibonacci Series");
+            currentDifficulty = "Easy";
+            comboBox1.Items.Clear();
+            comboBox1.Items.Add("Program to Print Full Pyramid Pattern (Star Pattern)");
+            comboBox1.Items.Add("Program to find if a character is vowel or Consonant");
+            comboBox1.Items.Add("Print Fibonacci Series");
+            comboBox1.Visible = true;
 
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            ListBox1.Items.Clear();
-            ListBox1.Items.Add("Floor in a Sorted Array");
-            ListBox1.Items.Add("Move All Zeroes to End");
-            ListBox1.Items.Add("T-primes");
+            currentDifficulty = "Medium";
+            comboBox1.Items.Clear();
+            comboBox1.Items.Add("Floor in a Sorted Array");
+            comboBox1.Items.Add("Move All Zeroes to End");
+            comboBox1.Items.Add("T-primes");
+            comboBox1.Visible = true;
 
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            ListBox1.Items.Clear();
-            ListBox1.Items.Add("");
-            ListBox1.Items.Add("");
-            ListBox1.Items.Add("");
+            currentDifficulty = "Hard";
+            comboBox1.Items.Clear();
+            comboBox1.Items.Add("Floor in a Sorted Array");
+            comboBox1.Items.Add("Move All Zeroes to End");
+            comboBox1.Items.Add("T-primes");
+            comboBox1.Visible = true;
 
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBox1_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (ListBox1.SelectedItem == null) return;
-        
+            if (e.Index < 0) return;
 
-            string problem = ListBox1.SelectedItem.ToString();
+            Color itemColor;
+            switch (currentDifficulty)
+            {
+                case "Easy": itemColor = Color.Green; break;
+                case "Medium": itemColor = Color.Yellow; break;
+                case "Hard": itemColor = Color.Red; break;
+                default: itemColor = Color.Black; break;
+            }
+
+            e.DrawBackground();
+            using (Brush brush = new SolidBrush(itemColor))
+            {
+                e.Graphics.DrawString(comboBox1.Items[e.Index].ToString(), e.Font, brush, e.Bounds);
+            }
+            e.DrawFocusRectangle();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedItem == null) return;
+
+            string problem = comboBox1.SelectedItem.ToString();
 
             ProblemDetailsForm form = new ProblemDetailsForm(problem);
             form.Show();

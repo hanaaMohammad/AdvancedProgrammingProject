@@ -10,9 +10,7 @@ namespace AdvancedProgramming.Forms
         private Panel headerPanel;
         private TextBox descriptionBox;
         private Label descriptionLabel;
-        private TextBox answerBox;
-        private Label answerLabel;
-        private Button submitButton;
+        private Button solveButton;
         private Button backButton;
         private Label feedbackLabel;
         private string problemName;
@@ -30,14 +28,14 @@ namespace AdvancedProgramming.Forms
             this.headerLabel = new Label();
             this.descriptionLabel = new Label();
             this.descriptionBox = new TextBox();
-            this.answerLabel = new Label();
-            this.answerBox = new TextBox();
-            this.submitButton = new Button();
+            this.solveButton = new Button();
             this.backButton = new Button();
             this.feedbackLabel = new Label();
 
             this.headerPanel.SuspendLayout();
             this.SuspendLayout();
+
+            this.ClientSize = new Size(755, 700);
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
@@ -75,31 +73,13 @@ namespace AdvancedProgramming.Forms
             this.descriptionBox.Text = "";
             this.descriptionBox.ScrollBars = ScrollBars.Vertical;
 
-            this.answerLabel.AutoSize = true;
-            this.answerLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            this.answerLabel.Location = new Point(50, 400);
-            this.answerLabel.Name = "answerLabel";
-            this.answerLabel.Size = new Size(100, 25);
-            this.answerLabel.TabIndex = 3;
-            this.answerLabel.Text = "Your Answer:";
-
-            this.answerBox.BorderStyle = BorderStyle.FixedSingle;
-            this.answerBox.Font = new Font("Segoe UI", 11F);
-            this.answerBox.Location = new Point(50, 430);
-            this.answerBox.Multiline = true;
-            this.answerBox.Name = "answerBox";
-            this.answerBox.Size = new Size(650, 100);
-            this.answerBox.TabIndex = 4;
-            this.answerBox.ScrollBars = ScrollBars.Vertical;
-
-            this.submitButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            this.submitButton.Location = new Point(450, 550);
-            this.submitButton.Name = "submitButton";
-            this.submitButton.Size = new Size(120, 45);
-            this.submitButton.TabIndex = 5;
-            this.submitButton.Text = "Submit";
-            this.submitButton.UseVisualStyleBackColor = false;
-            this.submitButton.Click += new EventHandler(this.submitButton_Click);
+            this.solveButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            this.solveButton.Location = new Point(300, 430);
+            this.solveButton.Name = "solveButton";
+            this.solveButton.Size = new Size(120, 45);
+            this.solveButton.TabIndex = 3;
+            this.solveButton.Text = "Solve";
+            this.solveButton.UseVisualStyleBackColor = false;
 
             this.backButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             this.backButton.Location = new Point(200, 550);
@@ -119,12 +99,9 @@ namespace AdvancedProgramming.Forms
             this.feedbackLabel.TabIndex = 7;
             this.feedbackLabel.Text = "";
 
-            this.ClientSize = new Size(755, 700);
             this.Controls.Add(this.feedbackLabel);
             this.Controls.Add(this.backButton);
-            this.Controls.Add(this.submitButton);
-            this.Controls.Add(this.answerBox);
-            this.Controls.Add(this.answerLabel);
+            this.Controls.Add(this.solveButton);
             this.Controls.Add(this.descriptionBox);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.headerPanel);
@@ -141,21 +118,6 @@ namespace AdvancedProgramming.Forms
         {
             base.OnResize(e);
             toolbar?.UpdateTheme();
-        }
-
-        private void submitButton_Click(object sender, EventArgs e)
-        {
-            string answer = answerBox.Text.Trim();
-            if (string.IsNullOrEmpty(answer))
-            {
-                feedbackLabel.ForeColor = Color.Orange;
-                feedbackLabel.Text = "Please enter an answer.";
-            }
-            else
-            {
-                feedbackLabel.ForeColor = Color.LightGreen;
-                feedbackLabel.Text = "Answer submitted!";
-            }
         }
 
         private void backButton_Click(object sender, EventArgs e)

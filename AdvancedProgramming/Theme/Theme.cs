@@ -95,6 +95,11 @@ namespace AdvancedProgramming
                         pnl.BackColor = Current.ControlBackColor;
                         break;
 
+                    case ListBox lst:
+                        lst.BackColor = Current.InputBackColor;
+                        lst.ForeColor = Current.TextColor;
+                        break;
+
                     case CheckBox chk:
                     case RadioButton rdo:
                         control.ForeColor = Current.TextColor;

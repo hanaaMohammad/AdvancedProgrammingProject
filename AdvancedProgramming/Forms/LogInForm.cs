@@ -106,6 +106,9 @@ namespace AdvancedProgramming.Forms
             {
                 Massage.Text = "Log in successful!";
                 CurrentUser.Username = username;
+                var details = user.GetUserDetails(username);
+                CurrentUser.Country = details.Country;
+                CurrentUser.Gender = details.Gender;
                 homeFarme.Show();
                 this.Close();
              

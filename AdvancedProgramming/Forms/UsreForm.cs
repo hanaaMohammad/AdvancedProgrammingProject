@@ -117,7 +117,7 @@ namespace AdvancedProgramming.Forms
                 Location = new Point(200, 324),
                Size = new Size(326, 43),
                 TabIndex = 6,
-               Text = "contry : " + CurrentUser.Country,
+               Text = "Country : " + CurrentUser.Country,
                TextAlign = ContentAlignment.MiddleCenter };
 
 

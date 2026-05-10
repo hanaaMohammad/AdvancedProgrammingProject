@@ -120,6 +120,8 @@ namespace AdvancedProgramming
             string username = userNameTextBox.Text.Trim();
             string password = passwordTextBox.Text;
             string confirm = confirmPasswordTextBox.Text;
+            string country = CountryCombo.SelectedItem.ToString();
+            string gender = MaleRadio.Checked ? "Male" : "Female";
 
             if (string.IsNullOrEmpty(username))
             {
@@ -159,8 +161,8 @@ namespace AdvancedProgramming
                 passwordTextBox.Text = "";
                 confirmPasswordTextBox.Text = "";
                 CurrentUser.Username = username;
-                CurrentUser.Country = CountryCombo.SelectedItem.ToString();
-                CurrentUser.Gender = MaleRadio.Checked?"Male" : "Female";
+                CurrentUser.Country = country;
+                CurrentUser.Gender = gender;
                 homeFarme = new HomeFarme();
                 homeFarme.Show();
                 this.Close();
