@@ -15,6 +15,11 @@ namespace AdvancedProgramming.Forms
         private Label feedbackLabel;
         private string problemName;
         private Toolbar toolbar;
+        private Label ColorDiscrip;
+        private Label ColorRed;
+        private Label ColorGreen;
+        private Label ColorYellow;
+
 
         public ProblemDetailsForm(string problem)
         {
@@ -24,94 +29,154 @@ namespace AdvancedProgramming.Forms
 
         private void InitializeComponent()
         {
-            this.headerPanel = new Panel();
-            this.headerLabel = new Label();
-            this.descriptionLabel = new Label();
-            this.descriptionBox = new TextBox();
-            this.solveButton = new Button();
-            this.backButton = new Button();
-            this.feedbackLabel = new Label();
-
-            this.headerPanel.SuspendLayout();
-            this.SuspendLayout();
-
             this.ClientSize = new Size(755, 700);
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Name = "ProblemDetailsForm";
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
 
-            this.headerPanel.Controls.Add(this.headerLabel);
-            this.headerPanel.Location = new Point(-1, 39);
-            this.headerPanel.Name = "headerPanel";
-            this.headerPanel.Size = new Size(755, 80);
-            this.headerPanel.TabIndex = 0;
+            headerPanel = new Panel()
+            {
+                Location = new Point(-1, 39),
+                Name = "headerPanel",
+                Size = new Size(755, 80),
+                TabIndex = 0
+            };
 
-            this.headerLabel.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold);
-            this.headerLabel.Location = new Point(0, 15);
-            this.headerLabel.Name = "headerLabel";
-            this.headerLabel.Size = new Size(755, 50);
-            this.headerLabel.TabIndex = 0;
-            this.headerLabel.Text = problemName;
-            this.headerLabel.TextAlign = ContentAlignment.MiddleCenter;
+            headerLabel = new Label()
+            {
+                Font = new Font("Segoe UI", 16.2F, FontStyle.Bold),
+                Location = new Point(0, 15),
+                Name = "headerLabel",
+                Size = new Size(755, 50),
+                TabIndex = 0,
+                Text = problemName,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
 
-            this.descriptionLabel.AutoSize = true;
-            this.descriptionLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            this.descriptionLabel.Location = new Point(50, 140);
-            this.descriptionLabel.Name = "descriptionLabel";
-            this.descriptionLabel.Size = new Size(150, 25);
-            this.descriptionLabel.TabIndex = 1;
-            this.descriptionLabel.Text = "Description:";
+            descriptionLabel = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Location = new Point(50, 140),
+                Name = "descriptionLabel",
+                Size = new Size(150, 25),
+                TabIndex = 1,
+                Text = "Description:"
+            };
 
-            this.descriptionBox.BorderStyle = BorderStyle.FixedSingle;
-            this.descriptionBox.Font = new Font("Segoe UI", 11F);
-            this.descriptionBox.Location = new Point(50, 175);
-            this.descriptionBox.Multiline = true;
-            this.descriptionBox.Name = "descriptionBox";
-            this.descriptionBox.ReadOnly = true;
-            this.descriptionBox.Size = new Size(650, 200);
-            this.descriptionBox.TabIndex = 2;
-            this.descriptionBox.Text = "";
-            this.descriptionBox.ScrollBars = ScrollBars.Vertical;
+            descriptionBox = new TextBox()
+            {
+                BorderStyle = BorderStyle.FixedSingle,
+                Font = new Font("Segoe UI", 11F),
+                Location = new Point(50, 175),
+                Multiline = true,
+                Name = "descriptionBox",
+                ReadOnly = true,
+                Size = new Size(650, 180),
+                TabIndex = 2,
+                Text = "",
+                ScrollBars = ScrollBars.Vertical
+            };
 
-            this.solveButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            this.solveButton.Location = new Point(300, 430);
-            this.solveButton.Name = "solveButton";
-            this.solveButton.Size = new Size(120, 45);
-            this.solveButton.TabIndex = 3;
-            this.solveButton.Text = "Solve";
-            this.solveButton.UseVisualStyleBackColor = false;
+            ColorDiscrip = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Location = new Point(50, 380),
+                Name = "ColorDiscrip",
+                Size = new Size(150, 25),
+                TabIndex = 8,
+                Text = "Color Description:"
+            };
 
-            this.backButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            this.backButton.Location = new Point(200, 550);
-            this.backButton.Name = "backButton";
-            this.backButton.Size = new Size(120, 45);
-            this.backButton.TabIndex = 6;
-            this.backButton.Text = "Back";
-            this.backButton.UseVisualStyleBackColor = false;
-            this.backButton.Click += new EventHandler(this.backButton_Click);
+            ColorRed = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                ForeColor = Color.Red,
+                Location = new Point(50, 410),
+                Name = "ColorRed",
+                Size = new Size(150, 25),
+                TabIndex = 9,
+                Text = "Red: Hard level"
+            };
 
-            this.feedbackLabel.AutoSize = true;
-            this.feedbackLabel.Font = new Font("Segoe UI", 14F, FontStyle.Italic);
-            this.feedbackLabel.ForeColor = Color.LightGreen;
-            this.feedbackLabel.Location = new Point(50, 610);
-            this.feedbackLabel.Name = "feedbackLabel";
-            this.feedbackLabel.Size = new Size(0, 25);
-            this.feedbackLabel.TabIndex = 7;
-            this.feedbackLabel.Text = "";
+            ColorGreen = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                ForeColor = Color.Green,
+                Location = new Point(50, 440),
+                Name = "ColorGreen",
+                Size = new Size(150, 25),
+                TabIndex = 10,
+                Text = "Green: Easy level"
+            };
 
-            this.Controls.Add(this.feedbackLabel);
-            this.Controls.Add(this.backButton);
-            this.Controls.Add(this.solveButton);
-            this.Controls.Add(this.descriptionBox);
-            this.Controls.Add(this.descriptionLabel);
-            this.Controls.Add(this.headerPanel);
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Name = "ProblemDetailsForm";
+            ColorYellow = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                ForeColor = Color.Yellow,
+                Location = new Point(50, 470),
+                Name = "ColorYellow",
+                Size = new Size(150, 25),
+                TabIndex = 11,
+                Text = "Yellow: Medium level"
+            };
+
+            solveButton = new Button()
+            {
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Location = new Point(317, 520),
+                Name = "solveButton",
+                Size = new Size(120, 45),
+                TabIndex = 3,
+                Text = "Solve",
+                UseVisualStyleBackColor = false
+            };
+
+            backButton = new Button()
+            {
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Location = new Point(317, 580),
+                Name = "backButton",
+                Size = new Size(120, 45),
+                TabIndex = 6,
+                Text = "Back",
+                UseVisualStyleBackColor = false
+            };
+            backButton.Click += new EventHandler(this.backButton_Click);
+
+            feedbackLabel = new Label()
+            {
+                AutoSize = true,
+                Font = new Font("Segoe UI", 14F, FontStyle.Italic),
+                ForeColor = Color.LightGreen,
+                Location = new Point(50, 650),
+                Name = "feedbackLabel",
+                Size = new Size(0, 25),
+                TabIndex = 7,
+                Text = ""
+            };
+
+            headerPanel.Controls.Add(headerLabel);
+
+            this.Controls.Add(headerPanel);
+            this.Controls.Add(descriptionLabel);
+            this.Controls.Add(descriptionBox);
+            this.Controls.Add(ColorDiscrip);
+            this.Controls.Add(ColorRed);
+            this.Controls.Add(ColorGreen);
+            this.Controls.Add(ColorYellow);
+            this.Controls.Add(solveButton);
+            this.Controls.Add(backButton);
+            this.Controls.Add(feedbackLabel);
+
             Theme.Apply(this);
-            this.headerPanel.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
         }
 
         protected override void OnResize(EventArgs e)
