@@ -14,8 +14,8 @@ namespace AdvancedProgramming
         private Label lblTitle;
         private Label lblSubtitle;
         private PictureBox logoBox;
-        private Button btnLogin;
-        private Button btnSignup;
+        private Button buttonLogin;
+        private Button buttonSignup;
         private Panel accentLine;
 
         public StartupForm()
@@ -92,7 +92,7 @@ namespace AdvancedProgramming
             };
             lblSubtitle.Location = new Point(cx - lblSubtitle.Width / 2, 320);
 
-            btnLogin = new Button
+            buttonLogin = new Button
             {
                 Text = "Log In",
                 Size = new Size(150, 48),
@@ -102,7 +102,7 @@ namespace AdvancedProgramming
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
             };
 
-            btnSignup = new Button
+            buttonSignup = new Button
             {
                 Text = "Sign Up",
                 Size = new Size(150, 48),
@@ -112,31 +112,33 @@ namespace AdvancedProgramming
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
             };
 
-            btnLogin.Click += (s, e) => new LogInForm().ShowDialog();
-            btnSignup.Click += (s, e) => new SignUpForm().ShowDialog();
+          
 
             this.Controls.Add(logoBox);
             this.Controls.Add(lblTitle);
             this.Controls.Add(accentLine);
             this.Controls.Add(lblSubtitle);
-            this.Controls.Add(btnLogin);
-            this.Controls.Add(btnSignup);
+            this.Controls.Add(buttonLogin);
+            this.Controls.Add(buttonSignup);
+            buttonLogin.Click += (s, e) => new LogInForm().ShowDialog();
+            buttonSignup.Click += (s, e) => new SignUpForm().ShowDialog();
+          
         }
 
         private void ApplyCustomStyles()
         {
             accentLine.BackColor = Color.FromArgb(108, 99, 255);
 
-            btnLogin.BackColor = Color.FromArgb(108, 99, 255);
-            btnLogin.ForeColor = Color.White;
-            btnLogin.FlatAppearance.BorderSize = 0;
-            btnLogin.FlatAppearance.MouseOverBackColor = Color.FromArgb(130, 120, 255);
+            buttonLogin.BackColor = Color.FromArgb(108, 99, 255);
+            buttonLogin.ForeColor = Color.White;
+            buttonLogin.FlatAppearance.BorderSize = 0;
+            buttonLogin.FlatAppearance.MouseOverBackColor = Color.FromArgb(130, 120, 255);
 
-            btnSignup.BackColor = Color.Transparent;
-            btnSignup.ForeColor = Color.FromArgb(108, 99, 255);
-            btnSignup.FlatAppearance.BorderSize = 2;
-            btnSignup.FlatAppearance.BorderColor = Color.FromArgb(108, 99, 255);
-            btnSignup.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 30, 100);
+            buttonSignup.BackColor = Color.Transparent;
+            buttonSignup.ForeColor = Color.FromArgb(108, 99, 255);
+            buttonSignup.FlatAppearance.BorderSize = 2;
+            buttonSignup.FlatAppearance.BorderColor = Color.FromArgb(108, 99, 255);
+            buttonSignup.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 30, 100);
         }
 
         private void StartAnimation()

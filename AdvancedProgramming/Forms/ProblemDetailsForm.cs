@@ -16,6 +16,7 @@ namespace AdvancedProgramming.Forms
         private Button backButton;
         private Label feedbackLabel;
         private string problemName;
+        private Toolbar toolbar;
 
         public ProblemDetailsForm(string problem)
         {
@@ -38,36 +39,34 @@ namespace AdvancedProgramming.Forms
             this.headerPanel.SuspendLayout();
             this.SuspendLayout();
 
-            this.headerPanel.BackColor = Color.Black;
+            toolbar = new Toolbar(this, "MiniCamp Puzzle");
+            this.Controls.Add(toolbar);
+
             this.headerPanel.Controls.Add(this.headerLabel);
-            this.headerPanel.Location = new Point(-1, -1);
+            this.headerPanel.Location = new Point(-1, 39);
             this.headerPanel.Name = "headerPanel";
-            this.headerPanel.Size = new Size(755, 100);
+            this.headerPanel.Size = new Size(755, 80);
             this.headerPanel.TabIndex = 0;
 
-            this.headerLabel.Font = new Font("Microsoft Sans Serif", 16.2F);
-            this.headerLabel.ForeColor = Color.White;
-            this.headerLabel.Location = new Point(0, 20);
+            this.headerLabel.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold);
+            this.headerLabel.Location = new Point(0, 15);
             this.headerLabel.Name = "headerLabel";
-            this.headerLabel.Size = new Size(755, 60);
+            this.headerLabel.Size = new Size(755, 50);
             this.headerLabel.TabIndex = 0;
             this.headerLabel.Text = problemName;
             this.headerLabel.TextAlign = ContentAlignment.MiddleCenter;
 
             this.descriptionLabel.AutoSize = true;
-            this.descriptionLabel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            this.descriptionLabel.ForeColor = Color.White;
-            this.descriptionLabel.Location = new Point(50, 130);
+            this.descriptionLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            this.descriptionLabel.Location = new Point(50, 140);
             this.descriptionLabel.Name = "descriptionLabel";
             this.descriptionLabel.Size = new Size(150, 25);
             this.descriptionLabel.TabIndex = 1;
             this.descriptionLabel.Text = "Description:";
 
-            this.descriptionBox.BackColor = Color.FromArgb(40, 40, 40);
             this.descriptionBox.BorderStyle = BorderStyle.FixedSingle;
-            this.descriptionBox.Font = new Font("Microsoft Sans Serif", 11F);
-            this.descriptionBox.ForeColor = Color.White;
-            this.descriptionBox.Location = new Point(50, 160);
+            this.descriptionBox.Font = new Font("Segoe UI", 11F);
+            this.descriptionBox.Location = new Point(50, 175);
             this.descriptionBox.Multiline = true;
             this.descriptionBox.Name = "descriptionBox";
             this.descriptionBox.ReadOnly = true;
@@ -77,28 +76,24 @@ namespace AdvancedProgramming.Forms
             this.descriptionBox.ScrollBars = ScrollBars.Vertical;
 
             this.answerLabel.AutoSize = true;
-            this.answerLabel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            this.answerLabel.ForeColor = Color.White;
-            this.answerLabel.Location = new Point(50, 390);
+            this.answerLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            this.answerLabel.Location = new Point(50, 400);
             this.answerLabel.Name = "answerLabel";
             this.answerLabel.Size = new Size(100, 25);
             this.answerLabel.TabIndex = 3;
             this.answerLabel.Text = "Your Answer:";
 
-            this.answerBox.BackColor = Color.FromArgb(40, 40, 40);
             this.answerBox.BorderStyle = BorderStyle.FixedSingle;
-            this.answerBox.Font = new Font("Microsoft Sans Serif", 11F);
-            this.answerBox.ForeColor = Color.White;
-            this.answerBox.Location = new Point(50, 420);
+            this.answerBox.Font = new Font("Segoe UI", 11F);
+            this.answerBox.Location = new Point(50, 430);
             this.answerBox.Multiline = true;
             this.answerBox.Name = "answerBox";
             this.answerBox.Size = new Size(650, 100);
             this.answerBox.TabIndex = 4;
             this.answerBox.ScrollBars = ScrollBars.Vertical;
 
-            this.submitButton.BackColor = Color.FromArgb(255, 192, 192);
-            this.submitButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            this.submitButton.Location = new Point(450, 540);
+            this.submitButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            this.submitButton.Location = new Point(450, 550);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new Size(120, 45);
             this.submitButton.TabIndex = 5;
@@ -106,9 +101,8 @@ namespace AdvancedProgramming.Forms
             this.submitButton.UseVisualStyleBackColor = false;
             this.submitButton.Click += new EventHandler(this.submitButton_Click);
 
-            this.backButton.BackColor = Color.FromArgb(255, 192, 192);
-            this.backButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            this.backButton.Location = new Point(200, 540);
+            this.backButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            this.backButton.Location = new Point(200, 550);
             this.backButton.Name = "backButton";
             this.backButton.Size = new Size(120, 45);
             this.backButton.TabIndex = 6;
@@ -117,15 +111,14 @@ namespace AdvancedProgramming.Forms
             this.backButton.Click += new EventHandler(this.backButton_Click);
 
             this.feedbackLabel.AutoSize = true;
-            this.feedbackLabel.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Italic);
+            this.feedbackLabel.Font = new Font("Segoe UI", 14F, FontStyle.Italic);
             this.feedbackLabel.ForeColor = Color.LightGreen;
-            this.feedbackLabel.Location = new Point(50, 600);
+            this.feedbackLabel.Location = new Point(50, 610);
             this.feedbackLabel.Name = "feedbackLabel";
             this.feedbackLabel.Size = new Size(0, 25);
             this.feedbackLabel.TabIndex = 7;
             this.feedbackLabel.Text = "";
 
-            this.BackColor = Color.FromArgb(64, 0, 64);
             this.ClientSize = new Size(755, 700);
             this.Controls.Add(this.feedbackLabel);
             this.Controls.Add(this.backButton);
@@ -136,11 +129,18 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.headerPanel);
             this.FormBorderStyle = FormBorderStyle.None;
-            this.Name = "ProblemDetailsForm";
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.Name = "ProblemDetailsForm";
+            Theme.Apply(this);
             this.headerPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            toolbar?.UpdateTheme();
         }
 
         private void submitButton_Click(object sender, EventArgs e)

@@ -108,6 +108,8 @@ namespace AdvancedProgramming.Forms
                 CurrentUser.Username = username;
                 homeFarme.Show();
                 this.Close();
+             
+
 
 
 

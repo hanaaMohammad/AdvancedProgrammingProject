@@ -15,6 +15,7 @@ namespace AdvancedProgramming.Forms
         private Button Problelms;
         private Button IconUser;
         private Button TotorialPage;
+        private Toolbar toolbar;
 
         public HomeFarme()
         {
@@ -27,15 +28,11 @@ namespace AdvancedProgramming.Forms
             this.FormBorderStyle = FormBorderStyle.None;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
+            
             this.ClientSize = new Size(1053, 829);
-            this.BackColor = Color.FromArgb(15, 15, 25);
 
-            Color accent = Color.FromArgb(108, 99, 255);
-            Color accentHover = Color.FromArgb(130, 120, 255);
-            Color surface = Color.FromArgb(28, 28, 44);
-            Color card = Color.FromArgb(38, 38, 56);
-            Color textWhite = Color.White;
-            Color textMuted = Color.FromArgb(160, 160, 180);
+            toolbar = new Toolbar(this, "MiniCamp Puzzle");
+            this.Controls.Add(toolbar);
 
             this.panelTextNameApp = new Panel();
             this.IconUser = new Button();
@@ -50,18 +47,15 @@ namespace AdvancedProgramming.Forms
             this.GridLayoutPages.SuspendLayout();
             this.SuspendLayout();
 
-            this.panelTextNameApp.BackColor = surface;
             this.panelTextNameApp.Controls.Add(this.IconUser);
             this.panelTextNameApp.Controls.Add(this.nameApp);
-            this.panelTextNameApp.Location = new Point(0, 0);
+            this.panelTextNameApp.Location = new Point(0, 40);
             this.panelTextNameApp.Name = "panelTextNameApp";
             this.panelTextNameApp.Size = new Size(1053, 170);
             this.panelTextNameApp.TabIndex = 0;
 
             this.IconUser.FlatStyle = FlatStyle.Flat;
             this.IconUser.FlatAppearance.BorderSize = 0;
-            this.IconUser.BackColor = accent;
-            this.IconUser.ForeColor = Color.White;
             this.IconUser.Font = new Font("Segoe UI", 24F);
             this.IconUser.Location = new Point(930, 35);
             this.IconUser.Name = "IconUser";
@@ -76,10 +70,8 @@ namespace AdvancedProgramming.Forms
                 this.Hide();
             };
 
-            this.nameApp.BackColor = surface;
             this.nameApp.BorderStyle = BorderStyle.None;
             this.nameApp.Font = new Font("Segoe UI", 36F, FontStyle.Bold);
-            this.nameApp.ForeColor = textWhite;
             this.nameApp.Location = new Point(40, 40);
             this.nameApp.Name = "nameApp";
             this.nameApp.ReadOnly = true;
@@ -97,7 +89,7 @@ namespace AdvancedProgramming.Forms
             this.GridLayoutPages.Controls.Add(this.UsrePage, 1, 0);
             this.GridLayoutPages.Controls.Add(this.TotorialPage, 2, 0);
             this.GridLayoutPages.Controls.Add(this.Problelms, 3, 0);
-            this.GridLayoutPages.Location = new Point(40, 185);
+            this.GridLayoutPages.Location = new Point(40, 225);
             this.GridLayoutPages.Name = "GridLayoutPages";
             this.GridLayoutPages.RowCount = 1;
             this.GridLayoutPages.RowStyles.Clear();
@@ -107,9 +99,6 @@ namespace AdvancedProgramming.Forms
 
             this.Homepage.FlatStyle = FlatStyle.Flat;
             this.Homepage.FlatAppearance.BorderSize = 0;
-            this.Homepage.FlatAppearance.MouseOverBackColor = accentHover;
-            this.Homepage.BackColor = accent;
-            this.Homepage.ForeColor = Color.White;
             this.Homepage.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             this.Homepage.Location = new Point(3, 3);
             this.Homepage.Name = "Homepage";
@@ -120,9 +109,6 @@ namespace AdvancedProgramming.Forms
 
             this.UsrePage.FlatStyle = FlatStyle.Flat;
             this.UsrePage.FlatAppearance.BorderSize = 0;
-            this.UsrePage.FlatAppearance.MouseOverBackColor = accentHover;
-            this.UsrePage.BackColor = card;
-            this.UsrePage.ForeColor = textMuted;
             this.UsrePage.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
             this.UsrePage.Location = new Point(246, 3);
             this.UsrePage.Name = "UsrePage";
@@ -139,9 +125,6 @@ namespace AdvancedProgramming.Forms
 
             this.TotorialPage.FlatStyle = FlatStyle.Flat;
             this.TotorialPage.FlatAppearance.BorderSize = 0;
-            this.TotorialPage.FlatAppearance.MouseOverBackColor = accentHover;
-            this.TotorialPage.BackColor = card;
-            this.TotorialPage.ForeColor = textMuted;
             this.TotorialPage.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
             this.TotorialPage.Location = new Point(489, 3);
             this.TotorialPage.Name = "TotorialPage";
@@ -152,9 +135,6 @@ namespace AdvancedProgramming.Forms
 
             this.Problelms.FlatStyle = FlatStyle.Flat;
             this.Problelms.FlatAppearance.BorderSize = 0;
-            this.Problelms.FlatAppearance.MouseOverBackColor = accentHover;
-            this.Problelms.BackColor = card;
-            this.Problelms.ForeColor = textMuted;
             this.Problelms.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
             this.Problelms.Location = new Point(732, 3);
             this.Problelms.Name = "Problelms";
@@ -169,20 +149,27 @@ namespace AdvancedProgramming.Forms
                 this.Hide();
             };
 
-            this.PanleGridPage.BackColor = surface;
-            this.PanleGridPage.Location = new Point(40, 255);
+            this.PanleGridPage.Location = new Point(40, 295);
             this.PanleGridPage.Name = "PanleGridPage";
-            this.PanleGridPage.Size = new Size(973, 540);
+            this.PanleGridPage.Size = new Size(973, 500);
             this.PanleGridPage.TabIndex = 1;
 
             this.Controls.Add(this.panelTextNameApp);
             this.Controls.Add(this.GridLayoutPages);
             this.Controls.Add(this.PanleGridPage);
 
+            Theme.Apply(this);
+
             this.panelTextNameApp.ResumeLayout(false);
             this.panelTextNameApp.PerformLayout();
             this.GridLayoutPages.ResumeLayout(false);
             this.ResumeLayout(false);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            toolbar?.UpdateTheme();
         }
     }
 }
