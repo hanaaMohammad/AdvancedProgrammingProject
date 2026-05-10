@@ -26,12 +26,12 @@ namespace AdvancedProgramming.Forms
 
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.ListBox1 = new System.Windows.Forms.ListBox();
+            this.label1 = new Label();
+            this.label2 = new Label();
+            this.button1 = new Button();
+            this.button2 = new Button();
+            this.button3 = new Button();
+           
             this.SuspendLayout();
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
@@ -79,8 +79,9 @@ namespace AdvancedProgramming.Forms
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new EventHandler(this.button3_Click);
 
-            this.ListBox1.Location = new Point(50, 220);
-            this.ListBox1.Size = new Size(180, 250);
+           ListBox1 = new ListBox{
+             Location = new Point(50, 220),
+                Size = new Size(180, 250) };
             this.ListBox1.SelectedIndexChanged += new EventHandler(this.listBox1_SelectedIndexChanged);
 
             this.ClientSize = new Size(755, 619);
@@ -121,15 +122,15 @@ namespace AdvancedProgramming.Forms
             ListBox1.Items.Clear();
             ListBox1.Items.Add("Program to Print Full Pyramid Pattern (Star Pattern)");
             ListBox1.Items.Add("Program to find if a character is vowel or Consonant");
-            ListBox1.Items.Add("");
+            ListBox1.Items.Add("Print Fibonacci Series");
 
         }
         private void button2_Click(object sender, EventArgs e)
         {
             ListBox1.Items.Clear();
             ListBox1.Items.Add("Floor in a Sorted Array");
-            ListBox1.Items.Add("");
-            ListBox1.Items.Add("");
+            ListBox1.Items.Add("Move All Zeroes to End");
+            ListBox1.Items.Add("T-primes");
 
         }
         private void button3_Click(object sender, EventArgs e)

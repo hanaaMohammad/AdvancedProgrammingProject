@@ -12,7 +12,7 @@ namespace AdvancedProgramming.Forms
     {
         private Label labelScore;
         private Label labelTitle;
-        private PictureBox pictureBoxUser;
+        private PictureBox pictureUser;
         private Panel panel1;
         private Label labelGender;
         private Label labelCountry;
@@ -54,50 +54,46 @@ namespace AdvancedProgramming.Forms
 
         private void InitializeComponent()
         {
-        
-            this.labelUsreName = new Label();
-            this.labelTitle = new Label();
-            this.labelScore = new Label();
-           
-            this.panel1 = new Panel();
-            this.labelCountry = new Label();
-            this.labelGender = new Label();
-            this.panel1.SuspendLayout();
-            this.SuspendLayout();
-           
-            this.labelUsreName.BackColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.labelUsreName.BorderStyle =BorderStyle.Fixed3D;
-            this.labelUsreName.Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.labelUsreName.ForeColor = Color.White;
-            this.labelUsreName.Location = new Point(200, 106);
-            this.labelUsreName.Size = new Size(326, 55);
-            this.labelUsreName.TabIndex = 0;
-            this.labelUsreName.Text = CurrentUser.Username;
-            this.labelUsreName.TextAlign = ContentAlignment.MiddleCenter;
-            this.labelUsreName.Click += new EventHandler(this.label1_Click);
-         
-            this.labelTitle.BackColor = Color.Black;
-            this.labelTitle.Font = new Font("Arial", 12F, System.Drawing.FontStyle.Bold);
-            this.labelTitle.ForeColor = Color.White;
-            this.labelTitle.Location = new Point(0, -1);
-          
-            this.labelTitle.Size = new Size(583, 90);
-            this.labelTitle.TabIndex = 3;
-            this.labelTitle.Text = "Profile User";
-            this.labelTitle.TextAlign =ContentAlignment.MiddleCenter;
-         
-            this.labelScore.BackColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.labelScore.BorderStyle = BorderStyle.Fixed3D;
-            this.labelScore.Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.labelScore.ForeColor = Color.White;
-            this.labelScore.Location = new Point(200, 181);
-           
-            this.labelScore.Size = new Size(326, 56);
-            this.labelScore.TabIndex = 2;
-            this.labelScore.Text =CurrentUser.score.ToString();
-            this.labelScore.TextAlign = ContentAlignment.MiddleCenter;
+            
 
-            this.pictureBoxUser = new PictureBox()
+
+
+            this.SuspendLayout();
+            labelUsreName = new Label()
+            {
+                BorderStyle = BorderStyle.Fixed3D,
+                Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic)))),
+                ForeColor = Color.White,
+                Location = new Point(200, 106),
+                Size = new Size(326, 55),
+                TabIndex = 0,
+                Text = "Name : " + CurrentUser.Username,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+        labelUsreName.Click += new EventHandler(label1_Click);
+
+            labelTitle = new Label() {
+        BackColor = Color.Black,
+             Font = new Font("Arial", 12F, System.Drawing.FontStyle.Bold),
+           ForeColor = Color.White,
+           Location = new Point(0, -1),
+
+           Size = new Size(583, 90),
+          TabIndex = 3,
+              Text = "Profile User",
+               TextAlign = ContentAlignment.MiddleCenter };
+            labelScore = new Label() {
+                BorderStyle = BorderStyle.Fixed3D,
+                Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic)))),
+                ForeColor = Color.White,
+                Location = new Point(200, 181),
+
+                Size = new Size(326, 56),
+                TabIndex = 2,
+                Text = "Score : " + CurrentUser.score.ToString(),
+                TextAlign = ContentAlignment.MiddleCenter };
+
+            this.pictureUser = new PictureBox()
             {
                 BorderStyle = BorderStyle.Fixed3D,
                 Location = new Point(3, 84),
@@ -106,46 +102,53 @@ namespace AdvancedProgramming.Forms
                 TabIndex = 4,
                 TabStop = false,
             };
-         UsreLoad();
+               this.panel1 = new Panel();
+ 
+            this.panel1.SuspendLayout();
+
+         
+            panel1.Location = new System.Drawing.Point(0, -7);
+            panel1.Size = new Size(583, 413);
+            panel1.TabIndex = 5;
+            labelCountry = new Label() {
+                BorderStyle = BorderStyle.Fixed3D,
+                Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic)))),
+                ForeColor = Color.White,
+                Location = new Point(200, 324),
+               Size = new Size(326, 43),
+                TabIndex = 6,
+               Text = "contry : " + CurrentUser.Country,
+               TextAlign = ContentAlignment.MiddleCenter };
 
 
-            this.panel1.Controls.Add(this.labelCountry);
-            this.panel1.Controls.Add(this.labelGender);
-            this.panel1.Controls.Add(this.pictureBoxUser);
-            this.panel1.Controls.Add(this.labelScore);
-            this.panel1.Controls.Add(this.labelUsreName);
-            this.panel1.Location = new System.Drawing.Point(0, -7);
-            this.panel1.Size = new Size(583, 413);
-            this.panel1.TabIndex = 5;
-         
-            this.labelCountry.BorderStyle = BorderStyle.Fixed3D;
-            this.labelCountry.Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.labelCountry.ForeColor = Color.White;
-            this.labelCountry.Location = new Point(200, 324);
-            this.labelCountry.Size = new Size(326, 43);
-            this.labelCountry.TabIndex = 6;
-            this.labelCountry.Text = "contry";
-            this.labelCountry.TextAlign = ContentAlignment.MiddleCenter;
-         
-            this.labelGender.BorderStyle = BorderStyle.Fixed3D;
-            this.labelGender.Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.labelGender.ForeColor = Color.White;
-            this.labelGender.Location = new Point(200, 255);
-            this.labelGender.Name = "label4";
-            this.labelGender.Size = new Size(326, 50);
-            this.labelGender.TabIndex = 5;
-            this.labelGender.Text = "gender";
-            this.labelGender.TextAlign = ContentAlignment.MiddleCenter;
-           
-            this.BackgroundImageLayout = ImageLayout.Center;
-            this.ClientSize = new Size(581, 405);
+
+            labelGender = new Label() {
+            BorderStyle = BorderStyle.Fixed3D,
+              Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic)))),
+             ForeColor = Color.White,
+             Location = new Point(200, 255),
+                Size = new Size(326, 50),
+               TabIndex = 5,
+              Text = "gender : " + CurrentUser.Gender  ,
+               TextAlign = ContentAlignment.MiddleCenter };
+
+            panel1.Controls.Add(labelCountry);
+            panel1.Controls.Add(labelGender);
+            panel1.Controls.Add(pictureUser);
+            panel1.Controls.Add(labelScore);
+            panel1.Controls.Add(labelUsreName);
             this.Controls.Add(this.labelTitle);
             this.Controls.Add(this.panel1);
-            this.FormBorderStyle =FormBorderStyle.None;
-            
+        
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.BackgroundImageLayout = ImageLayout.Center;
+            this.ClientSize = new Size(581, 405);
+
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
-           
+            UsreLoad();
+
+
         }
 
         protected override void OnResize(EventArgs e)
@@ -159,7 +162,8 @@ namespace AdvancedProgramming.Forms
             string fileName = CurrentUser.Gender == "Female" ? "Famale.jpg" : "Male.jpg";
             string imagePath = Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\..\Image\", fileName));
             if (File.Exists(imagePath))
-                pictureBoxUser.Image = Image.FromFile(imagePath);
+                pictureUser.Image = Image.FromFile(imagePath);
+            pictureUser.SizeMode = PictureBoxSizeMode.StretchImage;
         }
 
         private void label1_Click(object sender, EventArgs e)
