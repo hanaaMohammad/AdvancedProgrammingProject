@@ -12,7 +12,7 @@ namespace AdvancedProgramming.Forms
         private TableLayoutPanel GridLayoutPages;
         private Button Homepage;
         private Button UsrePage;
-        private Button Problelms;
+        private Button Problems;
         private Button IconUser;
         private Button TotorialPage;
         private Toolbar toolbar;
@@ -39,7 +39,7 @@ namespace AdvancedProgramming.Forms
             this.nameApp = new TextBox();
             this.PanleGridPage = new Panel();
             this.GridLayoutPages = new TableLayoutPanel();
-            this.Problelms = new Button();
+            this.Problems = new Button();
             this.Homepage = new Button();
             this.UsrePage = new Button();
             this.TotorialPage = new Button();
@@ -88,7 +88,7 @@ namespace AdvancedProgramming.Forms
             this.GridLayoutPages.Controls.Add(this.Homepage, 0, 0);
             this.GridLayoutPages.Controls.Add(this.UsrePage, 1, 0);
             this.GridLayoutPages.Controls.Add(this.TotorialPage, 2, 0);
-            this.GridLayoutPages.Controls.Add(this.Problelms, 3, 0);
+            this.GridLayoutPages.Controls.Add(this.Problems, 3, 0);
             this.GridLayoutPages.Location = new Point(40, 225);
             this.GridLayoutPages.Name = "GridLayoutPages";
             this.GridLayoutPages.RowCount = 1;
@@ -109,12 +109,12 @@ namespace AdvancedProgramming.Forms
 
             this.UsrePage.FlatStyle = FlatStyle.Flat;
             this.UsrePage.FlatAppearance.BorderSize = 0;
-            this.UsrePage.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
+            this.UsrePage.Font = new Font("Segoe UI", 18F, FontStyle.Regular);
             this.UsrePage.Location = new Point(246, 3);
             this.UsrePage.Name = "UsrePage";
             this.UsrePage.Size = new Size(237, 50);
             this.UsrePage.TabIndex = 1;
-            this.UsrePage.Text = "User Account";
+            this.UsrePage.Text = "👤";
             this.UsrePage.UseVisualStyleBackColor = false;
             this.UsrePage.Click += (s, e) =>
             {
@@ -133,16 +133,16 @@ namespace AdvancedProgramming.Forms
             this.TotorialPage.Text = "Tutorial";
             this.TotorialPage.UseVisualStyleBackColor = false;
 
-            this.Problelms.FlatStyle = FlatStyle.Flat;
-            this.Problelms.FlatAppearance.BorderSize = 0;
-            this.Problelms.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
-            this.Problelms.Location = new Point(732, 3);
-            this.Problelms.Name = "Problelms";
-            this.Problelms.Size = new Size(238, 50);
-            this.Problelms.TabIndex = 3;
-            this.Problelms.Text = "Problems";
-            this.Problelms.UseVisualStyleBackColor = false;
-            this.Problelms.Click += (s, e) =>
+            this.Problems.FlatStyle = FlatStyle.Flat;
+            this.Problems.FlatAppearance.BorderSize = 0;
+            this.Problems.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
+            this.Problems.Location = new Point(732, 3);
+            this.Problems.Name = "Problems";
+            this.Problems.Size = new Size(238, 50);
+            this.Problems.TabIndex = 3;
+            this.Problems.Text = "Problems";
+            this.Problems.UseVisualStyleBackColor = false;
+            this.Problems.Click += (s, e) =>
             {
                 var problem = new LevelProblemForm();
                 problem.Show();
