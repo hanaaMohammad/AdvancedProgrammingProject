@@ -5,13 +5,10 @@ namespace AdvancedProgramming.Forms
 {
     internal class ProblemDisplayForm : Form
     {
-        
-        private Panel headerPanel;
         private TextBox descriptionBox;
         private Label descriptionLabel;
         private Button solveButton;
         private Button backButton;
-        private Label feedbackLabel;
         private string problemName;
         private Toolbar toolbar;
    
@@ -25,95 +22,63 @@ namespace AdvancedProgramming.Forms
 
         private void InitializeComponent()
         {
-            this.ClientSize = new Size(755, 700);
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Name = "ProblemDetailsForm";
-
-            toolbar = new Toolbar(this, "MiniCamp Puzzle");
-            this.Controls.Add(toolbar);
-
-            headerPanel = new Panel()
+            toolbar = new Toolbar(this, problemName)
             {
-                Location = new Point(-1, 39),
-                Name = "headerPanel",
-                Size = new Size(755, 80),
-               
+                BackColor = Color.FromArgb(20, 20, 35),
+                Dock = DockStyle.Top,
+                ForeColor = Color.White,
+                Location = new Point(0, 0),
+                Size = new Size(1343, 40),
+                TabIndex = 0
+            };
+            this.toolbar.Paint += new PaintEventHandler(this.toolbar_Paint);
+
+            this.descriptionLabel = new Label()
+            {
+                Location = new Point(0, 0),
+                Size = new Size(100, 23),
+                TabIndex = 2
             };
 
+            this.descriptionBox = new TextBox()
+            {
+                Location = new Point(0, 0),
+                Size = new Size(100, 26),
+                TabIndex = 3
+            };
+
+         
+            this.solveButton = new Button()
+            {
+                Location = new Point(0, 0),
            
-
-
-            descriptionLabel = new Label()
-            {
-                AutoSize = true,
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Location = new Point(50, 140),
-                Size = new Size(150, 25),
-             
-                Text = "Description:"
+                Size = new Size(75, 23),
+                TabIndex = 4
             };
 
-            descriptionBox = new TextBox()
+       
+            this.backButton = new Button()
             {
-                BorderStyle = BorderStyle.FixedSingle,
-                Font = new Font("Segoe UI", 11F),
-                Location = new Point(50, 175),
-                Multiline = true,
-      
-                ReadOnly = true,
-                Size = new Size(650, 180),
-              
-                Text = "",
-                ScrollBars = ScrollBars.Vertical
+                Location = new Point(0, 0),
+           
+                Size = new Size(75, 23),
+                TabIndex = 5
             };
-
+            this.backButton.Click += new System.EventHandler(this.backButton_Click);
+         
+            this.ClientSize = new System.Drawing.Size(1343, 713);
+            this.Controls.Add(this.toolbar);
+            this.Controls.Add(this.descriptionLabel);
+            this.Controls.Add(this.descriptionBox);
+            this.Controls.Add(this.solveButton);
+            this.Controls.Add(this.backButton);
           
-            solveButton = new Button()
-            {
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Location = new Point(317, 520),
-               
-                Size = new Size(120, 45),
-                TabIndex = 1,
-                Text = "Solve",
-                UseVisualStyleBackColor = false
-            };
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+   
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
-            backButton = new Button()
-            {
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Location = new Point(317, 580),
-                Size = new Size(120, 45),
-                TabIndex = 2,
-                Text = "Back",
-                UseVisualStyleBackColor = false
-            };
-            backButton.Click += new EventHandler(this.backButton_Click);
-//???
-            feedbackLabel = new Label()
-            {
-                AutoSize = true,
-                Font = new Font("Segoe UI", 14F, FontStyle.Italic),
-                ForeColor = Color.LightGreen,
-                Location = new Point(50, 650),
-                Size = new Size(0, 25),
-                TabIndex = 7,
-                Text = ""
-            };
-
-
-            this.Controls.Add(headerPanel);
-            this.Controls.Add(descriptionLabel);
-            this.Controls.Add(descriptionBox);
-            
-            this.Controls.Add(solveButton);
-            this.Controls.Add(backButton);
-            this.Controls.Add(feedbackLabel);
-
-            Theme.Apply(this);
-
-           
         }
 
         protected override void OnResize(EventArgs e)
@@ -125,6 +90,11 @@ namespace AdvancedProgramming.Forms
         private void backButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void toolbar_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
