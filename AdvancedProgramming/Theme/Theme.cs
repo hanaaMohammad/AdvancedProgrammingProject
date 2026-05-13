@@ -5,12 +5,6 @@ namespace AdvancedProgramming
 {
     public static class Theme
     {
-        static Theme()
-        {
-            // Initialize with default theme
-            CurrentThemeType = ThemeType.Dark;
-            Current = new DarkTheme();
-        }
         public static ThemeType CurrentThemeType { get; private set; } = ThemeType.Dark;
         public static ITheme Current { get; private set; } = new DarkTheme();
 

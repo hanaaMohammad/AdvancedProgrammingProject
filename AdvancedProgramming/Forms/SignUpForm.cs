@@ -29,13 +29,6 @@ namespace AdvancedProgramming
         {
             InitializeSignUpComponents();
             this.FormBorderStyle = FormBorderStyle.None;
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            if (DesignMode) return;
-
             toolbar = new Toolbar(this, "Sign Up");
             this.Controls.Add(toolbar);
             Theme.Apply(this);

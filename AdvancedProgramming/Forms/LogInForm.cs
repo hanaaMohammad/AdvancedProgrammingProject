@@ -17,20 +17,12 @@ namespace AdvancedProgramming.Forms
         private bool passwordVasibilty = false;
         private Label Massage;
         private Toolbar toolbar;
+        private HomeFarme homeFarme;
+        
 
         public LogInForm()
         {
             InitializeLogInComponents();
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            if (DesignMode) return;
-
-            toolbar = new Toolbar(this, "Log In");
-            this.Controls.Add(toolbar);
-            Theme.Apply(this);
         }
 
         private void InitializeLogInComponents()
@@ -40,6 +32,11 @@ namespace AdvancedProgramming.Forms
             this.FormBorderStyle = FormBorderStyle.None;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.homeFarme = new HomeFarme();
+
+            // Add toolbar
+            toolbar = new Toolbar(this, "Log In");
+            this.Controls.Add(toolbar);
 
             // Adjust controls position to account for toolbar (toolbar height is 40)
             var userNameLabel = new Label { Text = "Username:", Location = new Point(30, 70), Size = new Size(100, 20) };
@@ -74,6 +71,9 @@ namespace AdvancedProgramming.Forms
             };
             btnHome.Click += (s, e) => this.Close();
             Controls.Add(btnHome);
+
+            // Apply theme
+            Theme.Apply(this);
         }
 
         private void PasswordTaggel_Click(object sender, EventArgs e)
@@ -109,7 +109,6 @@ namespace AdvancedProgramming.Forms
                 var details = user.GetUserDetails(username);
                 CurrentUser.Country = details.Country;
                 CurrentUser.Gender = details.Gender;
-                var homeFarme = new HomeFarme();
                 homeFarme.Show();
                 this.Close();
              
