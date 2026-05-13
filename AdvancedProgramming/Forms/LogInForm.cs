@@ -128,16 +128,6 @@ namespace AdvancedProgramming.Forms
                 toolbar.UpdateTheme();
         }
 
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // LogInForm
-            // 
-            this.ClientSize = new System.Drawing.Size(248, 253);
-            this.Name = "LogInForm";
-            this.ResumeLayout(false);
-
-        }
+      
     }
 }
