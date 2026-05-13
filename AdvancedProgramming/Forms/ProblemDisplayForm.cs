@@ -1,3 +1,4 @@
+using AdvancedProgramming.ProblemClasses;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -11,7 +12,8 @@ namespace AdvancedProgramming.Forms
         private Button backButton;
         private string problemName;
         private Toolbar toolbar;
-   
+        private Problem problemChoice;
+
 
 
         public ProblemDisplayForm(string problem)
@@ -32,6 +34,7 @@ namespace AdvancedProgramming.Forms
                 TabIndex = 0
             };
             this.toolbar.Paint += new PaintEventHandler(this.toolbar_Paint);
+            GetProblemDetails();
 
             this.descriptionLabel = new Label()
             {
@@ -95,6 +98,12 @@ namespace AdvancedProgramming.Forms
         private void toolbar_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+        private void GetProblemDetails()
+        {
+            ProbleLoadReadJs problemLoader = new ProbleLoadReadJs();
+            this.problemChoice = problemLoader.getProblemByName(problemName);
+            
         }
     }
 }
