@@ -1,0 +1,450 @@
+
+  [
+  
+      {
+        "title": "Program to Print Full Pyramid Pattern (Star Pattern)",
+        "description": "Given an integer N, the task is to print a full pyramid pattern with N rows. In this pattern \n each row contains an odd number of stars, ranging from 1 star in the first row to (2 * N - 1) stars in the Nth row /n All the stars are center-aligned.",
+        "Input ": "N = integer type 1 <= N <= 10",
+        "Output": "A full pyramid pattern of stars with N rows.",
+        "Example": { "Input": "N = 5\n ","Output": "" , "explanation": "Each row increases stars by 2 and is centered." },
+        "type": "pattren",
+        "level": "easy",
+        "TestCase": [
+          {
+            "input": "3",
+            "output": " *\n ***\n*****"
+          },
+          {
+            "input": "4",
+            "output": " *\n ***\n *****\n*******"
+          }
+        ],
+        "Constraints": "1 <= N <= 10"
+      
+      },
+      {
+        "title": "Program to find if a character is vowel or Consonant",
+        "description": "Given a character, determine if it is a vowel or a consonant.",
+        "type": "String",
+        "level": "easy",
+        "Constraints": "",
+        "input": "string ",
+        "output": "Boolean",
+        "Example": {
+          "input": "a",
+          "output": "vowel",
+          "explanation": "a is a vowel letter."
+        },
+        "TestCase": [
+          {
+            "input": "A",
+            "output": true
+          },
+          {
+            "input": "a",
+            "output": true
+          },
+          {
+            "input": "B",
+            "output": false
+          },
+          {
+            "input": "b",
+            "output": false
+          },
+          {
+            "input": "C",
+            "output": false
+          },
+          {
+            "input": "c",
+            "output": false
+          },
+          {
+            "input": "D",
+            "output": false
+          },
+          {
+            "input": "d",
+            "output": false
+          },
+          {
+            "input": "E",
+            "output": true
+          },
+          {
+            "input": "e",
+            "output": true
+          },
+          {
+            "input": "F",
+            "output": false
+          },
+          {
+            "input": "f",
+            "output": false
+          },
+          {
+            "input": "G",
+            "output": false
+          },
+          {
+            "input": "g",
+            "output": false
+          },
+          {
+            "input": "H",
+            "output": false
+          },
+          {
+            "input": "h",
+            "output": false
+          },
+          {
+            "input": "I",
+            "output": true
+          },
+          {
+            "input": "i",
+            "output": true
+          },
+          {
+            "input": "J",
+            "output": false
+          },
+          {
+            "input": "j",
+            "output": false
+          },
+          {
+            "input": "K",
+            "output": false
+          },
+          {
+            "input": "k",
+            "output": false
+          },
+          {
+            "input": "L",
+            "output": false
+          },
+          {
+            "input": "l",
+            "output": false
+          },
+          {
+            "input": "M",
+            "output": false
+          },
+          {
+            "input": "m",
+            "output": false
+          },
+          {
+            "input": "N",
+            "output": false
+          },
+          {
+            "input": "n",
+            "output": false
+          },
+          {
+            "input": "O",
+            "output": true
+          },
+          {
+            "input": "o",
+            "output": true
+          },
+          {
+            "input": "P",
+            "output": false
+          },
+          {
+            "input": "p",
+            "output": false
+          },
+          {
+            "input": "Q",
+            "output": false
+          },
+          {
+            "input": "q",
+            "output": false
+          },
+          {
+            "input": "R",
+            "output": false
+          },
+          {
+            "input": "r",
+            "output": false
+          },
+          {
+            "input": "S",
+            "output": false
+          },
+          {
+            "input": "s",
+            "output": false
+          },
+          {
+            "input": "T",
+            "output": false
+          },
+          {
+            "input": "t",
+            "output": false
+          },
+          {
+            "input": "U",
+            "output": true
+          },
+          {
+            "input": "u",
+            "output": true
+          },
+          {
+            "input": "V",
+            "output": false
+          },
+          {
+            "input": "v",
+            "output": false
+          },
+          {
+            "input": "W",
+            "output": false
+          },
+          {
+            "input": "w",
+            "output": false
+          },
+          {
+            "input": "X",
+            "output": false
+          },
+          {
+            "input": "x",
+            "output": false
+          },
+          {
+            "input": "Y",
+            "output": false
+          },
+          {
+            "input": "y",
+            "output": false
+          },
+          {
+            "input": "Z",
+            "output": false
+          },
+          {
+            "input": "z",
+            "output": false
+          }
+        ]
+      },
+
+      {
+        "title": "Print Fibonacci Series",
+        "description": "Print the Fibonacci series up to a given number of terms.",
+        "type": "Math",
+        "level": "easy",
+        "Example": {
+          "input": "5",
+          "output": "0 1 1 2 3",
+          "explanation": "Start from 0 and 1, each next number is sum of previous two."
+        },
+        "TestCase": [
+          {
+            "input": "1",
+            "output": "0"
+          },
+          {
+            "input": "2",
+            "output": "0 1"
+          },
+          {
+            "input": "3",
+            "output": "0 1 1 "
+          },
+          {
+            "input": "4",
+            "output": "0 1 1 2"
+          },
+          {
+            "input": "5",
+            "output": "0 1 1 2 3"
+          },
+          {
+            "input": "6",
+            "output": "0 1 1 2 3 5"
+          },
+          {
+            "input": "7",
+            "output": "0 1 1 2 3 5 8"
+          },
+          {
+            "input": "8",
+            "output": "0 1 1 2 3 5 8 13"
+          },
+          {
+            "input": "9",
+            "output": "0 1 1 2 3 5 8 13 21"
+          },
+          {
+            "input": "10",
+            "output": "0 1 1 2 3 5 8 13 21 34"
+          }
+        ],
+        "Constraints": "1 <= N <= 10"
+      }
+   ,
+
+  
+      {
+        "Title": "Floor in a Sorted Array",
+        "description": "Find the floor of a given number in a sorted array.",
+        "input": "N: size of array , array element , target number X ",
+        "output": "The floor of X in the array, or -1 if it does not exist.",
+        "Example": {
+          "input": "7\n1 2 8 10 10 12 19\n5",
+          "output": "1",
+          "explanation": "The floor of 5 is 2, which is the largest number less than or equal to 5 in the array."
+        },
+        "type": "array",
+        "Constraints": "Array size ( 1 _ to 10 elements) ",
+        "TestCases": [
+          {
+            "input": "1 2 8 10 10 12 19 | 5",
+            "output": "1"
+          },
+          {
+            "input": "1 2 8 10 10 12 19 | 11",
+            "output": "4"
+          },
+          {
+            "input": "1 2 8 10 10 12 19 | 0",
+            "output": "-1"
+          }
+        ]
+      },
+      {
+        "title": "Move All Zeroes to End",
+        "description": "Move all zeroes to the end of the array while maintaining the relative order of non-zero elements.",
+        "type": "array",
+        "Constraints": "Array size ( 1 _ to 10 elements) ",
+        "level": "medium",
+        "Example": {
+          "input": "1 2 0 4 3 0 5 0",
+          "output": "1 2 4 3 5 0 0 0",
+          "explanation": "All zeros are moved to the end while keeping other elements in order."
+        },
+        "Test Cases": [
+          {
+            "input": "1 2 0 4 3 0 5 0",
+            "output": "1 2 4 3 5 0 0 0"
+          },
+          {
+            "input": "10 20 30",
+            "output": "10 20 30"
+          },
+          {
+            "input": "0 0",
+            "output": "0 0"
+          }
+        ]
+      },
+      {
+        "title": "T-primes",
+        "description": "Find all T-primes in a given range.",
+        "type": "number theory",
+        "Constraints": "Range size (1 to 10)",
+        "level": "medium",
+        "Example": {
+          "input": "1 10",
+          "output": "4 9",
+          "explanation": "T-primes are numbers that are squares of prime numbers. In the range 1 to 10, the T-primes are 4 (2^2) and 9 (3^2)."
+        },
+        "input": "Range of numbers (start and end) , maximum number in the range 10 ",
+        "output": "All T-primes within the specified range.",
+        "TestCases": [
+          {
+            "input": "1 10",
+            "output": "2 3 5 7"
+          },
+          {
+            "input": "2 5",
+            "output": "2 3 5"
+          },
+          {
+            "input": "6 10",
+            "output": "7"
+          },
+          {
+            "input": "8 10",
+            "output": ""
+          }
+        ]
+      }
+    ,
+   
+      {
+        "title": "Happy Number",
+        "description": "Determine if a number is a happy number.",
+        "type": "math",
+        "Constraints": "Number range (1 to 10)",
+        "level": "hard",
+        "Example": {
+          "input": "19",
+          "output": "true",
+          "explanation": "19 → 1² + 9² = 82 → 8² + 2² = 68 → ... → 1 so it's happy."
+        },
+        "TestCases": [
+          {
+            "input": "19",
+            "output": "true"
+          },
+          {
+            "input": "2",
+            "output": "false"
+          },
+          {
+            "input": "7",
+            "output": "true"
+          }
+        ]
+      },
+      {
+        "title": "Lucky Numbers in a Matrix",
+        "description": "Find all lucky numbers in a given matrix.",
+        "type": "matrix",
+        "Constraints": "Matrix size max 3x3 for simplicity",
+        "level": "hard",
+        "Example": {
+          "input": "[[3,7,8],[9,11,13],[15,16,17]]",
+          "output": "15",
+          "explanation": "15 is smallest in its row and largest in its column."
+        },
+        "TestCases": [
+          {
+            "input": "[[3,7,8],[9,11,13],[15,16,17]]",
+            "output": "15"
+          },
+          {
+            "input": "[[1,10,4],[9,3,8],[15,16,17]]",
+            "output": "12"
+          },
+          {
+            "input": "[[5]]",
+            "output": "5"
+          }
+        ]
+      }
+    
+
+
+  ]
+

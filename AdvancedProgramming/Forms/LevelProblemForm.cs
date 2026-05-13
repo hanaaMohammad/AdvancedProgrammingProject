@@ -207,9 +207,8 @@ namespace AdvancedProgramming.Forms
         {
             currentDifficulty = "Hard";
             comboBox1.Items.Clear();
-            comboBox1.Items.Add("Floor in a Sorted Array");
-            comboBox1.Items.Add("Move All Zeroes to End");
-            comboBox1.Items.Add("T-primes");
+            comboBox1.Items.Add("Happy Number");
+            comboBox1.Items.Add("Lucky Numbers in a Matrix");
             comboBox1.Visible = true;
 
         }

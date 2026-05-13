@@ -5,7 +5,7 @@ namespace AdvancedProgramming.Forms
 {
     internal class ProblemDisplayForm : Form
     {
-        private Label headerLabel;
+        
         private Panel headerPanel;
         private TextBox descriptionBox;
         private Label descriptionLabel;
@@ -41,15 +41,7 @@ namespace AdvancedProgramming.Forms
                
             };
 
-            headerLabel = new Label()
-            {
-                Font = new Font("Segoe UI", 16.2F, FontStyle.Bold),
-                Location = new Point(0, 15),
-                Size = new Size(755, 50),
-            
-                Text = problemName,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
+           
 
 
             descriptionLabel = new Label()
@@ -110,7 +102,6 @@ namespace AdvancedProgramming.Forms
                 Text = ""
             };
 
-            headerPanel.Controls.Add(headerLabel);
 
             this.Controls.Add(headerPanel);
             this.Controls.Add(descriptionLabel);
