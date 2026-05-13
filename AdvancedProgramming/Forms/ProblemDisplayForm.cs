@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 namespace AdvancedProgramming.Forms
 {
-    internal class ProblemDisplay : Form
+    internal class ProblemDisplayForm : Form
     {
         private Label headerLabel;
         private Panel headerPanel;
@@ -17,7 +17,7 @@ namespace AdvancedProgramming.Forms
    
 
 
-        public ProblemDisplay(string problem)
+        public ProblemDisplayForm(string problem)
         {
             this.problemName = problem;
             InitializeComponent();

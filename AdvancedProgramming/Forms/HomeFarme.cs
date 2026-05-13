@@ -144,7 +144,7 @@ namespace AdvancedProgramming.Forms
             this.Problelms.UseVisualStyleBackColor = false;
             this.Problelms.Click += (s, e) =>
             {
-                var problem = new ProblemForm();
+                var problem = new LevelProblemForm();
                 problem.Show();
                 this.Hide();
             };

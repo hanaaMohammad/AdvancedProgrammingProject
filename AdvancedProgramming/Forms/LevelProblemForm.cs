@@ -9,7 +9,7 @@ using System.Drawing;
 
 namespace AdvancedProgramming.Forms
 {
-    internal class ProblemForm : Form
+    internal class LevelProblemForm : Form
     {
         private Label label2;
         private Button button1;
@@ -24,7 +24,7 @@ namespace AdvancedProgramming.Forms
         private Label ColorGreen;
         private Label ColorYellow;
 
-        public ProblemForm()
+        public LevelProblemForm()
         {
             InitializeComponent();
         }
@@ -241,7 +241,7 @@ namespace AdvancedProgramming.Forms
 
             string problem = comboBox1.SelectedItem.ToString();
 
-            ProblemDetailsForm form = new ProblemDetailsForm(problem);
+            ProblemDisplayForm form = new ProblemDisplayForm(problem);
             form.Show();
         }
         }

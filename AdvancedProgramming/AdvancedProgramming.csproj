@@ -81,7 +81,7 @@
     <Compile Include="Forms\ProblemForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ProblemDetailsForm.cs">
+    <Compile Include="Forms\ProblemDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\StartupForm.cs">
@@ -115,8 +115,8 @@
     <EmbeddedResource Include="Forms\ProblemForm.resx">
       <DependentUpon>ProblemForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ProblemDetailsForm.resx">
-      <DependentUpon>ProblemDetailsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ProblemDisplay.resx">
+      <DependentUpon>ProblemDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StartupForm.resx">
       <DependentUpon>StartupForm.cs</DependentUpon>
