@@ -22,6 +22,16 @@ namespace AdvancedProgramming.Forms
             InitializeComponent();
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (DesignMode) return;
+
+            toolbar = new Toolbar(this, "MiniCamp Puzzle");
+            this.Controls.Add(toolbar);
+            Theme.Apply(this);
+        }
+
         private void InitializeComponent()
         {
             this.Text = "Home Page";
@@ -30,9 +40,6 @@ namespace AdvancedProgramming.Forms
             this.StartPosition = FormStartPosition.CenterScreen;
             
             this.ClientSize = new Size(1053, 829);
-
-            toolbar = new Toolbar(this, "MiniCamp Puzzle");
-            this.Controls.Add(toolbar);
 
             this.panelTextNameApp = new Panel();
             this.IconUser = new Button();
@@ -157,8 +164,6 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(this.panelTextNameApp);
             this.Controls.Add(this.GridLayoutPages);
             this.Controls.Add(this.PanleGridPage);
-
-            Theme.Apply(this);
 
             this.panelTextNameApp.ResumeLayout(false);
             this.panelTextNameApp.PerformLayout();

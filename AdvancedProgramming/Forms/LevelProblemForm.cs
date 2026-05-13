@@ -29,6 +29,16 @@ namespace AdvancedProgramming.Forms
             InitializeComponent();
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (DesignMode) return;
+
+            toolbar = new Toolbar(this, "MiniCamp Puzzle");
+            this.Controls.Add(toolbar);
+            Theme.Apply(this);
+        }
+
         private void InitializeComponent()
         {
             this.label1 = new Label();
@@ -40,9 +50,6 @@ namespace AdvancedProgramming.Forms
             this.SuspendLayout();
 
             this.ClientSize = new Size(755, 619);
-
-            toolbar = new Toolbar(this, "MiniCamp Puzzle");
-            this.Controls.Add(toolbar);
 
             this.label1.Font = new Font("Segoe UI", 16.2F, System.Drawing.FontStyle.Bold);
             this.label1.Location = new Point(-1, 39);
@@ -156,9 +163,6 @@ namespace AdvancedProgramming.Forms
          
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
-       
-
-            Theme.Apply(this);
             ColorRed.ForeColor = Color.Red;
             ColorGreen.ForeColor = Color.Green;
             ColorYellow.ForeColor = Color.Yellow;

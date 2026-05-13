@@ -21,14 +21,19 @@ namespace AdvancedProgramming
         public StartupForm()
         {
             InitializeComponent();
-            DatabaseManager.InitializeDatabase();
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.ClientSize = new Size(850, 520);
+        }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (DesignMode) return;
+
+            DatabaseManager.InitializeDatabase();
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
-
             InitializeSplashScreen();
             Theme.Apply(this);
             ApplyCustomStyles();

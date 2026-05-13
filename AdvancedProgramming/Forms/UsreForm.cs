@@ -25,6 +25,13 @@ namespace AdvancedProgramming.Forms
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (DesignMode) return;
+
             labelUsreName.TextAlign = ContentAlignment.MiddleCenter;
             labelTitle.TextAlign = ContentAlignment.MiddleCenter;
             labelScore.TextAlign = ContentAlignment.MiddleCenter;
@@ -32,6 +39,7 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(toolbar);
             AddHomeButton();
             Theme.Apply(this);
+            UsreLoad();
         }
 
         private void AddHomeButton()
@@ -146,9 +154,6 @@ namespace AdvancedProgramming.Forms
 
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
-            UsreLoad();
-
-
         }
 
         protected override void OnResize(EventArgs e)
