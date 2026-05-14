@@ -19,6 +19,9 @@ namespace AdvancedProgramming.Forms
         private List<TestCase> testCases;
         private List<Panel> panels= new List<Panel>();
         private int currentTestCaseInde = 0;
+        private Toolbar toolbar;
+        private Button backButton;
+
         public Faild(string name)
         {
             
@@ -39,9 +42,21 @@ namespace AdvancedProgramming.Forms
             ((System.ComponentModel.ISupportInitialize)(this.GameOver)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.SuspendLayout();
-            // 
+
+            toolbar = new Toolbar(this, "MiniCamp Puzzle");
+            this.Controls.Add(toolbar);
+
+            backButton = new Button
+            {
+                Text = "Back",
+                Location = new Point(41, 600),
+                Size = new Size(90, 40),
+                FlatStyle = FlatStyle.Flat,
+            };
+            backButton.Click += (s, e) => this.Close();
+            this.Controls.Add(backButton);
+
             // GameOver
-            // 
             this.GameOver.Location = new System.Drawing.Point(41, 34);
             this.GameOver.Name = "GameOver";
             this.GameOver.Size = new System.Drawing.Size(523, 258);
@@ -49,18 +64,18 @@ namespace AdvancedProgramming.Forms
             this.GameOver.TabIndex = 0;
             this.GameOver.TabStop = false;
             this.GameOver.Click += new System.EventHandler(this.GameOver_Click);
-            // 
+
             // trackBar2
-            // 
             this.trackBar2.Location = new System.Drawing.Point(26, 333);
             this.trackBar2.Name = "trackBar2";
             this.trackBar2.Size = new System.Drawing.Size(590, 69);
             this.trackBar2.TabIndex = 1;
-            // 
+
             // Faild
-            // 
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(863, 802);
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.Controls.Add(this.trackBar2);
             this.Controls.Add(this.GameOver);
             this.Name = "Faild";
@@ -69,7 +84,15 @@ namespace AdvancedProgramming.Forms
             this.ResumeLayout(false);
             this.PerformLayout();
 
+            Theme.Apply(this);
         }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            toolbar?.UpdateTheme();
+        }
+
         private void InitalProblem(string name)
 
         {
@@ -111,7 +134,7 @@ namespace AdvancedProgramming.Forms
                 this.Controls.Add(panel);
                 panels.Add(panel);
 
-              
+               
 
             }
             timer2.Interval = 10;
@@ -128,10 +151,9 @@ namespace AdvancedProgramming.Forms
 
 
 
-
             }
             
-         
+          
             Panel panell= panels[currentTestCaseInde];
             if (panell.Top < 100)
                 panell.Top += 5;
