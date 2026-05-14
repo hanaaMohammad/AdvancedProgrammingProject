@@ -70,16 +70,5 @@ namespace AdvancedProgramming.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap pngtree_checkmark_or_tick_mark_approval_choice_selection_acceptance_right_correct_positive_png_image_38063721 {
-            get {
-                object obj = ResourceManager.GetObject("pngtree-checkmark-or-tick-mark-approval-choice-selection-acceptance-right-correct" +
-                        "-positive-png-image_38063721", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }

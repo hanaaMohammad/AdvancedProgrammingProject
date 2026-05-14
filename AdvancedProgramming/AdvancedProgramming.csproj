@@ -101,6 +101,11 @@
     <Compile Include="ProblemClasses\ProbleLoadReadJs.cs" />
     <Compile Include="ProblemClasses\Problem.cs" />
     <Compile Include="ProblemClasses\TestCase.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Session\CurrentUser.cs" />
     <Compile Include="Theme\ITheme.cs" />
     <Compile Include="Theme\DarkTheme.cs" />
@@ -137,14 +142,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="Forms\SignUpForm.resx">
       <DependentUpon>SignUpForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -182,6 +182,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\pngtree-checkmark-or-tick-mark-approval-choice-selection-acceptance-right-correct-positive-png-image_3806372.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pngtree-checkmark-or-tick-mark-approval-choice-selection-acceptance-right-correct-positive-png-image_38063722.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\3e566924-568c-463b-ad32-307b14c944d5.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\pngtree-checkmark-or-tick-mark-approval-choice-selection-acceptance-right-correct-positive-png-image_38063721.jpg" />
