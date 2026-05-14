@@ -79,6 +79,9 @@
     <Compile Include="Forms\AxpectedForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Faild.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\HomeFarme.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +122,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\AxpectedForm.resx">
       <DependentUpon>AxpectedForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Faild.resx">
+      <DependentUpon>Faild.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\HomeFarme.resx">
       <DependentUpon>HomeFarme.cs</DependentUpon>
