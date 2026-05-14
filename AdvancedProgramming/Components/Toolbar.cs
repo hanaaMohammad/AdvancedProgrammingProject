@@ -8,34 +8,38 @@ namespace AdvancedProgramming
     {
         private ContextMenuStrip themeMenu;
         private Button btnGear;
+        private Button btnClose;
+        private Label titleLabel;
         private Form parentForm;
         private Point dragOffset;
 
         public Toolbar(Form form, string title)
         {
             parentForm = form;
-            this.Height = 40;
+            this.Height = 55;
             this.Dock = DockStyle.Top;
             this.BackColor = Theme.Current.ControlBackColor;
             this.ForeColor = Theme.Current.TextColor;
 
-            var titleLabel = new Label
+            titleLabel = new Label
             {
                 Text = title,
-                Location = new Point(10, 10),
-                Size = new Size(200, 20),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold),
                 ForeColor = Theme.Current.TextColor,
                 BackColor = Color.Transparent
             };
+            titleLabel.Location = new Point((this.Width - titleLabel.Width) / 2, (this.Height - titleLabel.Height) / 2);
 
             btnGear = new Button
             {
                 Text = "⚙",
-                Location = new Point(form.Width - 70, 5),
-                Size = new Size(30, 30),
+                Location = new Point(form.Width - 80, 10),
+                Size = new Size(35, 35),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.Transparent,
-                ForeColor = Theme.Current.TextColor
+                ForeColor = Theme.Current.TextColor,
+                Anchor = AnchorStyles.Top | AnchorStyles.Right
             };
             btnGear.FlatAppearance.BorderSize = 0;
             btnGear.Click += BtnGear_Click;
@@ -48,14 +52,15 @@ namespace AdvancedProgramming
             darkItem.Click += (s, e) => { Theme.SetTheme(form, ThemeType.Dark); btnGear.ForeColor = Color.White; };
             lightItem.Click += (s, e) => { Theme.SetTheme(form, ThemeType.Light); btnGear.ForeColor = Color.Black; };
 
-            var btnClose = new Button
+            btnClose = new Button
             {
                 Text = "✕",
-                Location = new Point(form.Width - 35, 5),
-                Size = new Size(30, 30),
+                Location = new Point(form.Width - 40, 10),
+                Size = new Size(35, 35),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.Transparent,
-                ForeColor = Theme.Current.TextColor
+                ForeColor = Theme.Current.TextColor,
+                Anchor = AnchorStyles.Top | AnchorStyles.Right
             };
             btnClose.FlatAppearance.BorderSize = 0;
             btnClose.Click += (s, e) => form.Close();
@@ -63,6 +68,8 @@ namespace AdvancedProgramming
             this.Controls.Add(titleLabel);
             this.Controls.Add(btnGear);
             this.Controls.Add(btnClose);
+
+            this.Resize += (s, e) => RepositionTitle();
 
             this.MouseDown += (s, e) =>
             {
@@ -80,6 +87,11 @@ namespace AdvancedProgramming
             };
         }
 
+        private void RepositionTitle()
+        {
+            titleLabel.Location = new Point((this.Width - titleLabel.Width) / 2, (this.Height - titleLabel.Height) / 2);
+        }
+
         private void BtnGear_Click(object sender, EventArgs e)
         {
             themeMenu.Show(Cursor.Position);
@@ -91,14 +103,10 @@ namespace AdvancedProgramming
             this.ForeColor = Theme.Current.TextColor;
             themeMenu.BackColor = Theme.Current.ControlBackColor;
             themeMenu.ForeColor = Theme.Current.TextColor;
-            foreach (Control c in this.Controls)
-            {
-                if (c is Label) c.ForeColor = Theme.Current.TextColor;
-                if (c is Button btn && btn.Text == "⚙")
-                    btn.ForeColor = Theme.CurrentThemeType == ThemeType.Dark ? Color.White : Color.Black;
-                if (c is Button btn2 && btn2.Text == "✕")
-                    btn2.ForeColor = Theme.Current.TextColor;
-            }
+            titleLabel.ForeColor = Theme.Current.TextColor;
+            btnGear.ForeColor = Theme.CurrentThemeType == ThemeType.Dark ? Color.White : Color.Black;
+            btnClose.ForeColor = Theme.Current.TextColor;
+            RepositionTitle();
         }
     }
 }

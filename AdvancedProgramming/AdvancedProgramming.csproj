@@ -71,6 +71,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\PanelStars.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\UserManagement.cs" />
     <Compile Include="Forms\AxpectedForm.cs">
@@ -98,7 +101,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ProblemClasses\Example.cs" />
-    <Compile Include="ProblemClasses\ProbleLoadReadJs.cs" />
+    <Compile Include="ProblemClasses\ProblemLoadReadJs.cs" />
     <Compile Include="ProblemClasses\Problem.cs" />
     <Compile Include="ProblemClasses\TestCase.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -148,7 +151,9 @@
     <EmbeddedResource Include="Forms\SignUpForm.resx">
       <DependentUpon>SignUpForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="ProblemClasses\ProblemJs.json" />
+    <None Include="ProblemClasses\ProblemJs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
