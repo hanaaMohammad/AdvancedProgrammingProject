@@ -25,6 +25,7 @@ namespace AdvancedProgramming.Forms
         private TextBox InputExam;
         private TextBox OutputExam;
         private TextBox explation;
+        private Panel DrawPanel;
 
         public ProblemDisplayForm(string problem)
         {
@@ -212,8 +213,11 @@ namespace AdvancedProgramming.Forms
             RightPanel.Controls.Add(labelExplanation);
             RightPanel.Controls.Add(explation);
 
+            PaintStars();
+
             tableLayoutPanel.Controls.Add(LeftPanel, 0, 0);
             tableLayoutPanel.Controls.Add(RightPanel, 1, 0);
+            
 
             solveButton = new Button()
             {
@@ -298,6 +302,31 @@ namespace AdvancedProgramming.Forms
         {
             ProblemLoadReadJs problemLoader = new ProblemLoadReadJs();
             this.problemChoice = problemLoader.getProblemByName(problemName);
+        }
+        private void PaintStars()
+        {
+            Components.PanelStars panelStars = new Components.PanelStars();
+            panelStars.Location = new Point(10, 185);
+            panelStars.Width = 490;
+            panelStars.Height = 80;
+            if (this.problemChoice.type == "pattren")
+            {
+                OutputExam.Visible = false;
+                panelStars.Visible = true;
+            }
+            else
+            {
+                OutputExam.Visible = true;
+                panelStars.Visible = false;
+            }
+            RightPanel.Controls.Add(panelStars);
+            panelStars.BringToFront();
+            panelStars.Invalidate();
+
+
+
+
+
         }
     }
 }

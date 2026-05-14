@@ -71,6 +71,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\PanelStars.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\UserManagement.cs" />
     <Compile Include="Forms\AxpectedForm.cs">

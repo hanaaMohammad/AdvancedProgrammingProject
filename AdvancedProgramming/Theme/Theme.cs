@@ -92,6 +92,7 @@ namespace AdvancedProgramming
                         break;
 
                     case Panel pnl:
+                        if (pnl is Components.PanelStars) break;
                         pnl.BackColor = Current.ControlBackColor;
                         break;
 
