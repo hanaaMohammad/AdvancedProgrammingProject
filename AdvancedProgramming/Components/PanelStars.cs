@@ -10,8 +10,7 @@ namespace AdvancedProgramming.Components
 
         public PanelStars()
         {
-            this.Size = new Size(490, 150);
-            this.BackColor = Color.DarkCyan;
+            this.BackColor = Color.Black;
             InitializeStar();
         }
 
@@ -41,9 +40,9 @@ namespace AdvancedProgramming.Components
         private void DrawTriangleStars(Graphics g)
         {
             int rows = 5;
-            int starSize = 14;
+            int starSize = 20;
             int startX = this.Width / 2;
-            int startY = 4;
+            int startY = 10;
 
             for (int i = 0; i < rows; i++)
             {
@@ -60,8 +59,8 @@ namespace AdvancedProgramming.Components
                             (int)(y + star[l].Y)
                         );
                     }
-                    g.FillPolygon(Brushes.DimGray, copy);
-                    g.DrawPolygon(Pens.DarkCyan, copy);
+                    g.FillPolygon(Brushes.OliveDrab, copy);
+                    g.DrawPolygon(Pens.DarkOliveGreen, copy);
                 }
             }
         }
