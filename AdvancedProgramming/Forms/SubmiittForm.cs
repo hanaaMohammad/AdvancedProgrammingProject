@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using AdvancedProgramming.Service;
+using AdvancedProgramming.ProblemClasses;
 
 namespace AdvancedProgramming.Forms
 {
@@ -79,7 +81,7 @@ namespace AdvancedProgramming.Forms
                 Location = new Point(120, 150),
                 FlatStyle = FlatStyle.Flat,
             };
-       
+        
             comboBoxTybeLang.Items.Add("C++");
             comboBoxTybeLang.Items.Add("Java");
             comboBoxTybeLang.SelectedIndex = 0;
@@ -130,7 +132,50 @@ namespace AdvancedProgramming.Forms
         }
         private void buttonRun_Click(object sender, EventArgs e)
         {
+            string code = textBoxCode.Text;
+            string language = comboBoxTybeLang.SelectedItem.ToString();
+            string problemName = labelNameproblem.Text;
 
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                MessageBox.Show("Please enter your code.", "Warning");
+                return;
+            }
+
+            var problemLoader = new ProblemLoadReadJs();
+            var problem = problemLoader.getProblemByName(problemName);
+
+            if (problem == null || problem.TestCase == null || problem.TestCase.Count == 0)
+            {
+                MessageBox.Show("No test cases found for this problem.", "Error");
+                return;
+            }
+
+            var runner = new CodeRunner();
+            var results = runner.RunTestCases(code, language, problem.TestCase);
+
+            bool allPassed = true;
+            foreach (var r in results)
+            {
+                if (!r.Passed)
+                {
+                    allPassed = false;
+                    break;
+                }
+            }
+
+            if (allPassed)
+            {
+                AxpectedForm form = new AxpectedForm();
+                form.Show();
+                this.Hide();
+            }
+            else
+            {
+                Faild form = new Faild(problemName, results);
+                form.Show();
+                this.Hide();
+            }
         }
     }
 }

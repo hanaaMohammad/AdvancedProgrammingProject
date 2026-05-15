@@ -1,36 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
-using System.IO;
 
 namespace AdvancedProgramming.Service
 {
     public class ConnactiomCmd
     {
-        ProcessStartInfo processInfo ;
-
-
-
 
 
 
         public string call(string fileName, string arguments)
         {
-           procesInfo = new ProcessStartInfo();
-            procesInfo.FileName = fileName;
-            procesInfo.Arguments = arguments;
-            procesInfo.UseShellExecute = false;
-            procesInfo.RedirectStandardOutput = true;
-            procesInfo.RedirectStandardError = true;
-            procesInfo.CreateNoWindow = true;
+            try
+            {
+                ProcessStartInfo processInfo = new ProcessStartInfo();
+                processInfo.FileName = fileName;
+                processInfo.Arguments = arguments;
+                processInfo.UseShellExecute = false;
+                processInfo.RedirectStandardOutput = true;
+                processInfo.RedirectStandardError = true;
+                processInfo.CreateNoWindow = true;
 
-            Process p = Process.Start(procesInfo);
-            string error = p.StandardError.ReadToEnd();
-            p.WaitForExit();
-            return error;
+                Process p = Process.Start(processInfo);
+                string output = p.StandardOutput.ReadToEnd();
+                string error = p.StandardError.ReadToEnd();
+                p.WaitForExit();
+                return output + error;
+            }
+            catch (Exception ex)
+            {
+                return "ERROR:" + ex.Message;
+            }
 
 
 
@@ -40,28 +39,35 @@ namespace AdvancedProgramming.Service
 
 
 
+        public string callWithInput(string fileName, string arguments, string input)
+        {
+            try
+            {
+                ProcessStartInfo processInfo = new ProcessStartInfo();
+                processInfo.FileName = fileName;
+                processInfo.Arguments = arguments;
+                processInfo.UseShellExecute = false;
+                processInfo.RedirectStandardOutput = true;
+                processInfo.RedirectStandardError = true;
+                processInfo.RedirectStandardInput = true;
+                processInfo.CreateNoWindow = true;
+
+                Process p = Process.Start(processInfo);
+                p.StandardInput.Write(input);
+                p.StandardInput.Close();
+                string output = p.StandardOutput.ReadToEnd();
+                p.WaitForExit();
+                return output;
+            }
+            catch (Exception ex)
+            {
+                return "RUNTIME_ERROR:" + ex.Message;
+            }
 
 
 
 
-
-
-        
-        ProcessStartInfo procesInfo = new ProcessStartInfo();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }
 
 
 

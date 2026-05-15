@@ -1,43 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdvancedProgramming.Service
 {
     public class CodeCompile
     {
 
-        public string Copmile(string path,string language)
+        public string Compile(string path, string language)
         {
-            if (language == "c++")
-           
+            if (language.ToLower() == "c++")
+
                 return Execut("g++", path + " -o app.exe");
             else
                 return Execut("javac", path);
 
 
 
-
-
-
-
         }
 
-        private string Execut(string path , string args)
+        private string Execut(string fileName, string args)
         {
             ConnactiomCmd cmd = new ConnactiomCmd();
-            return cmd.call(path, args);
+            return cmd.call(fileName, args);
 
         }
+
+
+
+
+
     }
 
 
 
 
 
-
-
-    }
+}

@@ -8,7 +8,7 @@ namespace AdvancedProgramming.Service
 
         public string Path(string code , string Languge)
         {
-            string path = Languge == "c++" ? "code.cpp" : "code.java";
+            string path = Languge.ToLower() == "c++" ? "code.cpp" : "code.java";
            File.WriteAllText(path, code);
             return path;
 
