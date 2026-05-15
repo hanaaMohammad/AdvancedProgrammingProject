@@ -1,3 +1,4 @@
+using AdvancedProgramming.Components;
 using AdvancedProgramming.Forms;
 using AdvancedProgramming.Session;
 
@@ -35,6 +36,7 @@ namespace AdvancedProgramming
             InitializeSignUpComponents();
             toolbar = new Toolbar(this, "Sign Up");
             this.Controls.Add(toolbar);
+            PageBackButton.AddTo(this, (s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
             this.ResumeLayout(false);
             toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
             Theme.StylePage(this);
@@ -204,18 +206,6 @@ namespace AdvancedProgramming
                 Tag = "Error",
             };
 
-            var btnBack = new Button
-            {
-                Text = "\u2190 Back",
-                Location = new Point(DesignTokens.Spacing.Md, toolbar.Height + DesignTokens.Spacing.Sm),
-                Size = new Size(80, 30),
-                FlatStyle = FlatStyle.Flat,
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Ghost",
-            };
-            btnBack.FlatAppearance.BorderSize = 0;
-            btnBack.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
-
             this.Controls.AddRange(new Control[] {
                 headerLabel, subheadLabel,
                 usernameLabel, userNameTextBox,
@@ -223,7 +213,7 @@ namespace AdvancedProgramming
                 confirmLabel, confirmPasswordTextBox, confirmPasswordToggle,
                 countryLabel, countryCombo,
                 genderLabel, genderGroup,
-                signUpButton, btnBack,
+                signUpButton,
                 messageLabel
             });
         }

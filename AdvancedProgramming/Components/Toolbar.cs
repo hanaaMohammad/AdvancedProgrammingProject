@@ -9,9 +9,7 @@ namespace AdvancedProgramming
     {
         public event EventHandler CloseRequested;
 
-        private ContextMenuStrip themeMenu;
         private Button btnMinimize;
-        private Button btnGear;
         private Button btnClose;
         private Label titleLabel;
         private Point dragOffset;
@@ -35,38 +33,18 @@ namespace AdvancedProgramming
                 BackColor = Color.Transparent,
             };
 
-            btnMinimize = CreateWindowButton("\u2014", parent.Width - 126);
+            btnMinimize = CreateWindowButton("\u2014", parent.Width - 84);
             btnMinimize.Click += (s, e) =>
             {
                 var form = this.FindForm();
                 if (form != null) form.WindowState = FormWindowState.Minimized;
             };
 
-            btnGear = CreateWindowButton("\u2699", parent.Width - 84);
-            btnGear.Click += BtnGear_Click;
-
             btnClose = CreateWindowButton("\u2715", parent.Width - 42);
             btnClose.Click += (s, e) => CloseRequested?.Invoke(this, EventArgs.Empty);
 
-            themeMenu = new ContextMenuStrip();
-            themeMenu.BackColor = Theme.Current.ControlBackColor;
-            themeMenu.ForeColor = Theme.Current.TextColor;
-            var darkItem = themeMenu.Items.Add("Dark Theme");
-            var lightItem = themeMenu.Items.Add("Light Theme");
-            darkItem.Click += (s, e) =>
-            {
-                var form = parent.FindForm();
-                if (form != null) Theme.SetTheme(form, ThemeType.Dark);
-            };
-            lightItem.Click += (s, e) =>
-            {
-                var form = parent.FindForm();
-                if (form != null) Theme.SetTheme(form, ThemeType.Light);
-            };
-
             this.Controls.Add(titleLabel);
             this.Controls.Add(btnMinimize);
-            this.Controls.Add(btnGear);
             this.Controls.Add(btnClose);
 
             this.Resize += (s, e) => RepositionControls();
@@ -115,30 +93,8 @@ namespace AdvancedProgramming
         private void RepositionControls()
         {
             titleLabel.Location = new Point(DesignTokens.Spacing.Lg, (this.Height - titleLabel.Height) / 2);
-            btnMinimize.Location = new Point(this.Width - 126, 7);
-            btnGear.Location = new Point(this.Width - 84, 7);
+            btnMinimize.Location = new Point(this.Width - 84, 7);
             btnClose.Location = new Point(this.Width - 42, 7);
-        }
-
-        private void BtnGear_Click(object sender, EventArgs e)
-        {
-            foreach (ToolStripItem item in themeMenu.Items)
-            {
-                item.ForeColor = Theme.Current.TextColor;
-            }
-            themeMenu.Show(Cursor.Position);
-        }
-
-        public void UpdateTheme()
-        {
-            this.BackColor = Theme.Current.ToolbarBackColor;
-            titleLabel.ForeColor = Theme.Current.TextColor;
-            btnMinimize.ForeColor = Theme.Current.TextColor;
-            btnGear.ForeColor = Theme.Current.TextColor;
-            btnClose.ForeColor = Theme.Current.TextColor;
-            themeMenu.BackColor = Theme.Current.ControlBackColor;
-            themeMenu.ForeColor = Theme.Current.TextColor;
-            RepositionControls();
         }
     }
 }

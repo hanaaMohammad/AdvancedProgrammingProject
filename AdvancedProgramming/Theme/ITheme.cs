@@ -2,12 +2,6 @@ using System.Drawing;
 
 namespace AdvancedProgramming
 {
-    public enum ThemeType
-    {
-        Dark,
-        Light
-    }
-
     public interface ITheme
     {
         Color FormBackColor { get; }

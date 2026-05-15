@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using AdvancedProgramming.Components;
 using AdvancedProgramming.Session;
 
 
@@ -137,17 +138,7 @@ namespace AdvancedProgramming.Forms
                 Tag = "Error",
             };
 
-            var btnBack = new Button
-            {
-                Text = "\u2190 Back",
-                Location = new Point(DesignTokens.Spacing.Md, 52 + DesignTokens.Spacing.Sm),
-                Size = new Size(80, 30),
-                FlatStyle = FlatStyle.Flat,
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Ghost",
-            };
-            btnBack.FlatAppearance.BorderSize = 0;
-            btnBack.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+            var btnBack = PageBackButton.Create((s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
 
             this.Controls.AddRange(new Control[] {
                 headerLabel, subheadLabel,

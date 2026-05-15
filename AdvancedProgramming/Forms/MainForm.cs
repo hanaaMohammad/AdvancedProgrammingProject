@@ -35,14 +35,6 @@ namespace AdvancedProgramming
 
             Theme.Apply(this);
 
-            Theme.ThemeChanged += () =>
-            {
-                if (pageContainer != null)
-                    pageContainer.BackColor = Theme.Current.FormBackColor;
-                if (currentPage != null)
-                    currentPage.BackColor = Theme.Current.FormBackColor;
-            };
-
             NavigateToStartup();
         }
 
@@ -152,8 +144,6 @@ namespace AdvancedProgramming
             backStack.Push(() => NavigateToProblemDisplay(problemName));
             var page = new ProblemDisplayForm(problemName);
             page.SolveRequested += (s, e) => NavigateToSubmit(problemName);
-            page.HomeRequested += (s, e) => NavigateToHome();
-            page.UserRequested += (s, e) => NavigateToUser();
             page.BackRequested += (s, e) => GoBack();
             ShowPage(page);
         }
@@ -163,7 +153,6 @@ namespace AdvancedProgramming
             backStack.Push(() => NavigateToSubmit(problemName));
             var page = new SubmitForm(problemName);
             page.TestResultsReady += (s, results) => NavigateToResult(problemName, results);
-            page.HomeRequested += (s, e) => NavigateToHome();
             page.BackRequested += (s, e) => GoBack();
             ShowPage(page);
         }
@@ -174,7 +163,6 @@ namespace AdvancedProgramming
             if (results.AllPassed)
             {
                 var page = new AcceptedForm();
-                page.HomeRequested += (s, e) => NavigateToHome();
                 page.BackRequested += (s, e) => GoBack();
                 ShowPage(page);
             }
@@ -190,7 +178,7 @@ namespace AdvancedProgramming
         {
             backStack.Push(() => NavigateToUser());
             var page = new UserForm();
-            page.HomeRequested += (s, e) => NavigateToHome();
+            page.BackRequested += (s, e) => GoBack();
             ShowPage(page);
         }
 

@@ -1,4 +1,5 @@
-﻿using AdvancedProgramming.Session;
+﻿using AdvancedProgramming.Components;
+using AdvancedProgramming.Session;
 
 using System;
 using System.Drawing;
@@ -9,7 +10,7 @@ namespace AdvancedProgramming.Forms
 {
     public class UserForm : UserControl
     {
-        public event EventHandler HomeRequested;
+        public event EventHandler BackRequested;
 
         private Label labelScore;
         private Label labelTitle;
@@ -17,7 +18,6 @@ namespace AdvancedProgramming.Forms
         private Label labelGender;
         private Label labelCountry;
         private Label labelUsername;
-        private Button btnHome;
         private Toolbar toolbar;
 
         public UserForm()
@@ -26,26 +26,9 @@ namespace AdvancedProgramming.Forms
             InitializeComponent();
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
-            toolbar.CloseRequested += (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty);
-            AddHomeButton();
+            toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+            PageBackButton.AddTo(this, (s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
             Theme.StylePage(this);
-        }
-
-        private void AddHomeButton()
-        {
-            btnHome = new Button
-            {
-                Text = "\U0001f3e0",
-                Location = new Point(DesignTokens.Spacing.Md, toolbar.Height + DesignTokens.Spacing.Sm),
-                Size = new Size(DesignTokens.Sizing.IconButtonSize, DesignTokens.Sizing.IconButtonSize),
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 16F),
-                Tag = "Ghost",
-            };
-            btnHome.FlatAppearance.BorderSize = 0;
-            btnHome.Click += (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty);
-            this.Controls.Add(btnHome);
-            btnHome.BringToFront();
         }
 
         private void InitializeComponent()

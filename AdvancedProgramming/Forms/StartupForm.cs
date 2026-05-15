@@ -32,16 +32,9 @@ namespace AdvancedProgramming
             this.ResumeLayout(false);
 
             Theme.StylePage(this);
+            ApplyCustomStyles();
 
             toolbar.CloseRequested += (s, e) => Application.Exit();
-            Theme.ThemeChanged += OnThemeChanged;
-            this.Disposed += (s, e) => Theme.ThemeChanged -= OnThemeChanged;
-        }
-
-        private void OnThemeChanged()
-        {
-            ApplyCustomStyles();
-            toolbar.UpdateTheme();
         }
 
         private void InitializeSplashScreen()

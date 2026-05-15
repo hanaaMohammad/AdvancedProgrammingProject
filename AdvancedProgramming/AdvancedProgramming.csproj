@@ -109,6 +109,8 @@
     <Compile Include="CodeRun\CodeExecutor.cs" />
     <Compile Include="CodeRun\CSharpExecutor.cs" />
 
+    <Compile Include="Components\CSharpCodeHighlighter.cs" />
+    <Compile Include="Components\PageBackButton.cs" />
     <Compile Include="Components\PanelStars.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -159,7 +161,6 @@
     <Compile Include="Session\CurrentUser.cs" />
     <Compile Include="Theme\ITheme.cs" />
     <Compile Include="Theme\DarkTheme.cs" />
-    <Compile Include="Theme\LightTheme.cs" />
     <Compile Include="Theme\Theme.cs" />
     <Compile Include="Theme\DesignTokens.cs" />
     <Compile Include="Components\Toolbar.cs">

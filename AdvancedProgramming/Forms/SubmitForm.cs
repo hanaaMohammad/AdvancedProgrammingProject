@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AdvancedProgramming.Components;
 using AdvancedProgramming.Service;
 using AdvancedProgramming.ProblemClasses;
 using AdvancedProgramming.Session;
@@ -11,13 +12,11 @@ namespace AdvancedProgramming.Forms
     public class SubmitForm : UserControl
     {
         public event EventHandler<CodeRunnerTestResultList> TestResultsReady;
-        public event EventHandler HomeRequested;
         public event EventHandler BackRequested;
 
         private Toolbar toolbar;
-        private Button buttonHome;
+        private Button btnBack;
         private Button buttonRun;
-        private Button buttonBack;
         private Label labelProblemName;
         private Label labelCodePrompt;
         private ComboBox languageCombo;
@@ -41,16 +40,7 @@ namespace AdvancedProgramming.Forms
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
 
-            buttonHome = new Button
-            {
-                Text = "\u2302 Home",
-                Font = DesignTokens.Typography.BodySmall,
-                Size = new Size(DesignTokens.Sizing.ButtonWidthSm, 40),
-                Location = new Point(DesignTokens.Spacing.Md, toolbar.Height + DesignTokens.Spacing.Sm),
-                FlatStyle = FlatStyle.Flat,
-                Tag = "Ghost",
-            };
-            buttonHome.Click += (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty);
+            btnBack = PageBackButton.Create((s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
 
             labelProblemName = new Label
             {
@@ -104,21 +94,10 @@ namespace AdvancedProgramming.Forms
             };
             buttonRun.Click += ButtonRun_Click;
 
-            buttonBack = new Button
-            {
-                Text = "Back",
-                Font = DesignTokens.Typography.BodyMedium,
-                Size = new Size(DesignTokens.Sizing.ButtonWidthSm, DesignTokens.Sizing.ButtonHeight),
-                Location = new Point(cx - 175, 540),
-                FlatStyle = FlatStyle.Flat,
-                Tag = "Secondary",
-            };
-            buttonBack.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
-
             loadingOverlay = new LoadingOverlay();
 
-            this.Controls.Add(buttonHome);
-            this.Controls.Add(buttonBack);
+            this.Controls.Add(btnBack);
+            btnBack.BringToFront();
             this.Controls.Add(labelProblemName);
             this.Controls.Add(labelCodePrompt);
             this.Controls.Add(languageCombo);
@@ -127,7 +106,7 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(loadingOverlay);
 
             FormAccessibility.SetShortcutHint(buttonRun, "Ctrl+Enter", "Run test cases");
-            FormAccessibility.SetShortcutHint(buttonBack, "Esc", "Go back");
+            FormAccessibility.SetShortcutHint(btnBack, "Esc", "Go back");
             FormAccessibility.SetShortcutHint(codeEditor, "Tab", "Indent code");
 
             Theme.StylePage(this);
@@ -211,8 +190,7 @@ namespace AdvancedProgramming.Forms
         {
             isRunning = running;
             buttonRun.Enabled = !running;
-            buttonBack.Enabled = !running;
-            buttonHome.Enabled = !running;
+            btnBack.Enabled = !running;
             codeEditor.Enabled = !running;
             languageCombo.Enabled = !running;
 

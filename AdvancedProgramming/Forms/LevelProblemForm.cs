@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using AdvancedProgramming.Components;
 using AdvancedProgramming.ProblemClasses;
 
 namespace AdvancedProgramming.Forms
@@ -50,6 +51,8 @@ namespace AdvancedProgramming.Forms
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
             toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+
+            PageBackButton.AddTo(this, (s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
 
             int cx = this.Width / 2;
             int btnW = 220;
@@ -149,19 +152,8 @@ namespace AdvancedProgramming.Forms
             FormAccessibility.SetShortcutHint(hardButton, "3", "Hard problems");
             FormAccessibility.SetShortcutHint(problemCombo, "Down", "Select a problem");
 
-            Theme.ThemeChanged += OnThemeChanged;
-            this.Disposed += (s, e) => Theme.ThemeChanged -= OnThemeChanged;
-
             Theme.StylePage(this);
             this.ResumeLayout(false);
-        }
-
-        private void OnThemeChanged()
-        {
-            toolbar.UpdateTheme();
-            easyButton.FlatAppearance.BorderColor = Color.FromArgb(0, 200, 117);
-            mediumButton.FlatAppearance.BorderColor = Color.FromArgb(255, 183, 64);
-            hardButton.FlatAppearance.BorderColor = Color.FromArgb(255, 82, 82);
         }
 
         protected override void OnResize(EventArgs e)

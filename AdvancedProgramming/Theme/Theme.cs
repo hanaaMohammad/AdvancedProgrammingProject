@@ -6,23 +6,7 @@ namespace AdvancedProgramming
 {
     public static class Theme
     {
-        public static ThemeType CurrentThemeType { get; private set; } = ThemeType.Dark;
-        public static ITheme Current { get; private set; } = new DarkTheme();
-        public static event Action ThemeChanged;
-
-        public static void ToggleTheme(Control control)
-        {
-            CurrentThemeType = CurrentThemeType == ThemeType.Dark ? ThemeType.Light : ThemeType.Dark;
-            Current = CurrentThemeType == ThemeType.Dark ? (ITheme)new DarkTheme() : new LightTheme();
-            Apply(control);
-        }
-
-        public static void SetTheme(Control control, ThemeType themeType)
-        {
-            CurrentThemeType = themeType;
-            Current = themeType == ThemeType.Dark ? (ITheme)new DarkTheme() : new LightTheme();
-            Apply(control);
-        }
+        public static ITheme Current { get; } = new DarkTheme();
 
         public static void Apply(Control control)
         {
@@ -30,7 +14,6 @@ namespace AdvancedProgramming
             ApplyToControl(control, isRoot: true);
             ApplyToControls(control.Controls);
             control.ResumeLayout();
-            ThemeChanged?.Invoke();
         }
 
         private static void ApplyToControl(Control control, bool isRoot = false)

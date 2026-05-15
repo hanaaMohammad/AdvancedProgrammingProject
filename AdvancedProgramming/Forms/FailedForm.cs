@@ -1,4 +1,5 @@
-﻿using AdvancedProgramming.ProblemClasses;
+﻿using AdvancedProgramming.Components;
+using AdvancedProgramming.ProblemClasses;
 using AdvancedProgramming.Service;
 
 using System;
@@ -81,17 +82,7 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             };
 
-            backButton = new Button
-            {
-                Text = "\u2190 Back",
-                Location = new Point(DesignTokens.Spacing.Md, toolbar.Height + DesignTokens.Spacing.Sm),
-                Size = new Size(80, 30),
-                FlatStyle = FlatStyle.Flat,
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Ghost",
-            };
-            backButton.FlatAppearance.BorderSize = 0;
-            backButton.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+            backButton = PageBackButton.Create((s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
 
             this.Controls.Add(iconLabel);
             this.Controls.Add(headerLabel);
