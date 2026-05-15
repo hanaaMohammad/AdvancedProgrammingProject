@@ -1,4 +1,5 @@
 using AdvancedProgramming.ProblemClasses;
+
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -21,19 +22,24 @@ namespace AdvancedProgramming.Forms
         private Button userButton;
         private string problemName;
         private Problem problemChoice;
-        private TextBox input;
-        private TextBox output;
-        private TextBox Note;
+        private TextBox inputBox;
+        private TextBox outputBox;
+        private TextBox constraintsBox;
         private TableLayoutPanel tableLayoutPanel;
-        private Panel LeftPanel;
-        private Panel RightPanel;
-        private TextBox InputExam;
-        private TextBox OutputExam;
-        private TextBox explation;
+        private Panel leftPanel;
+        private Panel rightPanel;
+        private TextBox inputExampleBox;
+        private TextBox outputExampleBox;
+        private TextBox explanationBox;
+        private Button showSolutionButton;
+        private Label labelSolution;
+        private TextBox solutionBox;
+        private bool solutionVisible;
+        private bool isAvailable;
 
         public ProblemDisplayForm(string problem)
         {
-            this.Size = new Size(1100, 800);
+            this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
             InitializeComponent(problem);
         }
 
@@ -48,244 +54,316 @@ namespace AdvancedProgramming.Forms
                 return;
             }
 
+            isAvailable = ProblemCatalog.IsAvailable(problemName);
+
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
             toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
 
-            tableLayoutPanel = new TableLayoutPanel()
+            tableLayoutPanel = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 2,
                 RowCount = 1,
-                Padding = new Padding(10, 50, 10, 10),
+                Padding = new Padding(DesignTokens.Spacing.Md, 55, DesignTokens.Spacing.Md, DesignTokens.Spacing.Md),
             };
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
 
-            int m = 10;
-            int lh = 22;
-            int gap = 8;
-            int cw = 490;
+            int m = DesignTokens.Spacing.Md;
+            int lh = 24;
+            int gap = DesignTokens.Spacing.Sm;
+            int cw = 470;
             int y;
 
-            LeftPanel = new Panel() { Dock = DockStyle.Fill };
+            leftPanel = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
 
             y = m;
-            descriptionLabel = new Label()
+            descriptionLabel = new Label
             {
                 Text = "Description",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Font = DesignTokens.Typography.HeadingMedium,
                 Location = new Point(m, y),
                 Size = new Size(cw, lh),
             };
             y += lh + 4;
-            descriptionBox = new TextBox()
+            descriptionBox = new TextBox
             {
                 Location = new Point(m, y),
                 Width = cw,
-                Height = 130,
+                Height = 120,
                 Multiline = true,
                 ReadOnly = true,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.description,
+                Font = DesignTokens.Typography.BodyMedium,
             };
-            y += 130 + gap;
+            y += 120 + gap;
 
-            var lblInput = new Label()
+            var lblInput = new Label
             {
-                Text = "Input",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Text = "Input Format",
+                Font = DesignTokens.Typography.HeadingSmall,
                 Location = new Point(m, y),
                 Size = new Size(cw, lh),
             };
             y += lh + 4;
-            input = new TextBox()
+            inputBox = new TextBox
             {
                 Location = new Point(m, y),
                 Width = cw,
-                Height = 70,
+                Height = 60,
                 Multiline = true,
                 ReadOnly = true,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.input,
+                Font = DesignTokens.Typography.BodySmall,
             };
-            y += 70 + gap;
+            y += 60 + gap;
 
-            var lblOutput = new Label()
+            var lblOutput = new Label
             {
-                Text = "Output",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Text = "Output Format",
+                Font = DesignTokens.Typography.HeadingSmall,
                 Location = new Point(m, y),
                 Size = new Size(cw, lh),
             };
             y += lh + 4;
-            output = new TextBox()
+            outputBox = new TextBox
             {
                 Location = new Point(m, y),
                 Width = cw,
-                Height = 70,
+                Height = 60,
                 Multiline = true,
                 ReadOnly = true,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.output,
+                Font = DesignTokens.Typography.BodySmall,
             };
-            y += 70 + gap;
+            y += 60 + gap;
 
-            var lblNote = new Label()
+            var lblConstraints = new Label
             {
                 Text = "Constraints",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = DesignTokens.Typography.HeadingSmall,
                 Location = new Point(m, y),
                 Size = new Size(cw, lh),
             };
             y += lh + 4;
-            Note = new TextBox()
+            constraintsBox = new TextBox
             {
                 Location = new Point(m, y),
                 Width = cw,
-                Height = 70,
+                Height = 60,
                 Multiline = true,
                 ReadOnly = true,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.Constraints,
+                Font = DesignTokens.Typography.BodySmall,
             };
-            y += 70 + gap + 10;
+            y += 60 + gap + 10;
 
             int bw = 100;
             int bg = 10;
-            solveButton = new Button()
+            solveButton = new Button
             {
-                Text = "Solve",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Text = isAvailable ? "Solve" : "Coming Soon",
+                Font = DesignTokens.Typography.ButtonLabel,
                 Location = new Point(m, y),
-                Size = new Size(bw, 35),
+                Size = new Size(bw, 40),
+                Tag = isAvailable ? "Primary" : "Secondary",
+                Cursor = isAvailable ? Cursors.Hand : Cursors.Default,
+                Enabled = isAvailable,
             };
-            backButton = new Button()
+            backButton = new Button
             {
                 Text = "Back",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = DesignTokens.Typography.BodyMedium,
                 Location = new Point(m + bw + bg, y),
-                Size = new Size(bw, 35),
+                Size = new Size(bw, 40),
+                Tag = "Secondary",
+                Cursor = Cursors.Hand,
             };
-            homeButton = new Button()
+            homeButton = new Button
             {
                 Text = "Home",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = DesignTokens.Typography.BodyMedium,
                 Location = new Point(m + 2 * (bw + bg), y),
-                Size = new Size(bw, 35),
+                Size = new Size(bw, 40),
+                Tag = "Secondary",
+                Cursor = Cursors.Hand,
             };
-            userButton = new Button()
+            userButton = new Button
             {
-                Text = "User",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Text = "Profile",
+                Font = DesignTokens.Typography.BodyMedium,
                 Location = new Point(m + 3 * (bw + bg), y),
-                Size = new Size(bw, 35),
+                Size = new Size(bw, 40),
+                Tag = "Secondary",
+                Cursor = Cursors.Hand,
             };
 
-            LeftPanel.Controls.AddRange(new Control[] {
+            bool hasSolution = !string.IsNullOrWhiteSpace(problemChoice.solution);
+            showSolutionButton = new Button
+            {
+                Text = "Show Solution",
+                Font = DesignTokens.Typography.BodyMedium,
+                Location = new Point(m + 4 * (bw + bg), y),
+                Size = new Size(bw + 20, 40),
+                Tag = "Ghost",
+                Cursor = Cursors.Hand,
+                Enabled = hasSolution,
+                Visible = isAvailable,
+            };
+
+            leftPanel.Controls.AddRange(new Control[] {
                 descriptionLabel, descriptionBox,
-                lblInput, input,
-                lblOutput, output,
-                lblNote, Note,
-                solveButton, backButton, homeButton, userButton,
+                lblInput, inputBox,
+                lblOutput, outputBox,
+                lblConstraints, constraintsBox,
+                solveButton, backButton, homeButton, userButton, showSolutionButton,
             });
 
-            RightPanel = new Panel() { Dock = DockStyle.Fill };
+            rightPanel = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
 
             y = m;
-            var labelExample = new Label()
+            var labelExample = new Label
             {
                 Text = "Example",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Font = DesignTokens.Typography.HeadingMedium,
                 Location = new Point(m, y),
                 Size = new Size(cw, lh),
             };
             y += lh + 4;
 
-            var lblInputExam = new Label()
+            var lblInputExam = new Label
             {
                 Text = "Input",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = DesignTokens.Typography.HeadingSmall,
                 Location = new Point(m, y),
                 Size = new Size(cw, lh),
             };
             y += lh + 4;
-            InputExam = new TextBox()
+            inputExampleBox = new TextBox
             {
                 Location = new Point(m, y),
                 Width = cw,
-                Height = 120,
+                Height = 100,
                 Multiline = true,
                 ReadOnly = true,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.Example?.input ?? "",
+                Font = DesignTokens.Typography.Code,
+                BackColor = Theme.Current.InputBackColor,
             };
-            y += 120 + gap;
+            y += 100 + gap;
 
-            var lblOutputExam = new Label()
+            var lblOutputExam = new Label
             {
                 Text = "Output",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = DesignTokens.Typography.HeadingSmall,
                 Location = new Point(m, y),
                 Size = new Size(cw, lh),
             };
             y += lh + 4;
-            OutputExam = new TextBox()
+            outputExampleBox = new TextBox
             {
                 Location = new Point(m, y),
                 Width = cw,
-                Height = 120,
+                Height = 100,
                 Multiline = true,
                 ReadOnly = true,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.Example?.output ?? "",
+                Font = DesignTokens.Typography.Code,
+                BackColor = Theme.Current.InputBackColor,
             };
-            y += 120 + gap;
+            y += 100 + gap;
 
-            var labelExplanation = new Label()
+            var labelExplanation = new Label
             {
                 Text = "Explanation",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = DesignTokens.Typography.HeadingSmall,
                 Location = new Point(m, y),
                 Size = new Size(cw, lh),
             };
             y += lh + 4;
-            explation = new TextBox()
+            explanationBox = new TextBox
             {
                 Location = new Point(m, y),
                 Width = cw,
-                Height = 120,
+                Height = 100,
                 Multiline = true,
                 ReadOnly = true,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.Example?.explanation ?? "",
+                Font = DesignTokens.Typography.BodySmall,
             };
 
-            RightPanel.Controls.AddRange(new Control[] {
+            y += 100 + gap;
+            labelSolution = new Label
+            {
+                Text = "Solution",
+                Font = DesignTokens.Typography.HeadingSmall,
+                Location = new Point(m, y),
+                Size = new Size(cw, lh),
+                Visible = false,
+            };
+            y += lh + 4;
+            solutionBox = new TextBox
+            {
+                Location = new Point(m, y),
+                Width = cw,
+                Height = 150,
+                Multiline = true,
+                ReadOnly = true,
+                Text = problemChoice.solution ?? "",
+                Font = DesignTokens.Typography.Code,
+                BackColor = Theme.Current.InputBackColor,
+                Visible = false,
+            };
+
+            rightPanel.Controls.AddRange(new Control[] {
                 labelExample,
-                lblInputExam, InputExam,
-                lblOutputExam, OutputExam,
-                labelExplanation, explation,
+                lblInputExam, inputExampleBox,
+                lblOutputExam, outputExampleBox,
+                labelExplanation, explanationBox,
+                labelSolution, solutionBox,
             });
 
             PaintStars();
 
-            tableLayoutPanel.Controls.Add(LeftPanel, 0, 0);
-            tableLayoutPanel.Controls.Add(RightPanel, 1, 0);
+            tableLayoutPanel.Controls.Add(leftPanel, 0, 0);
+            tableLayoutPanel.Controls.Add(rightPanel, 1, 0);
 
             this.Controls.Add(tableLayoutPanel);
 
-            solveButton.Click += solveButton_Click;
+            solveButton.Click += (s, e) =>
+            {
+                if (isAvailable)
+                    SolveRequested?.Invoke(this, EventArgs.Empty);
+            };
             backButton.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
             homeButton.Click += (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty);
             userButton.Click += (s, e) => UserRequested?.Invoke(this, EventArgs.Empty);
+            showSolutionButton.Click += (s, e) => ToggleSolution();
 
-            Theme.Apply(this);
+            FormAccessibility.SetShortcutHint(solveButton, "Enter", "Open code editor");
+            FormAccessibility.SetShortcutHint(backButton, "Esc", "Go back");
+            FormAccessibility.SetShortcutHint(showSolutionButton, "Click", "Toggle solution");
+
+            Theme.StylePage(this);
         }
 
-        private void solveButton_Click(object sender, EventArgs e)
+        private void ToggleSolution()
         {
-            SolveRequested?.Invoke(this, EventArgs.Empty);
+            if (string.IsNullOrWhiteSpace(problemChoice?.solution))
+            {
+                MessageBox.Show(
+                    "No solution is available for this problem yet.",
+                    "Solution",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            solutionVisible = !solutionVisible;
+            showSolutionButton.Text = solutionVisible ? "Hide Solution" : "Show Solution";
+            labelSolution.Visible = solutionVisible;
+            solutionBox.Visible = solutionVisible;
         }
 
         private void GetProblemDetails()
@@ -297,20 +375,20 @@ namespace AdvancedProgramming.Forms
         private void PaintStars()
         {
             Components.PanelStars panelStars = new Components.PanelStars();
-            panelStars.Location = new Point(OutputExam.Left, OutputExam.Top);
-            panelStars.Width = OutputExam.Width;
-            panelStars.Height = OutputExam.Height;
+            panelStars.Location = new Point(outputExampleBox.Left, outputExampleBox.Top);
+            panelStars.Width = outputExampleBox.Width;
+            panelStars.Height = outputExampleBox.Height;
             if (this.problemChoice.type == "pattren")
             {
-                OutputExam.Visible = false;
+                outputExampleBox.Visible = false;
                 panelStars.Visible = true;
             }
             else
             {
-                OutputExam.Visible = true;
+                outputExampleBox.Visible = true;
                 panelStars.Visible = false;
             }
-            RightPanel.Controls.Add(panelStars);
+            rightPanel.Controls.Add(panelStars);
             panelStars.BringToFront();
             panelStars.Invalidate();
         }

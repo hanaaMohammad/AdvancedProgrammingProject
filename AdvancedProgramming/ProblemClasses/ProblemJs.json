@@ -19,9 +19,10 @@
             "output": "   *\n  ***\n *****\n*******"
           }
         ],
-        "Constraints": "1 <= N <= 10"
-      
-      },
+        "Constraints": "1 <= N <= 10",
+        "solution": "using System;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        int N = int.Parse(Console.ReadLine());\n        for (int i = 1; i <= N; i++)\n        {\n            Console.Write(new string(' ', N - i));\n            Console.WriteLine(new string('*', 2 * i - 1));\n        }\n    }\n}"
+       
+       },
       {
         "title": "Program to find if a character is vowel or Consonant",
         "description": "Given a character, determine if it is a vowel or a consonant.",

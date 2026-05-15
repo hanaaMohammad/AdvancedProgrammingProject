@@ -33,7 +33,7 @@ namespace AdvancedProgramming.Components
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            e.Graphics.Clear(Theme.Current.ControlBackColor);
+            e.Graphics.Clear(Theme.Current.SurfaceColor);
             DrawTriangleStars(e.Graphics);
         }
 
@@ -45,7 +45,7 @@ namespace AdvancedProgramming.Components
             int startY = 10;
 
             using (var fillBrush = new SolidBrush(Theme.Current.AccentColor))
-            using (var outlinePen = new Pen(Theme.Current.BorderColor))
+            using (var outlinePen = new Pen(Theme.Current.AccentColor))
             {
                 for (int i = 0; i < rows; i++)
                 {

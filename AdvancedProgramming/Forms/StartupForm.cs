@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using AdvancedProgramming.Forms;
+
 
 namespace AdvancedProgramming
 {
@@ -12,63 +12,35 @@ namespace AdvancedProgramming
         public event EventHandler SignUpRequested;
 
         private Toolbar toolbar;
-        private Timer animTimer;
-        private double animAngle = 0;
         private Label lblTitle;
         private Label lblSubtitle;
         private PictureBox logoBox;
         private Button buttonLogin;
         private Button buttonSignup;
         private Panel accentLine;
-
-        public StartupForm()
+    public StartupForm()
         {
             this.SuspendLayout();
-            this.AutoScaleDimensions = new SizeF(9F, 20F);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.Size = new Size(1100, 800);
+            this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
             this.Name = "StartupForm";
 
             InitializeSplashScreen();
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
+
             this.ResumeLayout(false);
 
-            Theme.Apply(this);
-            ApplyCustomStyles();
-            foreach (Control c in toolbar.Controls)
-            {
-                if (c is Button btn)
-                {
-                    btn.FlatAppearance.BorderSize = 0;
-                }
-            }
-            StartAnimation();
+            Theme.StylePage(this);
 
             toolbar.CloseRequested += (s, e) => Application.Exit();
             Theme.ThemeChanged += OnThemeChanged;
-            this.Disposed += (s, e) =>
-            {
-                Theme.ThemeChanged -= OnThemeChanged;
-                if (animTimer != null)
-                {
-                    animTimer.Stop();
-                    animTimer.Dispose();
-                }
-            };
+            this.Disposed += (s, e) => Theme.ThemeChanged -= OnThemeChanged;
         }
 
         private void OnThemeChanged()
         {
             ApplyCustomStyles();
-            foreach (Control c in toolbar.Controls)
-            {
-                if (c is Button btn)
-                {
-                    btn.FlatAppearance.BorderSize = 0;
-                }
-            }
             toolbar.UpdateTheme();
         }
 
@@ -78,116 +50,97 @@ namespace AdvancedProgramming
 
             logoBox = new PictureBox
             {
-                Size = new Size(130, 130),
-                Location = new Point(cx - 65, 70),
+                Size = new Size(120, 120),
+                Location = new Point(cx - 60, 120),
                 SizeMode = PictureBoxSizeMode.CenterImage,
                 BackColor = Color.Transparent,
                 Cursor = Cursors.Hand,
             };
 
-            using (var bmp = new Bitmap(130, 130))
+            using (var bmp = new Bitmap(120, 120))
             using (var g = Graphics.FromImage(bmp))
             {
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.Clear(Color.Transparent);
                 using (var brush = new SolidBrush(Theme.Current.AccentColor))
                 {
-                    g.FillEllipse(brush, 5, 5, 120, 120);
+                    g.FillEllipse(brush, 5, 5, 110, 110);
                 }
-                g.DrawString("\U0001f9e9", new Font("Segoe UI", 52), Brushes.White, 33, 33);
+                g.DrawString("\U0001f9e9", new Font("Segoe UI", 48), Brushes.White, 28, 28);
                 logoBox.Image = (Bitmap)bmp.Clone();
             }
 
             lblTitle = new Label
             {
                 Text = "MiniCamp Puzzle",
-                Font = new Font("Segoe UI", 34, FontStyle.Bold),
+                Font = DesignTokens.Typography.DisplayLarge,
                 BackColor = Color.Transparent,
                 AutoSize = false,
-                Size = new Size(850, 70),
+                Size = new Size(600, 80),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(0, 220),
+                Location = new Point(cx - 300, 260),
             };
 
             accentLine = new Panel
             {
-                Size = new Size(80, 4),
-                Location = new Point(cx - 40, 300),
+                Size = new Size(60, 4),
+                Location = new Point(cx - 30, 350),
+                BackColor = Theme.Current.AccentColor,
             };
 
             lblSubtitle = new Label
             {
-                Text = "Start with our App",
-                Font = new Font("Segoe UI", 15, FontStyle.Regular),
+                Text = "Solve code challenges. Level up your skills.",
+                Font = DesignTokens.Typography.BodyLarge,
                 BackColor = Color.Transparent,
-                AutoSize = true,
+                AutoSize = false,
+                Size = new Size(500, 30),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Location = new Point(cx - 250, 370),
                 Tag = "Secondary",
             };
 
             buttonLogin = new Button
             {
                 Text = "Log In",
-                Size = new Size(170, 52),
-                Location = new Point(cx - 180, 380),
+                Size = new Size(DesignTokens.Sizing.ButtonWidthMd, DesignTokens.Sizing.ButtonHeight),
+                Location = new Point(cx - 190, 440),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 13, FontStyle.Bold),
+                Font = DesignTokens.Typography.ButtonLabel,
+                Tag = "Primary",
             };
 
             buttonSignup = new Button
             {
                 Text = "Sign Up",
-                Size = new Size(170, 52),
-                Location = new Point(cx + 10, 380),
+                Size = new Size(DesignTokens.Sizing.ButtonWidthMd, DesignTokens.Sizing.ButtonHeight),
+                Location = new Point(cx + 10, 440),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 13, FontStyle.Bold),
+                Font = DesignTokens.Typography.ButtonLabel,
+                Tag = "Secondary",
             };
 
             this.Controls.Add(logoBox);
             this.Controls.Add(lblTitle);
             this.Controls.Add(accentLine);
+            this.Controls.Add(lblSubtitle);
             this.Controls.Add(buttonLogin);
             this.Controls.Add(buttonSignup);
+
             buttonLogin.Click += (s, e) => LoginRequested?.Invoke(this, EventArgs.Empty);
             buttonSignup.Click += (s, e) => SignUpRequested?.Invoke(this, EventArgs.Empty);
+
+            FormAccessibility.SetShortcutHint(buttonLogin, "Enter", "Log in");
+            FormAccessibility.SetShortcutHint(buttonSignup, "Tab", "Create an account");
         }
 
         private void ApplyCustomStyles()
         {
             accentLine.BackColor = Theme.Current.AccentColor;
-
-            buttonLogin.BackColor = Theme.Current.AccentColor;
-            buttonLogin.ForeColor = Color.White;
-            buttonLogin.FlatAppearance.BorderSize = 0;
-            buttonLogin.FlatAppearance.MouseOverBackColor = Theme.Current.ButtonHoverBackColor;
-
-            buttonSignup.BackColor = Color.Transparent;
-            buttonSignup.ForeColor = Theme.Current.AccentColor;
-            buttonSignup.FlatAppearance.BorderSize = 2;
-            buttonSignup.FlatAppearance.BorderColor = Theme.Current.AccentColor;
-            buttonSignup.FlatAppearance.MouseOverBackColor = Theme.Current.ButtonHoverBackColor;
-        }
-
-        private void StartAnimation()
-        {
-            animTimer = new Timer();
-            animTimer.Interval = 30;
-            animTimer.Tick += (s, e) =>
-            {
-                animAngle += 0.04;
-                int offset = (int)(Math.Sin(animAngle) * 6);
-                lblTitle.Location = new Point(0, 220 + offset);
-            };
-            animTimer.Start();
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            int cx = this.Width / 2;
-            lblSubtitle.Location = new Point(cx - lblSubtitle.Width / 2, 320);
-            this.Controls.Add(lblSubtitle);
+            lblTitle.ForeColor = Theme.Current.TextColor;
+            lblSubtitle.ForeColor = Theme.Current.SecondaryTextColor;
         }
 
         protected override void OnResize(EventArgs e)
@@ -195,12 +148,12 @@ namespace AdvancedProgramming
             base.OnResize(e);
             if (lblTitle == null) return;
             int cx = this.Width / 2;
-            logoBox.Location = new Point(cx - 65, 70);
-            lblTitle.Size = new Size(this.Width, 70);
-            accentLine.Location = new Point(cx - 40, 300);
-            lblSubtitle.Location = new Point(cx - lblSubtitle.Width / 2, 320);
-            buttonLogin.Location = new Point(cx - 180, 380);
-            buttonSignup.Location = new Point(cx + 10, 380);
+            logoBox.Location = new Point(cx - 60, 120);
+            lblTitle.Location = new Point(cx - 300, 260);
+            accentLine.Location = new Point(cx - 30, 350);
+            lblSubtitle.Location = new Point(cx - 250, 370);
+            buttonLogin.Location = new Point(cx - 190, 440);
+            buttonSignup.Location = new Point(cx + 10, 440);
         }
     }
 }

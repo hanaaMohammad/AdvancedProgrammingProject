@@ -21,13 +21,9 @@ namespace AdvancedProgramming.Service
 
     public class CodeRunner
     {
-        public List<CodeRunnerTestResult> RunTestCases(string code, string language, List<TestCase> testCases)
+        public List<CodeRunnerTestResult> RunTestCases(string code, List<TestCase> testCases)
         {
-            CodeExecutor executor;
-            if (language == "C#")
-                executor = new csharpExecutor();
-            else
-                executor = new JavaExecutor();
+            CodeExecutor executor = new CSharpExecutor();
 
             var results = new List<CodeRunnerTestResult>();
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AdvancedProgramming.CodeRun
 {
-    public class csharpExecutor:CodeExecutor
+    public class CSharpExecutor : CodeExecutor
     {
 
 

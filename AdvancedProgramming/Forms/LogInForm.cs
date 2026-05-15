@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using AdvancedProgramming;
 using AdvancedProgramming.Session;
+
 
 namespace AdvancedProgramming.Forms
 {
@@ -11,102 +11,184 @@ namespace AdvancedProgramming.Forms
         public event EventHandler LoginSuccess;
         public event EventHandler BackRequested;
 
-        private TextBox userNmaseTextBox;
+        private TextBox usernameTextBox;
         private TextBox passwordTextBox;
         private Button logInButton;
-        private Button passwordTaggel;
-        private bool passwordVasibilty = false;
-        private Label Massage;
+        private Button passwordToggle;
+        private bool passwordVisible = false;
+        private Label messageLabel;
         private Toolbar toolbar;
 
         public LogInForm()
         {
             this.SuspendLayout();
-            this.Size = new Size(1100, 800);
-            InitializeLogInComponents();
+            this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
             toolbar = new Toolbar(this, "Log In");
             this.Controls.Add(toolbar);
+            InitializeLogInComponents();
             this.ResumeLayout(false);
             toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
-            Theme.Apply(this);
+            Theme.StylePage(this);
+
+            FormAccessibility.SetShortcutHint(logInButton, "Enter", "Sign in");
+            FormAccessibility.SetShortcutHint(usernameTextBox, "Tab", "Username");
+        }
+
+        public void SubmitLogin()
+        {
+            LogInButton_Click(logInButton, EventArgs.Empty);
         }
 
         private void InitializeLogInComponents()
         {
             int cx = this.Width / 2;
-            int labelX = cx - 200;
-            int inputX = cx - 100;
-            int inputW = 250;
-            int toggleX = inputX + inputW - 35;
-            int rowY = 130;
-            int rowGap = 48;
+            int formW = 400;
+            int leftX = cx - formW / 2;
+            int inputW = DesignTokens.Sizing.InputWidth;
+            int inputX = cx - inputW / 2;
+            int labelX = cx - inputW / 2;
+            int rowY = 180;
+            int rowGap = 60;
 
-            var userNameLabel = new Label { Text = "Username", Location = new Point(labelX, rowY + 4), Size = new Size(90, 20) };
-            userNmaseTextBox = new TextBox { Location = new Point(inputX, rowY), Size = new Size(inputW, 24) };
+            var headerLabel = new Label
+            {
+                Text = "Welcome back",
+                Font = DesignTokens.Typography.DisplaySmall,
+                AutoSize = false,
+                Size = new Size(formW, 45),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Location = new Point(leftX, 120),
+            };
+            var subheadLabel = new Label
+            {
+                Text = "Sign in to continue solving challenges",
+                Font = DesignTokens.Typography.BodyMedium,
+                AutoSize = false,
+                Size = new Size(formW, 24),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Location = new Point(leftX, 165),
+                Tag = "Secondary",
+            };
+
+            var userNameLabel = new Label
+            {
+                Text = "Username",
+                Location = new Point(labelX, rowY + 2),
+                Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
+                Font = DesignTokens.Typography.BodySmall,
+                Tag = "Secondary",
+            };
+            usernameTextBox = new TextBox
+            {
+                Location = new Point(inputX, rowY + 26),
+                Size = new Size(inputW, DesignTokens.Sizing.InputHeight),
+                Font = DesignTokens.Typography.BodyMedium,
+            };
 
             rowY += rowGap;
-            var passwordLabel = new Label { Text = "Password", Location = new Point(labelX, rowY + 4), Size = new Size(90, 20) };
-            passwordTextBox = new TextBox { Location = new Point(inputX, rowY), Size = new Size(inputW - 35, 24), PasswordChar = '*' };
-            passwordTaggel = new Button { Text = "\U0001f441", Location = new Point(toggleX, rowY), Size = new Size(30, 24), FlatStyle = FlatStyle.Flat };
-            passwordTaggel.FlatAppearance.BorderSize = 0;
-            passwordTaggel.Click += PasswordTaggel_Click;
+            var passwordLabel = new Label
+            {
+                Text = "Password",
+                Location = new Point(labelX, rowY + 2),
+                Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
+                Font = DesignTokens.Typography.BodySmall,
+                Tag = "Secondary",
+            };
+            passwordTextBox = new TextBox
+            {
+                Location = new Point(inputX, rowY + 26),
+                Size = new Size(inputW - 40, DesignTokens.Sizing.InputHeight),
+                PasswordChar = '*',
+                Font = DesignTokens.Typography.BodyMedium,
+            };
+            passwordToggle = new Button
+            {
+                Text = "\U0001f441",
+                Location = new Point(inputX + inputW - 38, rowY + 26),
+                Size = new Size(36, DesignTokens.Sizing.InputHeight),
+                FlatStyle = FlatStyle.Flat,
+                Tag = "Ghost",
+                Font = DesignTokens.Typography.BodyMedium,
+            };
+            passwordToggle.FlatAppearance.BorderSize = 0;
+            passwordToggle.Click += PasswordToggle_Click;
 
-            rowY += rowGap + 25;
-            logInButton = new Button { Text = "Log In", Location = new Point(cx - 90, rowY), Size = new Size(180, 50), FlatStyle = FlatStyle.Flat };
-            logInButton.FlatAppearance.BorderSize = 0;
+            rowY += rowGap + 20;
+            logInButton = new Button
+            {
+                Text = "Log In",
+                Size = new Size(inputW, DesignTokens.Sizing.ButtonHeight),
+                Location = new Point(inputX, rowY),
+                FlatStyle = FlatStyle.Flat,
+                Font = DesignTokens.Typography.ButtonLabel,
+                Tag = "Primary",
+                Cursor = Cursors.Hand,
+            };
             logInButton.Click += LogInButton_Click;
+
+            rowY += 80;
+            messageLabel = new Label
+            {
+                Text = "",
+                Location = new Point(leftX, rowY),
+                Size = new Size(formW, 40),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = DesignTokens.Typography.BodySmall,
+                Tag = "Error",
+            };
 
             var btnBack = new Button
             {
                 Text = "\u2190 Back",
-                Location = new Point(this.Width - 85, 62),
-                Size = new Size(70, 26),
+                Location = new Point(DesignTokens.Spacing.Md, 52 + DesignTokens.Spacing.Sm),
+                Size = new Size(80, 30),
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 9F),
+                Font = DesignTokens.Typography.BodySmall,
+                Tag = "Ghost",
             };
-            btnBack.FlatAppearance.BorderSize = 1;
+            btnBack.FlatAppearance.BorderSize = 0;
             btnBack.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
 
-            rowY += 60;
-            Massage = new Label { Text = "", Location = new Point(labelX, rowY), Size = new Size(370, 50), TextAlign = ContentAlignment.MiddleCenter };
-
             this.Controls.AddRange(new Control[] {
-                userNameLabel, userNmaseTextBox,
-                passwordLabel, passwordTextBox, passwordTaggel,
+                headerLabel, subheadLabel,
+                userNameLabel, usernameTextBox,
+                passwordLabel, passwordTextBox, passwordToggle,
                 logInButton, btnBack,
-                Massage
+                messageLabel
             });
         }
 
-        private void PasswordTaggel_Click(object sender, EventArgs e)
+        private void PasswordToggle_Click(object sender, EventArgs e)
         {
-            passwordVasibilty = !passwordVasibilty;
-            passwordTextBox.PasswordChar = passwordVasibilty ? '\0' : '*';
-            passwordTaggel.Text = passwordVasibilty ? "\U0001f648" : "\U0001f441";
+            passwordVisible = !passwordVisible;
+            passwordTextBox.PasswordChar = passwordVisible ? '\0' : '*';
+            passwordToggle.Text = passwordVisible ? "\U0001f648" : "\U0001f441";
         }
 
         private void LogInButton_Click(object sender, EventArgs e)
         {
             string password = passwordTextBox.Text;
-            string username = userNmaseTextBox.Text;
+            string username = usernameTextBox.Text;
             var user = new UserManagement();
 
-            Massage.Text = "";
+            messageLabel.Text = "";
 
             if (string.IsNullOrEmpty(username))
             {
-                Massage.Text = "UserName is required, please enter it !!";
+                messageLabel.Text = "Username is required";
+                messageLabel.Tag = "Error";
                 return;
             }
             if (string.IsNullOrEmpty(password))
             {
-                Massage.Text = "Password is required, please enter it !!";
+                messageLabel.Text = "Password is required";
+                messageLabel.Tag = "Error";
                 return;
             }
 
             if (user.SignIn(username, password))
             {
-                Massage.Text = "Log in successful!";
+                messageLabel.Text = "";
                 CurrentUser.Username = username;
                 var details = user.GetUserDetails(username);
                 CurrentUser.Country = details.Country;
@@ -115,7 +197,10 @@ namespace AdvancedProgramming.Forms
                 LoginSuccess?.Invoke(this, EventArgs.Empty);
             }
             else
-                Massage.Text = "Oops!! Log in failed. Invalid username or password.";
+            {
+                messageLabel.Text = "Invalid username or password";
+                messageLabel.Tag = "Error";
+            }
         }
     }
 }

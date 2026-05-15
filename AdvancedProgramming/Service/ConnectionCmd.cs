@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace AdvancedProgramming.Service
 {
-    public class ConnactiomCmd
+    public class ConnectionCmd
     {
         public string call(string fileName, string arguments)
         {

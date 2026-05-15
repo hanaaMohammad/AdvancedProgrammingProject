@@ -107,8 +107,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeRun\CodeExecutor.cs" />
-    <Compile Include="CodeRun\csharpExecutor.cs" />
-    <Compile Include="CodeRun\JavaExcuteor.cs" />
+    <Compile Include="CodeRun\CSharpExecutor.cs" />
+
     <Compile Include="Components\PanelStars.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -117,13 +117,13 @@
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AxpectedForm.cs">
+    <Compile Include="Forms\AcceptedForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Faild.cs">
+    <Compile Include="Forms\FailedForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\HomeFarme.cs">
+    <Compile Include="Forms\HomeForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\LogInForm.cs">
@@ -138,15 +138,16 @@
     <Compile Include="Forms\StartupForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\SubmiittForm.cs">
+    <Compile Include="Forms\SubmitForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UsreForm.cs">
+    <Compile Include="Forms\UserForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ProblemClasses\Example.cs" />
     <Compile Include="ProblemClasses\ProblemLoadReadJs.cs" />
     <Compile Include="ProblemClasses\Problem.cs" />
+    <Compile Include="ProblemClasses\ProblemCatalog.cs" />
     <Compile Include="ProblemClasses\TestCase.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -154,28 +155,34 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Service\CodeRunner.cs" />
-    <Compile Include="Service\ConnactiomCmd.cs" />
+    <Compile Include="Service\ConnectionCmd.cs" />
     <Compile Include="Session\CurrentUser.cs" />
     <Compile Include="Theme\ITheme.cs" />
     <Compile Include="Theme\DarkTheme.cs" />
     <Compile Include="Theme\LightTheme.cs" />
     <Compile Include="Theme\Theme.cs" />
+    <Compile Include="Theme\DesignTokens.cs" />
     <Compile Include="Components\Toolbar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Components\LoadingOverlay.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\FormAccessibility.cs" />
+    <Compile Include="Components\PageTransition.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Forms\SignUpForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\AxpectedForm.resx">
-      <DependentUpon>AxpectedForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AcceptedForm.resx">
+      <DependentUpon>AcceptedForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Faild.resx">
-      <DependentUpon>Faild.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FailedForm.resx">
+      <DependentUpon>FailedForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\HomeFarme.resx">
-      <DependentUpon>HomeFarme.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\HomeForm.resx">
+      <DependentUpon>HomeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LogInForm.resx">
       <DependentUpon>LogInForm.cs</DependentUpon>
@@ -187,8 +194,8 @@
       <DependentUpon>ProblemDisplayForm.cs</DependentUpon>
     </EmbeddedResource>
 
-    <EmbeddedResource Include="Forms\UsreForm.resx">
-      <DependentUpon>UsreForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\UserForm.resx">
+      <DependentUpon>UserForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

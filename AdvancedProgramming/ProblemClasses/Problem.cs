@@ -19,5 +19,6 @@ namespace AdvancedProgramming.ProblemClasses
         public Example Example { get; set; }
         public string Constraints { get; set; }
         public string level { get; set; }
+        public string solution { get; set; }
     }
 }
