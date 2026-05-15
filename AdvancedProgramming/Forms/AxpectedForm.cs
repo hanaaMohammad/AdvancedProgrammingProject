@@ -20,7 +20,6 @@ namespace AdvancedProgramming.Forms
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AxpectedForm));
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelSumbb = new System.Windows.Forms.Label();
             this.pictureBox1trusoliotion = new System.Windows.Forms.PictureBox();
@@ -40,11 +39,10 @@ namespace AdvancedProgramming.Forms
                 Size = new Size(90, 58),
                 FlatStyle = FlatStyle.Flat,
             };
+            backButton.FlatAppearance.BorderSize = 0;
             backButton.Click += (s, e) => this.Close();
             this.Controls.Add(backButton);
 
-            // panel1
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.panel1.Controls.Add(this.labelSumbb);
             this.panel1.Controls.Add(this.pictureBox1trusoliotion);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -53,10 +51,7 @@ namespace AdvancedProgramming.Forms
             this.panel1.Size = new System.Drawing.Size(1882, 340);
             this.panel1.TabIndex = 0;
 
-            // labelSumbb
-            this.labelSumbb.BackColor = System.Drawing.Color.Black;
-            this.labelSumbb.Font = new System.Drawing.Font("Microsoft Sans Serif", 22.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSumbb.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.labelSumbb.Font = new System.Drawing.Font("Segoe UI", 22.2F, System.Drawing.FontStyle.Bold);
             this.labelSumbb.Location = new System.Drawing.Point(261, 48);
             this.labelSumbb.Name = "labelSumbb";
             this.labelSumbb.Size = new System.Drawing.Size(529, 81);
@@ -64,28 +59,23 @@ namespace AdvancedProgramming.Forms
             this.labelSumbb.Text = "-------Submmit✅🎉------";
             this.labelSumbb.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 
-            // pictureBox1trusoliotion
-            this.pictureBox1trusoliotion.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1trusoliotion.Image")));
             this.pictureBox1trusoliotion.Location = new System.Drawing.Point(340, 59);
             this.pictureBox1trusoliotion.Name = "pictureBox1trusoliotion";
             this.pictureBox1trusoliotion.Size = new System.Drawing.Size(367, 281);
             this.pictureBox1trusoliotion.TabIndex = 2;
             this.pictureBox1trusoliotion.TabStop = false;
-            this.pictureBox1trusoliotion.Click += new System.EventHandler(this.pictureBox1_Click);
 
-            // buttonHome
+            this.buttonHome.FlatStyle = FlatStyle.Flat;
+            this.buttonHome.FlatAppearance.BorderSize = 0;
+            this.buttonHome.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             this.buttonHome.Location = new System.Drawing.Point(498, 666);
             this.buttonHome.Name = "buttonHome";
             this.buttonHome.Size = new System.Drawing.Size(90, 58);
             this.buttonHome.TabIndex = 1;
             this.buttonHome.Text = "HOME";
-            this.buttonHome.UseVisualStyleBackColor = true;
             this.buttonHome.Click += new System.EventHandler(this.buttonHome_Click);
 
-            // label1
-            this.label1.BackColor = System.Drawing.Color.Black;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 16.2F, System.Drawing.FontStyle.Bold);
             this.label1.Location = new System.Drawing.Point(203, 364);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(646, 139);
@@ -94,8 +84,6 @@ namespace AdvancedProgramming.Forms
     "s were completed as expected.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 
-            // AxpectedForm
-            this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1882, 1055);
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;

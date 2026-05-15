@@ -47,12 +47,14 @@ namespace AdvancedProgramming.Forms
             passwordTextBox = new TextBox { Location = new Point(140, 108), Size = new Size(160, 20), PasswordChar = '*' };
 
             passwordTaggel = new Button { Text = "👁", Location = new Point(305, 106), Size = new Size(30, 23), FlatStyle = FlatStyle.Flat };
+            passwordTaggel.FlatAppearance.BorderSize = 0;
 
-            logInButton = new Button { Text = "log in", Location = new Point(140, 200), Size = new Size(100, 30) };
+            logInButton = new Button { Text = "log in", Location = new Point(140, 200), Size = new Size(100, 30), FlatStyle = FlatStyle.Flat };
+            logInButton.FlatAppearance.BorderSize = 0;
             passwordTaggel.Click += PasswordTaggel_Click;
             logInButton.Click += LogInButton_Click;
 
-            Massage = new Label { Text = "", Location = new Point(30, 290), Size = new Size(320, 60), FlatStyle = FlatStyle.Flat };
+            Massage = new Label { Text = "", Location = new Point(30, 290), Size = new Size(320, 60) };
 
             Controls.Add(Massage);
             Controls.Add(passwordTaggel);
@@ -69,6 +71,7 @@ namespace AdvancedProgramming.Forms
                 Size = new Size(60, 30),
                 FlatStyle = FlatStyle.Flat
             };
+            btnHome.FlatAppearance.BorderSize = 0;
             btnHome.Click += (s, e) => this.Close();
             Controls.Add(btnHome);
 

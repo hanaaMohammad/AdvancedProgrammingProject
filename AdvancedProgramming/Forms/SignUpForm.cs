@@ -50,17 +50,20 @@ namespace AdvancedProgramming
             var passwordLabel = new Label { Text = "Password:", Location = new Point(30, 110), Size = new Size(100, 20) };
             passwordTextBox = new TextBox { Location = new Point(140, 108), Size = new Size(160, 20), PasswordChar = '*' };
             passwordButtonToggle = new Button { Text = "👁", Location = new Point(305, 106), Size = new Size(30, 23), FlatStyle = FlatStyle.Flat };
+            passwordButtonToggle.FlatAppearance.BorderSize = 0;
             passwordButtonToggle.Click += TogglePasswordVisibility;
 
             var confirmLabel = new Label { Text = "Confirm:", Location = new Point(30, 150), Size = new Size(100, 20) };
             confirmPasswordTextBox = new TextBox { Location = new Point(140, 148), Size = new Size(160, 20), PasswordChar = '*' };
             confirmPasswordButtonToggle = new Button { Text = "👁", Location = new Point(305, 146), Size = new Size(30, 23), FlatStyle = FlatStyle.Flat };
+            confirmPasswordButtonToggle.FlatAppearance.BorderSize = 0;
             confirmPasswordButtonToggle.Click += confirmPasswordVisibilityTaggel;
 
-            signUpButton = new Button { Text = "Sign Up", Location = new Point(140, 350), Size = new Size(100, 30) };
+            signUpButton = new Button { Text = "Sign Up", Location = new Point(140, 350), Size = new Size(100, 30), FlatStyle = FlatStyle.Flat };
+            signUpButton.FlatAppearance.BorderSize = 0;
             signUpButton.Click += signUpButton_Click;
 
-            messageLabel = new Label { Location = new Point(30, 390), Size = new Size(320, 60), ForeColor = Color.Red };
+            messageLabel = new Label { Location = new Point(30, 390), Size = new Size(320, 60) };
 
             this.Controls.AddRange(new Control[] { usernameLabel, userNameTextBox, passwordLabel, passwordTextBox, passwordButtonToggle,
                 confirmLabel, confirmPasswordTextBox, confirmPasswordButtonToggle, signUpButton, messageLabel });
@@ -91,6 +94,7 @@ namespace AdvancedProgramming
                 Size = new Size(60, 30),
                 FlatStyle = FlatStyle.Flat
             };
+            btnHome.FlatAppearance.BorderSize = 0;
             btnHome.Click += (s, e) => this.Close();
             this.Controls.Add(btnHome);
 
