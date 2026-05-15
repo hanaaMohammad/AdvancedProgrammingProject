@@ -239,6 +239,9 @@ namespace AdvancedProgramming.Forms
                 labelExplanation, explation,
             });
 
+
+            //////////////////
+
             PaintStars();
 
             tableLayoutPanel.Controls.Add(LeftPanel, 0, 0);
