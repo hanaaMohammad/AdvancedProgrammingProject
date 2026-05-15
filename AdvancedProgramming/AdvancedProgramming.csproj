@@ -112,6 +112,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Service\CodeRunner.cs" />
     <Compile Include="Service\ConnactiomCmd.cs" />
     <Compile Include="Service\FileManger.cs" />
     <Compile Include="Session\CurrentUser.cs" />
