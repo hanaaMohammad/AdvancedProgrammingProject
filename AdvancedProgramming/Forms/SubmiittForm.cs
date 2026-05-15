@@ -35,9 +35,9 @@ namespace AdvancedProgramming.Forms
 
             buttonHome = new Button
             {
-                Text = "Home",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                Size = new Size(90, 45),
+                Text = "\u2302 Home",
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Size = new Size(100, 45),
                 Location = new Point(15, 70),
                 FlatStyle = FlatStyle.Flat,
             };
@@ -46,9 +46,9 @@ namespace AdvancedProgramming.Forms
             buttonBack = new Button
             {
                 Text = "Back",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                Size = new Size(90, 45),
-                Location = new Point(15, 125),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Size = new Size(100, 45),
+                Location = new Point(320, 480),
                 FlatStyle = FlatStyle.Flat,
             };
             buttonBack.Click += buttonBack_Click;
@@ -65,7 +65,7 @@ namespace AdvancedProgramming.Forms
             {
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold | FontStyle.Italic),
                 Size = new Size(300, 30),
-                Location = new Point(120, 115),
+                Location = new Point(120, 185),
                 Text = "Enter the code here \u2B07\u2B07",
                 TextAlign = ContentAlignment.MiddleCenter,
             };
