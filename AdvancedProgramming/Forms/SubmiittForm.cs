@@ -8,7 +8,7 @@ namespace AdvancedProgramming.Forms
     {
         private Toolbar toolbar;
         private Button buttonHome;
-        private Button buttonRun;
+        private Button buttonRunn;
         private Button buttonBack;
         private Label labelNameproblem;
         private Label labeIndtwrite;
@@ -63,11 +63,12 @@ namespace AdvancedProgramming.Forms
 
             labeIndtwrite = new Label
             {
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold | FontStyle.Italic),
-                Size = new Size(300, 30),
-                Location = new Point(120, 185),
-                Text = "Enter the code here \u2B07\u2B07",
+
+                Size = new Size(250, 20),
+                Location = new Point(125, 190),
+                Text = "\\\\Enter the code here",
                 TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White
             };
 
             comboBoxTybeLang = new ComboBox
@@ -78,7 +79,7 @@ namespace AdvancedProgramming.Forms
                 Location = new Point(120, 150),
                 FlatStyle = FlatStyle.Flat,
             };
-            comboBoxTybeLang.Items.Add("C#");
+       
             comboBoxTybeLang.Items.Add("C++");
             comboBoxTybeLang.Items.Add("Java");
             comboBoxTybeLang.SelectedIndex = 0;
@@ -92,7 +93,7 @@ namespace AdvancedProgramming.Forms
                 ScrollBars = ScrollBars.Both,
             };
 
-            buttonRun = new Button
+            buttonRunn = new Button
             {
                 Text = "Run",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
@@ -100,7 +101,7 @@ namespace AdvancedProgramming.Forms
                 Location = new Point(430, 480),
                 FlatStyle = FlatStyle.Flat,
             };
-            buttonRun.Click += buttonRun_Click;
+            buttonRunn.Click += buttonRun_Click;
 
             this.Controls.Add(buttonHome);
             this.Controls.Add(buttonBack);
@@ -108,7 +109,7 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(labeIndtwrite);
             this.Controls.Add(comboBoxTybeLang);
             this.Controls.Add(textBoxCode);
-            this.Controls.Add(buttonRun);
+            this.Controls.Add(buttonRunn);
 
             Theme.Apply(this);
 
