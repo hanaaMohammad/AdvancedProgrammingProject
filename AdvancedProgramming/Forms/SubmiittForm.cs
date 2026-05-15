@@ -68,7 +68,7 @@ namespace AdvancedProgramming.Forms
 
                 Size = new Size(250, 20),
                 Location = new Point(125, 190),
-                Text = "\\\\Enter the code here",
+                Text = "Enter the code here",
                 TextAlign = ContentAlignment.MiddleCenter,
                 ForeColor = Color.White
             };
@@ -82,7 +82,7 @@ namespace AdvancedProgramming.Forms
                 FlatStyle = FlatStyle.Flat,
             };
         
-            comboBoxTybeLang.Items.Add("C++");
+            comboBoxTybeLang.Items.Add("C#");
             comboBoxTybeLang.Items.Add("Java");
             comboBoxTybeLang.SelectedIndex = 0;
 

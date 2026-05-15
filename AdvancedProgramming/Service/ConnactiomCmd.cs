@@ -5,9 +5,6 @@ namespace AdvancedProgramming.Service
 {
     public class ConnactiomCmd
     {
-
-
-
         public string call(string fileName, string arguments)
         {
             try
@@ -24,20 +21,19 @@ namespace AdvancedProgramming.Service
                 string output = p.StandardOutput.ReadToEnd();
                 string error = p.StandardError.ReadToEnd();
                 p.WaitForExit();
-                return output + error;
+
+                if (p.ExitCode == 0)
+                    return "";
+                else
+                    return (output + error).Trim();
             }
             catch (Exception ex)
             {
-                return "ERROR:" + ex.Message;
+                if (ex.Message.Contains("cannot find the file"))
+                    return "ERROR: Compiler '" + fileName + "' not found. Use Java or install the compiler.";
+                return "ERROR: " + ex.Message;
             }
-
-
-
-
         }
-
-
-
 
         public string callWithInput(string fileName, string arguments, string input)
         {
@@ -56,22 +52,20 @@ namespace AdvancedProgramming.Service
                 p.StandardInput.Write(input);
                 p.StandardInput.Close();
                 string output = p.StandardOutput.ReadToEnd();
+                string error = p.StandardError.ReadToEnd();
                 p.WaitForExit();
-                return output;
+
+                string result = output;
+                if (!string.IsNullOrEmpty(error))
+                    result += "\n" + error.Trim();
+                return result;
             }
             catch (Exception ex)
             {
-                return "RUNTIME_ERROR:" + ex.Message;
+                if (ex.Message.Contains("cannot find the file"))
+                    return "RUNTIME_ERROR: Executable '" + fileName + "' not found. Compilation may have failed.";
+                return "RUNTIME_ERROR: " + ex.Message;
             }
-
-
-
-
         }
-
-
-
-
-
     }
 }

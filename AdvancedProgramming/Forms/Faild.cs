@@ -111,7 +111,7 @@ namespace AdvancedProgramming.Forms
 
             if (GameOver.Visible)
             {
-                GameOver.Location = new Point(185,400);
+                GameOver.Location = new Point(185, 400);
                 GameOver.Size = new Size(480, 220);
                 GameOver.BackColor = Color.Transparent;
             }

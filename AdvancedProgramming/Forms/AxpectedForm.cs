@@ -108,7 +108,12 @@ namespace AdvancedProgramming.Forms
         {
 
         }
-        private void buttonHome_Click(object sender, System.EventArgs e) { }
+        private void buttonHome_Click(object sender, System.EventArgs e)
+        {
+            HomeFarme form = new HomeFarme();
+            form.Show();
+            this.Close();
+        }
 
     }
 }
