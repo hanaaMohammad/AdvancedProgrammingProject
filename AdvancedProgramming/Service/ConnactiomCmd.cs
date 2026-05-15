@@ -10,35 +10,30 @@ namespace AdvancedProgramming.Service
 {
     public class ConnactiomCmd
     {
-        Process p;
-      
-        public ConnactiomCmd()
+        ProcessStartInfo processInfo ;
+
+
+
+
+
+
+        public string call(string fileName, string arguments)
         {
+           procesInfo = new ProcessStartInfo();
+            procesInfo.FileName = fileName;
+            procesInfo.Arguments = arguments;
+            procesInfo.UseShellExecute = false;
+            procesInfo.RedirectStandardOutput = true;
+            procesInfo.RedirectStandardError = true;
+            procesInfo.CreateNoWindow = true;
 
-            p = new Process();
-            p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.RedirectStandardInput = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.CreateNoWindow = true;
-            call();  
-
-
-
-
-
+            Process p = Process.Start(procesInfo);
+            string error = p.StandardError.ReadToEnd();
+            p.WaitForExit();
+            return error;
 
 
-        }
 
-      
-
-
-        public void call()
-        {
-            p.Start();
-           
 
         }
 
