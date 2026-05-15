@@ -5,8 +5,13 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Forms
 {
-    internal class ProblemDisplayForm : Form
+    public class ProblemDisplayForm : UserControl
     {
+        public event EventHandler SolveRequested;
+        public event EventHandler HomeRequested;
+        public event EventHandler UserRequested;
+        public event EventHandler BackRequested;
+
         private Toolbar toolbar;
         private TextBox descriptionBox;
         private Label descriptionLabel;
@@ -28,6 +33,7 @@ namespace AdvancedProgramming.Forms
 
         public ProblemDisplayForm(string problem)
         {
+            this.Size = new Size(1100, 800);
             InitializeComponent(problem);
         }
 
@@ -39,14 +45,12 @@ namespace AdvancedProgramming.Forms
             if (problemChoice == null)
             {
                 MessageBox.Show("Problem not found");
-                this.Close();
                 return;
             }
 
-            this.ClientSize = new Size(1100, 700);
-
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
+            toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
 
             tableLayoutPanel = new TableLayoutPanel()
             {
@@ -264,9 +268,6 @@ namespace AdvancedProgramming.Forms
                 labelExplanation, explation,
             });
 
-
-            //////////////////
-
             PaintStars();
 
             tableLayoutPanel.Controls.Add(LeftPanel, 0, 0);
@@ -275,47 +276,16 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(tableLayoutPanel);
 
             solveButton.Click += solveButton_Click;
-            backButton.Click += backButton_Click;
-            homeButton.Click += homeButton_Click;
-            userButton.Click += userButton_Click;
-
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterScreen;
+            backButton.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+            homeButton.Click += (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty);
+            userButton.Click += (s, e) => UserRequested?.Invoke(this, EventArgs.Empty);
 
             Theme.Apply(this);
         }
 
-        protected override void OnResize(EventArgs e)
+        private void solveButton_Click(object sender, EventArgs e)
         {
-            base.OnResize(e);
-            toolbar?.UpdateTheme();
-        }
-
-        private void solveButton_Click(object sender, EventArgs e) {
-            SubmiittForm form = new SubmiittForm(problemName);
-            form.Show();
-            this.Hide();
-        
-        
-        }
-
-        private void homeButton_Click(object sender, EventArgs e)
-        {
-            var home = new HomeFarme();
-            home.Show();
-            this.Close();
-        }
-
-        private void userButton_Click(object sender, EventArgs e)
-        {
-            var usre = new UsreForm();
-            usre.Show();
-            this.Close();
-        }
-
-        private void backButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
+            SolveRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void GetProblemDetails()

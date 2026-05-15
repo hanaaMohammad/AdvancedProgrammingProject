@@ -8,14 +8,16 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Forms
 {
-    public class Faild:Form
+    public class Failed : UserControl
     {
+        public event EventHandler BackRequested;
+
         private PictureBox GameOver;
         private ProblemLoadReadJs load;
         private Timer timer2;
         private Problem problem;
         private List<TestCase> testCases;
-        private List<Panel> panels= new List<Panel>();
+        private List<Panel> panels = new List<Panel>();
         private List<int> targetTops = new List<int>();
         private int currentTestCaseInde = 0;
         private Toolbar toolbar;
@@ -23,25 +25,18 @@ namespace AdvancedProgramming.Forms
         private List<CodeRunnerTestResult> testResults;
         private Label labelHeader;
 
-        public Faild(string name)
-        {
-            try
-            {
-                InitializeComponent();
-                InitalProblem(name);
-                DisplayTestCases();
-            }
-            catch { }
-        }
+        public Failed(string name) : this(name, null) { }
 
-        public Faild(string name, List<CodeRunnerTestResult> results)
+        public Failed(string name, List<CodeRunnerTestResult> results)
         {
+            this.Size = new Size(1100, 800);
+            testResults = results;
             try
             {
-                testResults = results;
                 InitializeComponent();
                 InitalProblem(name);
                 DisplayTestCases();
+                toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
             }
             catch { }
         }
@@ -54,29 +49,17 @@ namespace AdvancedProgramming.Forms
 
             this.AutoScroll = true;
 
-            try
-            {
-                string bgPath = Path.Combine(Application.StartupPath, "Image", "BackGround.jpg");
-                if (!File.Exists(bgPath))
-                    bgPath = Path.GetFullPath(@"..\..\..\Image\BackGround.jpg");
-                if (File.Exists(bgPath))
-                {
-                    this.BackgroundImage = Image.FromFile(bgPath);
-                    this.BackgroundImageLayout = ImageLayout.Stretch;
-                }
-            }
-            catch { }
-
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
 
+            int cx = this.Width / 2;
             labelHeader = new Label
             {
                 Text = "Some tests failed!",
                 Font = new Font("Segoe UI", 18F, FontStyle.Bold),
                 ForeColor = Color.Red,
                 Size = new Size(400, 45),
-                Location = new Point(225, 70),
+                Location = new Point(cx - 200, 70),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.Transparent
             };
@@ -89,7 +72,7 @@ namespace AdvancedProgramming.Forms
                 FlatStyle = FlatStyle.Flat,
             };
             backButton.FlatAppearance.BorderSize = 0;
-            backButton.Click += (s, e) => this.Close();
+            backButton.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
 
             try
             {
@@ -111,29 +94,20 @@ namespace AdvancedProgramming.Forms
 
             if (GameOver.Visible)
             {
-                GameOver.Location = new Point(185, 400);
+                GameOver.Location = new Point(cx - 240, 420);
                 GameOver.Size = new Size(480, 220);
                 GameOver.BackColor = Color.Transparent;
             }
 
-            this.ClientSize = new Size(850, 700);
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterScreen;
             this.Controls.Add(labelHeader);
             this.Controls.Add(GameOver);
             this.Controls.Add(backButton);
-            this.Name = "Faild";
+            this.Name = "Failed";
 
             this.ResumeLayout(false);
             this.PerformLayout();
 
             Theme.Apply(this);
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            toolbar?.UpdateTheme();
         }
 
         private void InitalProblem(string name)
@@ -148,6 +122,7 @@ namespace AdvancedProgramming.Forms
             if (testCases == null || testCases.Count == 0)
                 return;
 
+            int cx = this.Width / 2;
             int startY = GameOver.Visible ? 350 : 130;
 
             for (int i = 0; i < testCases.Count; i++)
@@ -159,7 +134,7 @@ namespace AdvancedProgramming.Forms
                 {
                     Width = 620,
                     Height = 110,
-                    Left = 115,
+                    Left = cx - 310,
                     Top = -150,
                     BackColor = Theme.Current.ControlBackColor,
                     BorderStyle = BorderStyle.FixedSingle

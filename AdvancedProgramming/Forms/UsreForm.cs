@@ -6,8 +6,10 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Forms
 {
-    internal class UsreForm : Form
+    public class UserForm : UserControl
     {
+        public event EventHandler HomeRequested;
+
         private Label labelScore;
         private Label labelTitle;
         private PictureBox pictureUser;
@@ -18,13 +20,13 @@ namespace AdvancedProgramming.Forms
         private Button btnHome;
         private Toolbar toolbar;
 
-        public UsreForm()
+        public UserForm()
         {
+            this.Size = new Size(1100, 800);
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterScreen;
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
+            toolbar.CloseRequested += (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty);
             AddHomeButton();
             Theme.Apply(this);
         }
@@ -33,8 +35,8 @@ namespace AdvancedProgramming.Forms
         {
             btnHome = new Button
             {
-                Text = "🏠",
-                Location = new Point(10, 50),
+                Text = "\U0001f3e0",
+                Location = new Point(10, 55),
                 Size = new Size(50, 40),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 16F),
@@ -47,43 +49,43 @@ namespace AdvancedProgramming.Forms
 
         private void InitializeComponent()
         {
+            int cx = this.Width / 2;
             this.SuspendLayout();
 
             labelUsreName = new Label()
             {
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Location = new Point(200, 106),
-                Size = new Size(326, 55),
+                Location = new Point(cx - 150, 106),
+                Size = new Size(400, 55),
                 TabIndex = 0,
                 Text = "Name : " + CurrentUser.Username,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            labelUsreName.Click += new EventHandler(label1_Click);
 
             labelTitle = new Label()
             {
                 Font = new Font("Segoe UI", 14F, FontStyle.Bold),
-                Location = new Point(0, -1),
-                Size = new Size(583, 90),
+                Location = new Point(0, 55),
+                Size = new Size(1100, 45),
                 TabIndex = 3,
-                Text = "Profile User",
+                Text = "User Profile",
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
             labelScore = new Label()
             {
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Location = new Point(200, 181),
-                Size = new Size(326, 56),
+                Location = new Point(cx - 150, 181),
+                Size = new Size(400, 56),
                 TabIndex = 2,
-                Text = "Score : " + CurrentUser.score.ToString(),
+                Text = "Score : " + CurrentUser.Score.ToString(),
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
             this.pictureUser = new PictureBox()
             {
                 BorderStyle = BorderStyle.FixedSingle,
-                Location = new Point(3, 84),
+                Location = new Point(60, 84),
                 Size = new Size(178, 283),
                 TabIndex = 4,
                 TabStop = false,
@@ -92,15 +94,15 @@ namespace AdvancedProgramming.Forms
             this.panel1 = new Panel();
             this.panel1.SuspendLayout();
 
-            panel1.Location = new System.Drawing.Point(0, -7);
-            panel1.Size = new Size(583, 413);
+            panel1.Location = new System.Drawing.Point(0, 10);
+            panel1.Size = new Size(1100, 750);
             panel1.TabIndex = 5;
 
             labelCountry = new Label()
             {
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Location = new Point(200, 324),
-                Size = new Size(326, 43),
+                Location = new Point(cx - 150, 324),
+                Size = new Size(400, 43),
                 TabIndex = 6,
                 Text = "Country : " + CurrentUser.Country,
                 TextAlign = ContentAlignment.MiddleCenter
@@ -109,8 +111,8 @@ namespace AdvancedProgramming.Forms
             labelGender = new Label()
             {
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Location = new Point(200, 255),
-                Size = new Size(326, 50),
+                Location = new Point(cx - 150, 255),
+                Size = new Size(400, 50),
                 TabIndex = 5,
                 Text = "gender : " + CurrentUser.Gender,
                 TextAlign = ContentAlignment.MiddleCenter
@@ -124,19 +126,11 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(this.labelTitle);
             this.Controls.Add(this.panel1);
 
-            this.FormBorderStyle = FormBorderStyle.None;
             this.BackgroundImageLayout = ImageLayout.Center;
-            this.ClientSize = new Size(581, 405);
 
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             UsreLoad();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            toolbar?.UpdateTheme();
         }
 
         private void UsreLoad()
@@ -148,15 +142,9 @@ namespace AdvancedProgramming.Forms
             pictureUser.SizeMode = PictureBoxSizeMode.StretchImage;
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
         private void BtnHome_Click(object sender, EventArgs e)
         {
-            var home = new HomeFarme();
-            home.Show();
-            this.Close();
+            HomeRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

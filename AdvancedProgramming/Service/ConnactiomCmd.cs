@@ -22,10 +22,8 @@ namespace AdvancedProgramming.Service
                 string error = p.StandardError.ReadToEnd();
                 p.WaitForExit();
 
-                if (p.ExitCode == 0)
-                    return "";
-                else
-                    return (output + error).Trim();
+                string result = (output + error).Trim();
+                return string.IsNullOrEmpty(result) ? "" : result;
             }
             catch (Exception ex)
             {

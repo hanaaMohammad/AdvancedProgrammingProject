@@ -3,34 +3,37 @@ using System.Drawing;
 using System.Windows.Forms;
 using AdvancedProgramming.Service;
 using AdvancedProgramming.ProblemClasses;
+using AdvancedProgramming.Session;
 
 namespace AdvancedProgramming.Forms
 {
-    internal class SubmiittForm : Form
+    public class SubmitForm : UserControl
     {
+        public event EventHandler<CodeRunnerTestResultList> TestResultsReady;
+        public event EventHandler HomeRequested;
+        public event EventHandler BackRequested;
+
         private Toolbar toolbar;
         private Button buttonHome;
         private Button buttonRunn;
         private Button buttonBack;
         private Label labelNameproblem;
-        private Label labeIndtwrite;
+        private Label labelCodePrompt;
         private ComboBox comboBoxTybeLang;
         private TextBox textBoxCode;
 
-        public SubmiittForm(string problemName)
+        public SubmitForm(string problemName)
         {
+            this.Size = new Size(1100, 800);
             InitializeComponent();
             labelNameproblem.Text = problemName;
+            toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void InitializeComponent()
         {
+            int cx = this.Width / 2;
             SuspendLayout();
-
-            this.Text = "Submit Code";
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.ClientSize = new Size(808, 549);
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
@@ -50,27 +53,25 @@ namespace AdvancedProgramming.Forms
                 Text = "Back",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 Size = new Size(100, 45),
-                Location = new Point(320, 480),
+                Location = new Point(cx - 110, 560),
                 FlatStyle = FlatStyle.Flat,
             };
-            buttonBack.Click += buttonBack_Click;
+            buttonBack.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
 
             labelNameproblem = new Label
             {
                 Font = new Font("Segoe UI", 14F, FontStyle.Bold),
                 Size = new Size(550, 40),
-                Location = new Point(120, 70),
+                Location = new Point(cx - 275, 70),
                 TextAlign = ContentAlignment.MiddleCenter,
             };
 
-            labeIndtwrite = new Label
+            labelCodePrompt = new Label
             {
-
                 Size = new Size(250, 20),
-                Location = new Point(125, 190),
+                Location = new Point(cx - 125, 195),
                 Text = "Enter the code here",
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.White
             };
 
             comboBoxTybeLang = new ComboBox
@@ -78,10 +79,10 @@ namespace AdvancedProgramming.Forms
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Font = new Font("Segoe UI", 10F),
                 Size = new Size(140, 28),
-                Location = new Point(120, 150),
+                Location = new Point(cx - 70, 150),
                 FlatStyle = FlatStyle.Flat,
             };
-        
+
             comboBoxTybeLang.Items.Add("C#");
             comboBoxTybeLang.Items.Add("Java");
             comboBoxTybeLang.SelectedIndex = 0;
@@ -89,9 +90,9 @@ namespace AdvancedProgramming.Forms
             textBoxCode = new TextBox
             {
                 Font = new Font("Consolas", 10F, FontStyle.Regular),
-                Location = new Point(120, 185),
+                Location = new Point(cx - 275, 230),
                 Multiline = true,
-                Size = new Size(550, 280),
+                Size = new Size(550, 300),
                 ScrollBars = ScrollBars.Both,
             };
 
@@ -100,7 +101,7 @@ namespace AdvancedProgramming.Forms
                 Text = "Run",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 Size = new Size(120, 45),
-                Location = new Point(430, 480),
+                Location = new Point(cx + 10, 560),
                 FlatStyle = FlatStyle.Flat,
             };
             buttonRunn.Click += buttonRun_Click;
@@ -108,7 +109,7 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(buttonHome);
             this.Controls.Add(buttonBack);
             this.Controls.Add(labelNameproblem);
-            this.Controls.Add(labeIndtwrite);
+            this.Controls.Add(labelCodePrompt);
             this.Controls.Add(comboBoxTybeLang);
             this.Controls.Add(textBoxCode);
             this.Controls.Add(buttonRunn);
@@ -118,18 +119,12 @@ namespace AdvancedProgramming.Forms
             ResumeLayout(false);
             PerformLayout();
         }
+
         private void buttonHome_Click(object sender, EventArgs e)
         {
-            HomeFarme form = new HomeFarme();
-            form.Show();
-            this.Hide();
+            HomeRequested?.Invoke(this, EventArgs.Empty);
         }
-        private void buttonBack_Click(object sender, EventArgs e)
-        {
-            LevelProblemForm form = new LevelProblemForm();
-            form.Show();
-            this.Hide();
-        }
+
         private void buttonRun_Click(object sender, EventArgs e)
         {
             string code = textBoxCode.Text;
@@ -155,27 +150,27 @@ namespace AdvancedProgramming.Forms
             var results = runner.RunTestCases(code, language, problem.TestCase);
 
             bool allPassed = true;
+            int passedCount = 0;
             foreach (var r in results)
             {
-                if (!r.Passed)
-                {
+                if (r.Passed)
+                    passedCount++;
+                else
                     allPassed = false;
-                    break;
-                }
             }
 
-            if (allPassed)
+            if (allPassed && passedCount > 0)
             {
-                AxpectedForm form = new AxpectedForm();
-                form.Show();
-                this.Hide();
+                var userMgmt = new UserManagement();
+                userMgmt.UpdateScore(CurrentUser.Username, passedCount * 10);
+                CurrentUser.Score = userMgmt.GetScore(CurrentUser.Username);
             }
-            else
+
+            TestResultsReady?.Invoke(this, new CodeRunnerTestResultList
             {
-                Faild form = new Faild(problemName, results);
-                form.Show();
-                this.Hide();
-            }
+                Results = results,
+                AllPassed = allPassed
+            });
         }
     }
 }

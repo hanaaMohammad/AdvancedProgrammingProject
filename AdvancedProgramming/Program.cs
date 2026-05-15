@@ -8,10 +8,17 @@ namespace AdvancedProgramming
         [STAThread]
         static void Main()
         {
-            DatabaseManager.InitializeDatabase();
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new StartupForm());
+            try
+            {
+                DatabaseManager.InitializeDatabase();
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new MainForm());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.GetType().Name + ": " + ex.Message + "\n\nStack Trace:\n" + ex.StackTrace);
+            }
         }
     }
 }

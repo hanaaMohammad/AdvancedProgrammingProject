@@ -6,16 +6,17 @@ namespace AdvancedProgramming
 {
     public class Toolbar : Panel
     {
+        public event EventHandler CloseRequested;
+
         private ContextMenuStrip themeMenu;
+        private Button btnMinimize;
         private Button btnGear;
         private Button btnClose;
         private Label titleLabel;
-        private Form parentForm;
         private Point dragOffset;
 
-        public Toolbar(Form form, string title)
+        public Toolbar(Control parent, string title)
         {
-            parentForm = form;
             this.Height = 55;
             this.Dock = DockStyle.Top;
             this.BackColor = Theme.Current.ControlBackColor;
@@ -31,15 +32,34 @@ namespace AdvancedProgramming
             };
             titleLabel.Location = new Point((this.Width - titleLabel.Width) / 2, (this.Height - titleLabel.Height) / 2);
 
-            btnGear = new Button
+            btnMinimize = new Button
             {
-                Text = "⚙",
-                Location = new Point(form.Width - 80, 10),
+                Text = "\u2014",
+                Location = new Point(parent.Width - 120, 10),
                 Size = new Size(35, 35),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.Transparent,
                 ForeColor = Theme.Current.TextColor,
-                Anchor = AnchorStyles.Top | AnchorStyles.Right
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                TabStop = false,
+            };
+            btnMinimize.FlatAppearance.BorderSize = 0;
+            btnMinimize.Click += (s, e) =>
+            {
+                var form = this.FindForm();
+                if (form != null) form.WindowState = FormWindowState.Minimized;
+            };
+
+            btnGear = new Button
+            {
+                Text = "\u2699",
+                Location = new Point(parent.Width - 80, 10),
+                Size = new Size(35, 35),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent,
+                ForeColor = Theme.Current.TextColor,
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                TabStop = false,
             };
             btnGear.FlatAppearance.BorderSize = 0;
             btnGear.Click += BtnGear_Click;
@@ -49,23 +69,33 @@ namespace AdvancedProgramming
             themeMenu.ForeColor = Theme.Current.TextColor;
             var darkItem = themeMenu.Items.Add("Dark Theme");
             var lightItem = themeMenu.Items.Add("Light Theme");
-            darkItem.Click += (s, e) => { Theme.SetTheme(form, ThemeType.Dark); btnGear.ForeColor = Color.White; };
-            lightItem.Click += (s, e) => { Theme.SetTheme(form, ThemeType.Light); btnGear.ForeColor = Color.Black; };
+            darkItem.Click += (s, e) =>
+            {
+                var form = parent.FindForm();
+                if (form != null) Theme.SetTheme(form, ThemeType.Dark);
+            };
+            lightItem.Click += (s, e) =>
+            {
+                var form = parent.FindForm();
+                if (form != null) Theme.SetTheme(form, ThemeType.Light);
+            };
 
             btnClose = new Button
             {
-                Text = "✕",
-                Location = new Point(form.Width - 40, 10),
+                Text = "\u2715",
+                Location = new Point(parent.Width - 40, 10),
                 Size = new Size(35, 35),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.Transparent,
                 ForeColor = Theme.Current.TextColor,
-                Anchor = AnchorStyles.Top | AnchorStyles.Right
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                TabStop = false,
             };
             btnClose.FlatAppearance.BorderSize = 0;
-            btnClose.Click += (s, e) => form.Close();
+            btnClose.Click += (s, e) => CloseRequested?.Invoke(this, EventArgs.Empty);
 
             this.Controls.Add(titleLabel);
+            this.Controls.Add(btnMinimize);
             this.Controls.Add(btnGear);
             this.Controls.Add(btnClose);
 
@@ -80,9 +110,13 @@ namespace AdvancedProgramming
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    Point mousePos = Control.MousePosition;
-                    mousePos.Offset(dragOffset.X, dragOffset.Y);
-                    form.Location = mousePos;
+                    var form = this.FindForm();
+                    if (form != null)
+                    {
+                        Point mousePos = Control.MousePosition;
+                        mousePos.Offset(dragOffset.X, dragOffset.Y);
+                        form.Location = mousePos;
+                    }
                 }
             };
         }
@@ -104,7 +138,8 @@ namespace AdvancedProgramming
             themeMenu.BackColor = Theme.Current.ControlBackColor;
             themeMenu.ForeColor = Theme.Current.TextColor;
             titleLabel.ForeColor = Theme.Current.TextColor;
-            btnGear.ForeColor = Theme.CurrentThemeType == ThemeType.Dark ? Color.White : Color.Black;
+            btnMinimize.ForeColor = Theme.Current.TextColor;
+            btnGear.ForeColor = Theme.Current.TextColor;
             btnClose.ForeColor = Theme.Current.TextColor;
             RepositionTitle();
         }

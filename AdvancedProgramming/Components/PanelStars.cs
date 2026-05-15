@@ -10,7 +10,6 @@ namespace AdvancedProgramming.Components
 
         public PanelStars()
         {
-            this.BackColor = Color.Black;
             InitializeStar();
         }
 
@@ -34,6 +33,7 @@ namespace AdvancedProgramming.Components
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            e.Graphics.Clear(Theme.Current.ControlBackColor);
             DrawTriangleStars(e.Graphics);
         }
 
@@ -44,23 +44,27 @@ namespace AdvancedProgramming.Components
             int startX = this.Width / 2;
             int startY = 10;
 
-            for (int i = 0; i < rows; i++)
+            using (var fillBrush = new SolidBrush(Theme.Current.AccentColor))
+            using (var outlinePen = new Pen(Theme.Current.BorderColor))
             {
-                for (int j = 0; j <= i; j++)
+                for (int i = 0; i < rows; i++)
                 {
-                    int x = startX + (int)((j - i / 2.0) * starSize);
-                    int y = startY + i * starSize;
-
-                    Point[] copy = new Point[star.Length];
-                    for (int l = 0; l < star.Length; l++)
+                    for (int j = 0; j <= i; j++)
                     {
-                        copy[l] = new Point(
-                            (int)(x + star[l].X),
-                            (int)(y + star[l].Y)
-                        );
+                        int x = startX + (int)((j - i / 2.0) * starSize);
+                        int y = startY + i * starSize;
+
+                        Point[] copy = new Point[star.Length];
+                        for (int l = 0; l < star.Length; l++)
+                        {
+                            copy[l] = new Point(
+                                (int)(x + star[l].X),
+                                (int)(y + star[l].Y)
+                            );
+                        }
+                        g.FillPolygon(fillBrush, copy);
+                        g.DrawPolygon(outlinePen, copy);
                     }
-                    g.FillPolygon(Brushes.OliveDrab, copy);
-                    g.DrawPolygon(Pens.DarkOliveGreen, copy);
                 }
             }
         }

@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
@@ -60,6 +61,9 @@
       <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.5.3.0\lib\netstandard2.0\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Resources.Extensions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Resources.Extensions.6.0.0\lib\netstandard2.0\System.Resources.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Buffers, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll</HintPath>
     </Reference>
@@ -110,35 +114,35 @@
     </Compile>
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\UserManagement.cs" />
-    <Compile Include="Forms\AxpectedForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AxpectedForm.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\Faild.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\HomeFarme.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\LogInForm.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\LevelProblemForm.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\ProblemDisplayForm.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\StartupForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\StartupForm.Designer.cs">
-      <DependentUpon>StartupForm.cs</DependentUpon>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\SubmiittForm.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\UsreForm.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ProblemClasses\Example.cs" />
     <Compile Include="ProblemClasses\ProblemLoadReadJs.cs" />
@@ -161,7 +165,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Forms\SignUpForm.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\AxpectedForm.resx">
@@ -182,9 +186,7 @@
     <EmbeddedResource Include="Forms\ProblemDisplayForm.resx">
       <DependentUpon>ProblemDisplayForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StartupForm.resx">
-      <DependentUpon>StartupForm.cs</DependentUpon>
-    </EmbeddedResource>
+
     <EmbeddedResource Include="Forms\UsreForm.resx">
       <DependentUpon>UsreForm.cs</DependentUpon>
     </EmbeddedResource>

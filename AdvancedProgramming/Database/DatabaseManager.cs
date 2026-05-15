@@ -28,6 +28,7 @@ namespace AdvancedProgramming
 
                 try { new SQLiteCommand("ALTER TABLE users ADD COLUMN Country VARCHAR", connection).ExecuteNonQuery(); } catch { }
                 try { new SQLiteCommand("ALTER TABLE users ADD COLUMN gender VARCHAR", connection).ExecuteNonQuery(); } catch { }
+                try { new SQLiteCommand("ALTER TABLE users ADD COLUMN score INTEGER DEFAULT 0", connection).ExecuteNonQuery(); } catch { }
 
                 using (var checkCmd = new SQLiteCommand("SELECT COUNT(*) FROM users WHERE username = 'admin'", connection))
                 {

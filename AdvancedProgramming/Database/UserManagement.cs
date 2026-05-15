@@ -19,7 +19,6 @@ namespace AdvancedProgramming
                     cmd.Parameters.AddWithValue("@password", password);
                     cmd.Parameters.AddWithValue("@Country", Country);
                     cmd.Parameters.AddWithValue("@Gender", Gender);
-                    cmd.Parameters.AddWithValue("@score", 0);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -56,6 +55,34 @@ namespace AdvancedProgramming
                 }
             }
             return (null, null);
+        }
+
+        public int GetScore(string username)
+        {
+            using (var conn = DatabaseManager.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SQLiteCommand("SELECT COALESCE(score, 0) FROM users WHERE username = @username", conn))
+                {
+                    cmd.Parameters.AddWithValue("@username", username);
+                    var result = cmd.ExecuteScalar();
+                    return Convert.ToInt32(result);
+                }
+            }
+        }
+
+        public void UpdateScore(string username, int points)
+        {
+            using (var conn = DatabaseManager.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SQLiteCommand("UPDATE users SET score = COALESCE(score, 0) + @points WHERE username = @username", conn))
+                {
+                    cmd.Parameters.AddWithValue("@points", points);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public bool UsernameExists(string username)

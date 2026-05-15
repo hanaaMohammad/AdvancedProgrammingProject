@@ -6,8 +6,11 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming
 {
-    public class SignUpForm : Form
+    public class SignUpForm : UserControl
     {
+        public event EventHandler SignUpSuccess;
+        public event EventHandler BackRequested;
+
         private TextBox userNameTextBox;
         private TextBox passwordTextBox;
         private TextBox confirmPasswordTextBox;
@@ -15,11 +18,10 @@ namespace AdvancedProgramming
         private Button passwordButtonToggle;
         private Button confirmPasswordButtonToggle;
         private Label messageLabel;
-        private bool passwordVisible = false;// default echo // when click show
+        private bool passwordVisible = false;
         private bool confirmPasswordVisible = false;
         private UserManagement userManager;
         private Toolbar toolbar;
-        private HomeFarme homeFarme;
         private ComboBox CountryCombo;
         private GroupBox GroupGender;
         private RadioButton MaleRadio;
@@ -27,10 +29,13 @@ namespace AdvancedProgramming
 
         public SignUpForm()
         {
+            this.SuspendLayout();
+            this.Size = new Size(1100, 800);
             InitializeSignUpComponents();
-            this.FormBorderStyle = FormBorderStyle.None;
             toolbar = new Toolbar(this, "Sign Up");
             this.Controls.Add(toolbar);
+            this.ResumeLayout(false);
+            toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
             Theme.Apply(this);
             userManager = new UserManagement();
             DatabaseManager.InitializeDatabase();
@@ -38,84 +43,88 @@ namespace AdvancedProgramming
 
         private void InitializeSignUpComponents()
         {
-            this.Text = "Sign Up";
-            this.Size = new Size(400, 550);
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterScreen;
+            int cx = this.Width / 2;
+            int labelX = cx - 200;
+            int inputX = cx - 100;
+            int inputW = 270;
+            int toggleX = inputX + inputW - 35;
+            int rowY = 100;
+            int rowGap = 48;
 
-            var usernameLabel = new Label { Text = "Username:", Location = new Point(30, 70), Size = new Size(100, 20) };
-            userNameTextBox = new TextBox { Location = new Point(140, 68), Size = new Size(200, 20) };
+            var usernameLabel = new Label { Text = "Username", Location = new Point(labelX, rowY + 4), Size = new Size(90, 20) };
+            userNameTextBox = new TextBox { Location = new Point(inputX, rowY), Size = new Size(inputW, 24) };
 
-
-            var passwordLabel = new Label { Text = "Password:", Location = new Point(30, 110), Size = new Size(100, 20) };
-            passwordTextBox = new TextBox { Location = new Point(140, 108), Size = new Size(160, 20), PasswordChar = '*' };
-            passwordButtonToggle = new Button { Text = "👁", Location = new Point(305, 106), Size = new Size(30, 23), FlatStyle = FlatStyle.Flat };
+            rowY += rowGap;
+            var passwordLabel = new Label { Text = "Password", Location = new Point(labelX, rowY + 4), Size = new Size(90, 20) };
+            passwordTextBox = new TextBox { Location = new Point(inputX, rowY), Size = new Size(inputW - 35, 24), PasswordChar = '*' };
+            passwordButtonToggle = new Button { Text = "\U0001f441", Location = new Point(toggleX, rowY), Size = new Size(30, 24), FlatStyle = FlatStyle.Flat };
             passwordButtonToggle.FlatAppearance.BorderSize = 0;
             passwordButtonToggle.Click += TogglePasswordVisibility;
 
-            var confirmLabel = new Label { Text = "Confirm:", Location = new Point(30, 150), Size = new Size(100, 20) };
-            confirmPasswordTextBox = new TextBox { Location = new Point(140, 148), Size = new Size(160, 20), PasswordChar = '*' };
-            confirmPasswordButtonToggle = new Button { Text = "👁", Location = new Point(305, 146), Size = new Size(30, 23), FlatStyle = FlatStyle.Flat };
+            rowY += rowGap;
+            var confirmLabel = new Label { Text = "Confirm", Location = new Point(labelX, rowY + 4), Size = new Size(90, 20) };
+            confirmPasswordTextBox = new TextBox { Location = new Point(inputX, rowY), Size = new Size(inputW - 35, 24), PasswordChar = '*' };
+            confirmPasswordButtonToggle = new Button { Text = "\U0001f441", Location = new Point(toggleX, rowY), Size = new Size(30, 24), FlatStyle = FlatStyle.Flat };
             confirmPasswordButtonToggle.FlatAppearance.BorderSize = 0;
             confirmPasswordButtonToggle.Click += confirmPasswordVisibilityTaggel;
 
-            signUpButton = new Button { Text = "Sign Up", Location = new Point(140, 350), Size = new Size(100, 30), FlatStyle = FlatStyle.Flat };
+            rowY += rowGap;
+            var countryLabel = new Label { Text = "Country", Location = new Point(labelX, rowY + 4), Size = new Size(90, 20) };
+            CountryCombo = new ComboBox { Location = new Point(inputX, rowY), Size = new Size(170, 25), DropDownStyle = ComboBoxStyle.DropDownList };
+            CountryCombo.Items.AddRange(new object[] { "Palestine", "Jordan", "Lebanon", "Egypt", "US", "UK" });
+            CountryCombo.SelectedIndex = 0;
+
+            rowY += rowGap;
+            var genderLabel = new Label { Text = "Gender", Location = new Point(labelX, rowY + 3), Size = new Size(90, 20) };
+            GroupGender = new GroupBox { Location = new Point(inputX, rowY), Size = new Size(200, 44) };
+            MaleRadio = new RadioButton { Text = "Male", Location = new Point(12, 13), Size = new Size(75, 20) };
+            FmaleRadio = new RadioButton { Text = "Female", Location = new Point(100, 13), Size = new Size(85, 20) };
+            GroupGender.Controls.Add(MaleRadio);
+            GroupGender.Controls.Add(FmaleRadio);
+            MaleRadio.Checked = true;
+
+            rowY += rowGap + 30;
+            signUpButton = new Button { Text = "Sign Up", Location = new Point(cx - 90, rowY), Size = new Size(180, 50), FlatStyle = FlatStyle.Flat };
             signUpButton.FlatAppearance.BorderSize = 0;
             signUpButton.Click += signUpButton_Click;
 
-            messageLabel = new Label { Location = new Point(30, 390), Size = new Size(320, 60) };
-
-            this.Controls.AddRange(new Control[] { usernameLabel, userNameTextBox, passwordLabel, passwordTextBox, passwordButtonToggle,
-                confirmLabel, confirmPasswordTextBox, confirmPasswordButtonToggle, signUpButton, messageLabel });
-            /////////////////////////////////////////////////////////////////////////
-            ///
-            var countryLabel = new Label { Text = "Country: ", Location = new Point(30, 190), Size = new Size(100, 20) };
-            CountryCombo = new ComboBox { Location = new Point(30, 210), Size = new Size(200, 25), DropDownStyle = ComboBoxStyle.DropDown,Sorted=true};
-            CountryCombo.Items.AddRange(new object[] { "Palestine", "Jordan", "Lebanon", "Egypt", "US", "UK" });
-            CountryCombo.SelectedIndex = 0;
-            this.Controls.Add(countryLabel);
-            this.Controls.Add(CountryCombo);
-          
-            /////////////////////////////////////////////////////////////////////////////
-            ///
-            var genderLabel = new Label { Text = "Gender:", Location = new Point(245, 190), Size = new Size(100, 20) };
-            GroupGender = new GroupBox { Location = new Point(245, 210), Size = new Size(130, 100) };
-            MaleRadio = new RadioButton { Text = "Male", Location = new Point(10, 25), Size = new Size(110, 20) };
-            FmaleRadio = new RadioButton { Text = "Female", Location = new Point(10, 50), Size = new Size(110, 20) };
-            GroupGender.Controls.Add(MaleRadio);
-            GroupGender.Controls.Add(FmaleRadio);
-            this.Controls.Add(genderLabel);
-            this.Controls.Add(GroupGender);
-
-            var btnHome = new Button
+            var btnBack = new Button
             {
-                Text = "🏠",
-                Location = new Point(270, 350),
-                Size = new Size(60, 30),
-                FlatStyle = FlatStyle.Flat
+                Text = "\u2190 Back",
+                Location = new Point(this.Width - 85, 62),
+                Size = new Size(70, 26),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 9F),
             };
-            btnHome.FlatAppearance.BorderSize = 0;
-            btnHome.Click += (s, e) => this.Close();
-            this.Controls.Add(btnHome);
+            btnBack.FlatAppearance.BorderSize = 1;
+            btnBack.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
 
-        }
-        private void CountryCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string country = CountryCombo.SelectedItem.ToString();
+            rowY += 60;
+            messageLabel = new Label { Location = new Point(labelX, rowY), Size = new Size(400, 50), TextAlign = ContentAlignment.MiddleCenter };
 
+            this.Controls.AddRange(new Control[] {
+                usernameLabel, userNameTextBox,
+                passwordLabel, passwordTextBox, passwordButtonToggle,
+                confirmLabel, confirmPasswordTextBox, confirmPasswordButtonToggle,
+                countryLabel, CountryCombo,
+                genderLabel, GroupGender,
+                signUpButton, btnBack,
+                messageLabel
+            });
         }
+
         private void TogglePasswordVisibility(object sender, EventArgs e)
         {
             passwordVisible = !passwordVisible;
             passwordTextBox.PasswordChar = passwordVisible ? '\0' : '*';
-            passwordButtonToggle.Text = passwordVisible ? "🙈" : "👁";
+            passwordButtonToggle.Text = passwordVisible ? "\U0001f648" : "\U0001f441";
         }
 
         private void confirmPasswordVisibilityTaggel(object sender, EventArgs e)
         {
             confirmPasswordVisible = !confirmPasswordVisible;
             confirmPasswordTextBox.PasswordChar = confirmPasswordVisible ? '\0' : '*';
-            confirmPasswordButtonToggle.Text = confirmPasswordVisible ? "🙈" : "👁";
+            confirmPasswordButtonToggle.Text = confirmPasswordVisible ? "\U0001f648" : "\U0001f441";
         }
 
         private void signUpButton_Click(object sender, EventArgs e)
@@ -157,7 +166,7 @@ namespace AdvancedProgramming
                 return;
             }
 
-            if (userManager.SignUp(username, password ,CountryCombo.SelectedItem.ToString(),MaleRadio.Checked? "Male" : "Female"))
+            if (userManager.SignUp(username, password, CountryCombo.SelectedItem.ToString(), MaleRadio.Checked ? "Male" : "Female"))
             {
                 messageLabel.ForeColor = Color.Green;
                 messageLabel.Text = "Sign up successful!";
@@ -167,31 +176,9 @@ namespace AdvancedProgramming
                 CurrentUser.Username = username;
                 CurrentUser.Country = country;
                 CurrentUser.Gender = gender;
-                homeFarme = new HomeFarme();
-                homeFarme.Show();
-                this.Close();
-
+                CurrentUser.Score = 0;
+                SignUpSuccess?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            if (toolbar != null)
-                toolbar.UpdateTheme();
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // SignUpForm
-            // 
-            this.ClientSize = new System.Drawing.Size(1772, 244);
-            this.Name = "SignUpForm";
-            this.ResumeLayout(false);
-
-        }
-
     }
 }

@@ -4,8 +4,11 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Forms
 {
-    public class HomeFarme : Form
+    public class HomeForm : UserControl
     {
+        public event EventHandler UserRequested;
+        public event EventHandler ProblemsRequested;
+
         private Panel panelTextNameApp;
         private TextBox nameApp;
         private Panel PanleGridPage;
@@ -17,22 +20,19 @@ namespace AdvancedProgramming.Forms
         private Button TotorialPage;
         private Toolbar toolbar;
 
-        public HomeFarme()
+        public HomeForm()
         {
+            this.Size = new Size(1100, 800);
             InitializeComponent();
         }
 
         private void InitializeComponent()
         {
             this.Text = "Home Page";
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            
-            this.ClientSize = new Size(1053, 829);
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
+            toolbar.CloseRequested += (s, e) => Application.Exit();
 
             this.panelTextNameApp = new Panel();
             this.IconUser = new Button();
@@ -51,7 +51,7 @@ namespace AdvancedProgramming.Forms
             this.panelTextNameApp.Controls.Add(this.nameApp);
             this.panelTextNameApp.Location = new Point(0, 40);
             this.panelTextNameApp.Name = "panelTextNameApp";
-            this.panelTextNameApp.Size = new Size(1053, 170);
+            this.panelTextNameApp.Size = new Size(1100, 170);
             this.panelTextNameApp.TabIndex = 0;
 
             this.IconUser.FlatStyle = FlatStyle.Flat;
@@ -61,14 +61,9 @@ namespace AdvancedProgramming.Forms
             this.IconUser.Name = "IconUser";
             this.IconUser.Size = new Size(90, 90);
             this.IconUser.TabIndex = 1;
-            this.IconUser.Text = "👤";
+            this.IconUser.Text = "\U0001f464";
             this.IconUser.UseVisualStyleBackColor = false;
-            this.IconUser.Click += (s, e) =>
-            {
-                var usre = new UsreForm();
-                usre.Show();
-                this.Hide();
-            };
+            this.IconUser.Click += (s, e) => UserRequested?.Invoke(this, EventArgs.Empty);
 
             this.nameApp.BorderStyle = BorderStyle.None;
             this.nameApp.Font = new Font("Segoe UI", 36F, FontStyle.Bold);
@@ -94,7 +89,7 @@ namespace AdvancedProgramming.Forms
             this.GridLayoutPages.RowCount = 1;
             this.GridLayoutPages.RowStyles.Clear();
             this.GridLayoutPages.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            this.GridLayoutPages.Size = new Size(973, 56);
+            this.GridLayoutPages.Size = new Size(1020, 56);
             this.GridLayoutPages.TabIndex = 0;
 
             this.Homepage.FlatStyle = FlatStyle.Flat;
@@ -114,14 +109,9 @@ namespace AdvancedProgramming.Forms
             this.UsrePage.Name = "UsrePage";
             this.UsrePage.Size = new Size(237, 50);
             this.UsrePage.TabIndex = 1;
-            this.UsrePage.Text = "👤";
+            this.UsrePage.Text = "\U0001f464";
             this.UsrePage.UseVisualStyleBackColor = false;
-            this.UsrePage.Click += (s, e) =>
-            {
-                var usre = new UsreForm();
-                usre.Show();
-                this.Hide();
-            };
+            this.UsrePage.Click += (s, e) => UserRequested?.Invoke(this, EventArgs.Empty);
 
             this.TotorialPage.FlatStyle = FlatStyle.Flat;
             this.TotorialPage.FlatAppearance.BorderSize = 0;
@@ -142,16 +132,11 @@ namespace AdvancedProgramming.Forms
             this.Problems.TabIndex = 3;
             this.Problems.Text = "Problems";
             this.Problems.UseVisualStyleBackColor = false;
-            this.Problems.Click += (s, e) =>
-            {
-                var problem = new LevelProblemForm();
-                problem.Show();
-                this.Hide();
-            };
+            this.Problems.Click += (s, e) => ProblemsRequested?.Invoke(this, EventArgs.Empty);
 
             this.PanleGridPage.Location = new Point(40, 295);
             this.PanleGridPage.Name = "PanleGridPage";
-            this.PanleGridPage.Size = new Size(973, 500);
+            this.PanleGridPage.Size = new Size(1020, 500);
             this.PanleGridPage.TabIndex = 1;
 
             this.Controls.Add(this.panelTextNameApp);
@@ -164,12 +149,6 @@ namespace AdvancedProgramming.Forms
             this.panelTextNameApp.PerformLayout();
             this.GridLayoutPages.ResumeLayout(false);
             this.ResumeLayout(false);
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            toolbar?.UpdateTheme();
         }
     }
 }

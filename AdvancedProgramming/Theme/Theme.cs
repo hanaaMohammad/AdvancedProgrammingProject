@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -7,8 +8,9 @@ namespace AdvancedProgramming
     {
         public static ThemeType CurrentThemeType { get; private set; } = ThemeType.Dark;
         public static ITheme Current { get; private set; } = new DarkTheme();
+        public static event Action ThemeChanged;
 
-        public static void ToggleTheme(Form form)
+        public static void ToggleTheme(Control control)
         {
             if (CurrentThemeType == ThemeType.Dark)
             {
@@ -20,24 +22,25 @@ namespace AdvancedProgramming
                 CurrentThemeType = ThemeType.Dark;
                 Current = new DarkTheme();
             }
-            Apply(form);
+            Apply(control);
         }
 
-        public static void SetTheme(Form form, ThemeType themeType)
+        public static void SetTheme(Control control, ThemeType themeType)
         {
             CurrentThemeType = themeType;
             Current = themeType == ThemeType.Dark ? (ITheme)new DarkTheme() : new LightTheme();
-            Apply(form);
+            Apply(control);
         }
 
-        public static void Apply(Form form)
+        public static void Apply(Control control)
         {
-            form.SuspendLayout();
-            form.BackColor = Current.FormBackColor;
-            form.ForeColor = Current.TextColor;
-            form.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            ApplyToControls(form.Controls);
-            form.ResumeLayout();
+            control.SuspendLayout();
+            control.BackColor = Current.FormBackColor;
+            control.ForeColor = Current.TextColor;
+            control.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ApplyToControls(control.Controls);
+            control.ResumeLayout();
+            ThemeChanged?.Invoke();
         }
 
         private static void ApplyToControls(Control.ControlCollection controls)
@@ -56,7 +59,7 @@ namespace AdvancedProgramming
                         break;
 
                     case Label lbl:
-                        lbl.ForeColor = Current.TextColor;
+                        lbl.ForeColor = lbl.Tag?.ToString() == "Secondary" ? Current.SecondaryTextColor : Current.TextColor;
                         lbl.BackColor = Color.Transparent;
                         break;
 
@@ -92,7 +95,6 @@ namespace AdvancedProgramming
                         break;
 
                     case Panel pnl:
-                        if (pnl is Components.PanelStars) break;
                         pnl.BackColor = Current.ControlBackColor;
                         break;
 

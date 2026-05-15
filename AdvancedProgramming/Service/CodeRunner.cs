@@ -11,31 +11,29 @@ namespace AdvancedProgramming.Service
         public TestCase TestCase { get; set; }
         public string ActualOutput { get; set; }
         public string ExpectedOutput { get; set; }
+    }
 
-
-
-
+    public class CodeRunnerTestResultList
+    {
+        public List<CodeRunnerTestResult> Results { get; set; }
+        public bool AllPassed { get; set; }
     }
 
     public class CodeRunner
     {
-
-
         public List<CodeRunnerTestResult> RunTestCases(string code, string language, List<TestCase> testCases)
         {
             CodeExecutor executor;
             if (language == "C#")
                 executor = new csharpExecutor();
             else
-                executor = new JavaExcuteor();
+                executor = new JavaExecutor();
 
             var results = new List<CodeRunnerTestResult>();
-
 
             foreach (var T in testCases)
             {
                 string actualOutput = executor.ExecuteCode(code, T.input);
-
 
                 string expectedOutput = T.output?.ToString() ?? "";
 
@@ -51,13 +49,6 @@ namespace AdvancedProgramming.Service
 
                 bool passed = actualTrim.Equals(expectedTrim, StringComparison.OrdinalIgnoreCase);
 
-
-
-
-                actualTrim.Equals(
-                       expectedTrim,
-                       StringComparison.OrdinalIgnoreCase);
-
                 results.Add(new CodeRunnerTestResult
                 {
                     Passed = passed,
@@ -65,21 +56,8 @@ namespace AdvancedProgramming.Service
                     ActualOutput = actualOutput.Trim(),
                     ExpectedOutput = expectedOutput.Trim()
                 });
-
-
-
             }
-return results;
-
-
-
-
-
-
-
-
-
-
+            return results;
         }
     }
 }
