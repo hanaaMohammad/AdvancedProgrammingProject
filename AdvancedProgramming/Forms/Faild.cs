@@ -53,6 +53,7 @@ namespace AdvancedProgramming.Forms
                 Size = new Size(90, 40),
                 FlatStyle = FlatStyle.Flat,
             };
+            backButton.FlatAppearance.BorderSize = 0;
             backButton.Click += (s, e) => this.Close();
             this.Controls.Add(backButton);
 
@@ -72,7 +73,6 @@ namespace AdvancedProgramming.Forms
             this.trackBar2.TabIndex = 1;
 
             // Faild
-            this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(863, 802);
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -112,20 +112,20 @@ namespace AdvancedProgramming.Forms
                     Height = 90,
                     Left = startX,
                     Top = -150,
-                    BackColor = Color.FromArgb(20, 20, 20),
-                    BorderStyle = BorderStyle.Fixed3D
+                    BackColor = Theme.Current.ControlBackColor,
+                    BorderStyle = BorderStyle.FixedSingle
                 };TextBox textCase = new TextBox()
                 {
                     Multiline = true,
                     ReadOnly = true,
-                        BorderStyle = BorderStyle.Fixed3D,
+                        BorderStyle = BorderStyle.FixedSingle,
                         Width=560,
                     Height = 70,
                     Left = 15,
                     Top = 10,
                     Font = new Font("Consolas", 11),
-                    BackColor = Color.FromArgb(20, 20, 20),
-                    ForeColor = Color.Lime,
+                    BackColor = Theme.Current.InputBackColor,
+                    ForeColor = Theme.Current.TextColor,
                     Text=testCase.ToString(),
 
 

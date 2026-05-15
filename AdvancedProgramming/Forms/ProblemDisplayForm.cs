@@ -77,8 +77,11 @@ namespace AdvancedProgramming.Forms
             y += lh + 4;
             descriptionBox = new TextBox()
             {
-                Location = new Point(m, y), Width = cw, Height = 130,
-                Multiline = true, ReadOnly = true,
+                Location = new Point(m, y),
+                Width = cw,
+                Height = 130,
+                Multiline = true,
+                ReadOnly = true,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.description,
             };
@@ -94,8 +97,11 @@ namespace AdvancedProgramming.Forms
             y += lh + 4;
             input = new TextBox()
             {
-                Location = new Point(m, y), Width = cw, Height = 70,
-                Multiline = true, ReadOnly = true,
+                Location = new Point(m, y),
+                Width = cw,
+                Height = 70,
+                Multiline = true,
+                ReadOnly = true,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.input,
             };
@@ -111,8 +117,11 @@ namespace AdvancedProgramming.Forms
             y += lh + 4;
             output = new TextBox()
             {
-                Location = new Point(m, y), Width = cw, Height = 70,
-                Multiline = true, ReadOnly = true,
+                Location = new Point(m, y),
+                Width = cw,
+                Height = 70,
+                Multiline = true,
+                ReadOnly = true,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.output,
             };
@@ -128,8 +137,11 @@ namespace AdvancedProgramming.Forms
             y += lh + 4;
             Note = new TextBox()
             {
-                Location = new Point(m, y), Width = cw, Height = 70,
-                Multiline = true, ReadOnly = true,
+                Location = new Point(m, y),
+                Width = cw,
+                Height = 70,
+                Multiline = true,
+                ReadOnly = true,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.Constraints,
             };
@@ -141,25 +153,29 @@ namespace AdvancedProgramming.Forms
             {
                 Text = "Solve",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                Location = new Point(m, y), Size = new Size(bw, 35),
+                Location = new Point(m, y),
+                Size = new Size(bw, 35),
             };
             backButton = new Button()
             {
                 Text = "Back",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                Location = new Point(m + bw + bg, y), Size = new Size(bw, 35),
+                Location = new Point(m + bw + bg, y),
+                Size = new Size(bw, 35),
             };
             homeButton = new Button()
             {
                 Text = "Home",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                Location = new Point(m + 2 * (bw + bg), y), Size = new Size(bw, 35),
+                Location = new Point(m + 2 * (bw + bg), y),
+                Size = new Size(bw, 35),
             };
             userButton = new Button()
             {
                 Text = "User",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                Location = new Point(m + 3 * (bw + bg), y), Size = new Size(bw, 35),
+                Location = new Point(m + 3 * (bw + bg), y),
+                Size = new Size(bw, 35),
             };
 
             LeftPanel.Controls.AddRange(new Control[] {
@@ -192,8 +208,11 @@ namespace AdvancedProgramming.Forms
             y += lh + 4;
             InputExam = new TextBox()
             {
-                Location = new Point(m, y), Width = cw, Height = 120,
-                Multiline = true, ReadOnly = true,
+                Location = new Point(m, y),
+                Width = cw,
+                Height = 120,
+                Multiline = true,
+                ReadOnly = true,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.Example?.input ?? "",
             };
@@ -209,8 +228,11 @@ namespace AdvancedProgramming.Forms
             y += lh + 4;
             OutputExam = new TextBox()
             {
-                Location = new Point(m, y), Width = cw, Height = 120,
-                Multiline = true, ReadOnly = true,
+                Location = new Point(m, y),
+                Width = cw,
+                Height = 120,
+                Multiline = true,
+                ReadOnly = true,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.Example?.output ?? "",
             };
@@ -226,8 +248,11 @@ namespace AdvancedProgramming.Forms
             y += lh + 4;
             explation = new TextBox()
             {
-                Location = new Point(m, y), Width = cw, Height = 120,
-                Multiline = true, ReadOnly = true,
+                Location = new Point(m, y),
+                Width = cw,
+                Height = 120,
+                Multiline = true,
+                ReadOnly = true,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 Text = problemChoice.Example?.explanation ?? "",
             };
@@ -266,7 +291,13 @@ namespace AdvancedProgramming.Forms
             toolbar?.UpdateTheme();
         }
 
-        private void solveButton_Click(object sender, EventArgs e) { }
+        private void solveButton_Click(object sender, EventArgs e) {
+            SubmiittForm form = new SubmiittForm(problemName);
+            form.Show();
+            this.Hide();
+        
+        
+        }
 
         private void homeButton_Click(object sender, EventArgs e)
         {

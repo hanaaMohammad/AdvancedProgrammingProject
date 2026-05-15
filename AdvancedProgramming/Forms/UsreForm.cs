@@ -2,9 +2,7 @@
 using System;
 using System.Drawing;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
-
 
 namespace AdvancedProgramming.Forms
 {
@@ -25,9 +23,6 @@ namespace AdvancedProgramming.Forms
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
-            labelUsreName.TextAlign = ContentAlignment.MiddleCenter;
-            labelTitle.TextAlign = ContentAlignment.MiddleCenter;
-            labelScore.TextAlign = ContentAlignment.MiddleCenter;
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
             AddHomeButton();
@@ -50,87 +45,76 @@ namespace AdvancedProgramming.Forms
             btnHome.BringToFront();
         }
 
-       
-
         private void InitializeComponent()
         {
-            
-
-
-
             this.SuspendLayout();
+
             labelUsreName = new Label()
             {
-                BorderStyle = BorderStyle.Fixed3D,
-                Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic)))),
-                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 Location = new Point(200, 106),
                 Size = new Size(326, 55),
                 TabIndex = 0,
                 Text = "Name : " + CurrentUser.Username,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-        labelUsreName.Click += new EventHandler(label1_Click);
+            labelUsreName.Click += new EventHandler(label1_Click);
 
-            labelTitle = new Label() {
-        BackColor = Color.Black,
-             Font = new Font("Arial", 12F, System.Drawing.FontStyle.Bold),
-           ForeColor = Color.White,
-           Location = new Point(0, -1),
+            labelTitle = new Label()
+            {
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold),
+                Location = new Point(0, -1),
+                Size = new Size(583, 90),
+                TabIndex = 3,
+                Text = "Profile User",
+                TextAlign = ContentAlignment.MiddleCenter
+            };
 
-           Size = new Size(583, 90),
-          TabIndex = 3,
-              Text = "Profile User",
-               TextAlign = ContentAlignment.MiddleCenter };
-            labelScore = new Label() {
-                BorderStyle = BorderStyle.Fixed3D,
-                Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic)))),
-                ForeColor = Color.White,
+            labelScore = new Label()
+            {
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 Location = new Point(200, 181),
-
                 Size = new Size(326, 56),
                 TabIndex = 2,
                 Text = "Score : " + CurrentUser.score.ToString(),
-                TextAlign = ContentAlignment.MiddleCenter };
+                TextAlign = ContentAlignment.MiddleCenter
+            };
 
             this.pictureUser = new PictureBox()
             {
-                BorderStyle = BorderStyle.Fixed3D,
+                BorderStyle = BorderStyle.FixedSingle,
                 Location = new Point(3, 84),
-              
                 Size = new Size(178, 283),
                 TabIndex = 4,
                 TabStop = false,
             };
-               this.panel1 = new Panel();
- 
+
+            this.panel1 = new Panel();
             this.panel1.SuspendLayout();
 
-         
             panel1.Location = new System.Drawing.Point(0, -7);
             panel1.Size = new Size(583, 413);
             panel1.TabIndex = 5;
-            labelCountry = new Label() {
-                BorderStyle = BorderStyle.Fixed3D,
-                Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic)))),
-                ForeColor = Color.White,
+
+            labelCountry = new Label()
+            {
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 Location = new Point(200, 324),
-               Size = new Size(326, 43),
+                Size = new Size(326, 43),
                 TabIndex = 6,
-               Text = "Country : " + CurrentUser.Country,
-               TextAlign = ContentAlignment.MiddleCenter };
+                Text = "Country : " + CurrentUser.Country,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
 
-
-
-            labelGender = new Label() {
-            BorderStyle = BorderStyle.Fixed3D,
-              Font = new Font("Microsoft Sans Serif", 7.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic)))),
-             ForeColor = Color.White,
-             Location = new Point(200, 255),
+            labelGender = new Label()
+            {
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Location = new Point(200, 255),
                 Size = new Size(326, 50),
-               TabIndex = 5,
-              Text = "gender : " + CurrentUser.Gender  ,
-               TextAlign = ContentAlignment.MiddleCenter };
+                TabIndex = 5,
+                Text = "gender : " + CurrentUser.Gender,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
 
             panel1.Controls.Add(labelCountry);
             panel1.Controls.Add(labelGender);
@@ -139,7 +123,7 @@ namespace AdvancedProgramming.Forms
             panel1.Controls.Add(labelUsreName);
             this.Controls.Add(this.labelTitle);
             this.Controls.Add(this.panel1);
-        
+
             this.FormBorderStyle = FormBorderStyle.None;
             this.BackgroundImageLayout = ImageLayout.Center;
             this.ClientSize = new Size(581, 405);
@@ -147,8 +131,6 @@ namespace AdvancedProgramming.Forms
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             UsreLoad();
-
-
         }
 
         protected override void OnResize(EventArgs e)
