@@ -1,153 +1,119 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 using System.Windows.Forms;
-
-
-
 
 namespace AdvancedProgramming.Forms
 {
     internal class SubmiittForm : Form
     {
-        public SubmiittForm(string problemName)
-        {
-            InitializeComponent();
-
-            labelNameproblem.Text = problemName;
-        }
+        private Toolbar toolbar;
         private Button buttonHome;
         private Button buttonRun;
+        private Button buttonBack;
         private Label labelNameproblem;
         private Label labeIndtwrite;
         private ComboBox comboBoxTybeLang;
         private TextBox textBoxCode;
-        private Button buttonBack;
+
+        public SubmiittForm(string problemName)
+        {
+            InitializeComponent();
+            labelNameproblem.Text = problemName;
+        }
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // button1
-            this.buttonHome = new System.Windows.Forms.Button()
-            {
-                BackColor = System.Drawing.Color.RosyBrown,
-                Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
-                Location = new System.Drawing.Point(13, 13),
-                Name = "button1",
-                Size = new System.Drawing.Size(75, 50),
-                TabIndex = 0,
-                Text = "Home",
-                UseVisualStyleBackColor = false
-            };
-            this.buttonHome.Click += new EventHandler(this.buttonHome_Click);
-            // 
-            // button2
-            // 
-            this.buttonBack = new System.Windows.Forms.Button()
-            {
-                BackColor = System.Drawing.Color.RosyBrown,
-                Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
-                Location = new System.Drawing.Point(13, 474),
-                Name = "button2",
-                Size = new System.Drawing.Size(75, 57),
-                TabIndex = 1,
-                Text = "Back",
-                UseVisualStyleBackColor = false
-            };
-            this.buttonBack.Click += new EventHandler(this.buttonBack_Click);
+            SuspendLayout();
 
-            // 
-            // button3
-            // 
-            this.buttonRun = new System.Windows.Forms.Button()
+            this.Text = "Submit Code";
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.ClientSize = new Size(808, 549);
+
+            toolbar = new Toolbar(this, "MiniCamp Puzzle");
+            this.Controls.Add(toolbar);
+
+            buttonHome = new Button
             {
-                BackColor = System.Drawing.Color.Gray,
-                Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
-                Location = new System.Drawing.Point(518, 485),
-                Name = "button3",
-                Size = new System.Drawing.Size(149, 46),
-                TabIndex = 2,
-                Text = "Run",
-                UseVisualStyleBackColor = false
+                Text = "Home",
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Size = new Size(90, 45),
+                Location = new Point(15, 70),
+                FlatStyle = FlatStyle.Flat,
             };
-            this.buttonRun.Click += new EventHandler(this.buttonRun_Click);
-            // 
-            // label1
-            // 
-            this.labelNameproblem = new System.Windows.Forms.Label()
+            buttonHome.Click += buttonHome_Click;
+
+            buttonBack = new Button
             {
-                BackColor = System.Drawing.SystemColors.ButtonHighlight,
-                Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
-                Location = new System.Drawing.Point(128, 23),
-                Name = "label1",
-                Size = new System.Drawing.Size(464, 40),
-                TabIndex = 3,
-                Text = "label1",
-                TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+                Text = "Back",
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Size = new Size(90, 45),
+                Location = new Point(15, 125),
+                FlatStyle = FlatStyle.Flat,
             };
-            // 
-            // label2
-            // 
-            this.labeIndtwrite = new System.Windows.Forms.Label()
+            buttonBack.Click += buttonBack_Click;
+
+            labelNameproblem = new Label
             {
-                BackColor = System.Drawing.Color.RosyBrown,
-                Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0))),
-                Location = new System.Drawing.Point(192, 103),
-                Name = "label2",
-                Size = new System.Drawing.Size(321, 34),
-                TabIndex = 4,
-                Text = "Enter the code here ⬇⬇",
-                TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold),
+                Size = new Size(550, 40),
+                Location = new Point(120, 70),
+                TextAlign = ContentAlignment.MiddleCenter,
             };
-            // 
-            // comboBox1
-            // 
-            this.comboBoxTybeLang = new System.Windows.Forms.ComboBox()
+
+            labeIndtwrite = new Label
             {
-                FormattingEnabled = true,
-                Location = new System.Drawing.Point(131, 143),
-                Name = "comboBox1",
-                Text = "language type",
-                Size = new System.Drawing.Size(133, 24),
-                TabIndex = 5
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold | FontStyle.Italic),
+                Size = new Size(300, 30),
+                Location = new Point(120, 115),
+                Text = "Enter the code here \u2B07\u2B07",
+                TextAlign = ContentAlignment.MiddleCenter,
             };
-            this.comboBoxTybeLang.Items.Add("C#");
-            this.comboBoxTybeLang.Items.Add("C++");
-            this.comboBoxTybeLang.Items.Add("Java");
-            // textBox1
-            // 
-            this.textBoxCode = new System.Windows.Forms.TextBox()
+
+            comboBoxTybeLang = new ComboBox
             {
-                Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
-                Location = new System.Drawing.Point(131, 143),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 10F),
+                Size = new Size(140, 28),
+                Location = new Point(120, 150),
+                FlatStyle = FlatStyle.Flat,
+            };
+            comboBoxTybeLang.Items.Add("C#");
+            comboBoxTybeLang.Items.Add("C++");
+            comboBoxTybeLang.Items.Add("Java");
+            comboBoxTybeLang.SelectedIndex = 0;
+
+            textBoxCode = new TextBox
+            {
+                Font = new Font("Consolas", 10F, FontStyle.Regular),
+                Location = new Point(120, 185),
                 Multiline = true,
-                Name = "textBox1",
-                Size = new System.Drawing.Size(461, 344),
-                TabIndex = 6,
-                TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+                Size = new Size(550, 280),
+                ScrollBars = ScrollBars.Both,
             };
-            // 
-            // submmitForm
-            // 
-            this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(808, 549);
-            this.Controls.Add(this.comboBoxTybeLang);
-            this.Controls.Add(this.textBoxCode);
-            this.Controls.Add(this.labeIndtwrite);
-            this.Controls.Add(this.labelNameproblem);
-            this.Controls.Add(this.buttonRun);
-            this.Controls.Add(this.buttonBack);
-            this.Controls.Add(this.buttonHome);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.Name = "submmitForm";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+
+            buttonRun = new Button
+            {
+                Text = "Run",
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Size = new Size(120, 45),
+                Location = new Point(430, 480),
+                FlatStyle = FlatStyle.Flat,
+            };
+            buttonRun.Click += buttonRun_Click;
+
+            this.Controls.Add(buttonHome);
+            this.Controls.Add(buttonBack);
+            this.Controls.Add(labelNameproblem);
+            this.Controls.Add(labeIndtwrite);
+            this.Controls.Add(comboBoxTybeLang);
+            this.Controls.Add(textBoxCode);
+            this.Controls.Add(buttonRun);
+
+            Theme.Apply(this);
+
+            ResumeLayout(false);
+            PerformLayout();
         }
         private void buttonHome_Click(object sender, EventArgs e)
         {
