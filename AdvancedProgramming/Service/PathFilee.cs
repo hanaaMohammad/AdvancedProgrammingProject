@@ -1,30 +1,30 @@
-﻿using AdvancedProgramming.ProblemClasses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using AdvancedProgramming.ProblemClasses;
 
 namespace AdvancedProgramming.Service
 {
-    public class RunCode
+    public class RunCode        
     {
-       
+
         private string code;
         private string language;
         private Problem problem;
-      
+
 
         public RunCode(Problem problemChoice)
         {
-            this.problemChoice = problemChoice;
+            this.problem = problemChoice;
         }
 
         public RunCode(string language, string code, Problem problem)
 
         {
-          
+
             this.language = language;
             this.problem = problem;
             this.code = code;
@@ -33,22 +33,18 @@ namespace AdvancedProgramming.Service
         }
         private void CreatSourceCode()
         {
-           
+
 
             if (language == "c++")
             {
-             File.CreateFile(codeRun+ ".cpp", code);
-
-
-
+                File.WriteAllText("codeRun.cpp", code);
             }
             else
-            {
-               File.CreateFile(CodeRun + ".cs", code);
-
-            }
-
+                File.WriteAllText("CodeRun.cs", code);
 
         }
+
+
     }
 }
+
