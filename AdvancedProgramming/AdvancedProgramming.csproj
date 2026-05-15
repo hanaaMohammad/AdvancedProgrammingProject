@@ -113,8 +113,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Service\ConnactiomCmd.cs" />
-    <Compile Include="Service\PathFilee.cs" />
-    <Compile Include="Service\Runcode.cs" />
+    <Compile Include="Service\FileManger.cs" />
     <Compile Include="Session\CurrentUser.cs" />
     <Compile Include="Theme\ITheme.cs" />
     <Compile Include="Theme\DarkTheme.cs" />

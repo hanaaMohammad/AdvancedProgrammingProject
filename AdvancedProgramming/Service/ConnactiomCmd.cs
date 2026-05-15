@@ -21,6 +21,7 @@ namespace AdvancedProgramming.Service
             p.StartInfo.RedirectStandardInput = true;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.UseShellExecute = false;
+            p.StartInfo.CreateNoWindow = true;
             call();  
 
 
