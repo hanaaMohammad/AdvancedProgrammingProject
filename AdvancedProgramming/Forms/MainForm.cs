@@ -84,8 +84,8 @@ namespace AdvancedProgramming
                 case SubmitForm _:
                     currentPage.Controls.OfType<TextBox>().FirstOrDefault(tb => tb.Multiline)?.Focus();
                     break;
-                case StartupForm _:
-                    FormAccessibility.FocusPrimaryAction(currentPage);
+                case StartupForm startup:
+                    startup.FocusLogin();
                     break;
             }
         }

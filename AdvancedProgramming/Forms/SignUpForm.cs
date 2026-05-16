@@ -1,7 +1,5 @@
 using AdvancedProgramming.Components;
-using AdvancedProgramming.Forms;
 using AdvancedProgramming.Session;
-
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -14,222 +12,243 @@ namespace AdvancedProgramming
         public event EventHandler BackRequested;
         public event EventHandler HomeRequested;
 
+        private const int CardWidth = 420;
+
+        private Toolbar toolbar;
+        private Button btnBack;
+        private Button btnHome;
+        private Panel formCard;
+        private Panel fieldsScroll;
         private TextBox userNameTextBox;
         private TextBox passwordTextBox;
         private TextBox confirmPasswordTextBox;
-        private Button signUpButton;
-        private Button passwordToggle;
-        private Button confirmPasswordToggle;
-        private Label messageLabel;
-        private bool passwordVisible = false;
-        private bool confirmPasswordVisible = false;
-        private UserManagement userManager;
-        private Toolbar toolbar;
+        private Label passwordToggle;
+        private Label confirmPasswordToggle;
         private ComboBox countryCombo;
-        private GroupBox genderGroup;
         private RadioButton maleRadio;
         private RadioButton femaleRadio;
+        private Label messageLabel;
+        private Panel signUpPill;
+        private bool passwordVisible;
+        private bool confirmPasswordVisible;
+        private readonly UserManagement userManager = new UserManagement();
 
         public SignUpForm()
         {
-            this.SuspendLayout();
-            this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            InitializeSignUpComponents();
-            toolbar = new Toolbar(this, "Sign Up");
-            this.Controls.Add(toolbar);
-            PageBackButton.AddTo(this,
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
-                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
-            this.ResumeLayout(false);
-            toolbar.CloseRequested += (s, e) => Application.Exit();
-            Theme.StylePage(this);
-            userManager = new UserManagement();
+            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
+            CatalogUi.EnableDoubleBuffer(this);
+            DoubleBuffered = true;
+            InitializeComponent();
         }
 
-        private void InitializeSignUpComponents()
+        private void InitializeComponent()
         {
-            int cx = this.Width / 2;
-            int formW = 420;
-            int leftX = cx - formW / 2;
-            int inputW = DesignTokens.Sizing.InputWidth;
-            int inputX = cx - inputW / 2;
-            int labelX = cx - inputW / 2;
-            int rowY = 160;
-            int rowGap = 56;
+            var accent = Theme.Current.AccentColor;
+            BackColor = CatalogUi.PageBack;
+            SuspendLayout();
 
-            var headerLabel = new Label
+            toolbar = new Toolbar(this, "Sign Up");
+            toolbar.CloseRequested += (s, e) => Application.Exit();
+            Controls.Add(toolbar);
+
+            (btnBack, btnHome) = PageBackButton.Create(
+                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+            Controls.Add(btnBack);
+            Controls.Add(btnHome);
+            btnBack.BringToFront();
+            btnHome.BringToFront();
+
+            formCard = CatalogUi.CreateCard(Color.FromArgb(50, accent), 20);
+            BuildFormCard();
+            Controls.Add(formCard);
+
+            signUpPill = CatalogUi.CreateActionPill(
+                "Sign Up \u2192",
+                true,
+                accent,
+                (s, e) => SignUpButton_Click(s, e));
+            Controls.Add(signUpPill);
+
+            FormAccessibility.SetShortcutHint(btnBack, "Esc", "Go back");
+
+            ResumeLayout(false);
+            ApplyLayout();
+        }
+
+        private void BuildFormCard()
+        {
+            formCard.Controls.Add(new Label
             {
                 Text = "Create your account",
-                Font = DesignTokens.Typography.DisplaySmall,
-                AutoSize = false,
-                Size = new Size(formW, 40),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(leftX, 80),
-            };
-            var subheadLabel = new Label
+                Font = new Font("Segoe UI", 20, FontStyle.Bold),
+                ForeColor = Color.White,
+                Location = new Point(28, 20),
+                Size = new Size(CardWidth - 56, 30),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+
+            formCard.Controls.Add(new Label
             {
                 Text = "Join MiniCamp and start solving puzzles",
-                Font = DesignTokens.Typography.BodyMedium,
-                AutoSize = false,
-                Size = new Size(formW, 22),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(leftX, 124),
-                Tag = "Secondary",
+                Font = new Font("Segoe UI", 10),
+                ForeColor = CatalogUi.MutedText,
+                Location = new Point(28, 52),
+                Size = new Size(CardWidth - 56, 20),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+
+            fieldsScroll = new Panel
+            {
+                Location = new Point(28, 82),
+                AutoScroll = true,
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
             };
 
-            var usernameLabel = new Label
-            {
-                Text = "Username",
-                Location = new Point(labelX, rowY + 2),
-                Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-            };
-            userNameTextBox = new TextBox
-            {
-                Location = new Point(inputX, rowY + 24),
-                Size = new Size(inputW, DesignTokens.Sizing.InputHeight),
-                Font = DesignTokens.Typography.BodyMedium,
-            };
+            int y = 0;
+            int w = CardWidth - 56;
 
-            rowY += rowGap;
-            var passwordLabel = new Label
-            {
-                Text = "Password",
-                Location = new Point(labelX, rowY + 2),
-                Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-            };
-            passwordTextBox = new TextBox
-            {
-                Location = new Point(inputX, rowY + 24),
-                Size = new Size(inputW - 40, DesignTokens.Sizing.InputHeight),
-                PasswordChar = '*',
-                Font = DesignTokens.Typography.BodyMedium,
-            };
-            passwordToggle = new Button
-            {
-                Text = "\U0001f441",
-                Location = new Point(inputX + inputW - 38, rowY + 24),
-                Size = new Size(36, DesignTokens.Sizing.InputHeight),
-                FlatStyle = FlatStyle.Flat,
-                Tag = "Ghost",
-            };
-            passwordToggle.FlatAppearance.BorderSize = 0;
-            passwordToggle.Click += (s, e) => TogglePassword(passwordTextBox, passwordToggle, ref passwordVisible);
+            CatalogUi.AddFormField(fieldsScroll, ref y, "Username", w, out userNameTextBox);
+            CatalogUi.AddPasswordField(fieldsScroll, ref y, "Password", w, out passwordTextBox, out passwordToggle);
+            passwordToggle.Click += (s, e) =>
+                CatalogUi.TogglePasswordVisibility(passwordTextBox, passwordToggle, ref passwordVisible);
+            CatalogUi.AddPasswordField(fieldsScroll, ref y, "Confirm Password", w, out confirmPasswordTextBox, out confirmPasswordToggle);
+            confirmPasswordToggle.Click += (s, e) =>
+                CatalogUi.TogglePasswordVisibility(confirmPasswordTextBox, confirmPasswordToggle, ref confirmPasswordVisible);
 
-            rowY += rowGap;
-            var confirmLabel = new Label
-            {
-                Text = "Confirm Password",
-                Location = new Point(labelX, rowY + 2),
-                Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-            };
-            confirmPasswordTextBox = new TextBox
-            {
-                Location = new Point(inputX, rowY + 24),
-                Size = new Size(inputW - 40, DesignTokens.Sizing.InputHeight),
-                PasswordChar = '*',
-                Font = DesignTokens.Typography.BodyMedium,
-            };
-            confirmPasswordToggle = new Button
-            {
-                Text = "\U0001f441",
-                Location = new Point(inputX + inputW - 38, rowY + 24),
-                Size = new Size(36, DesignTokens.Sizing.InputHeight),
-                FlatStyle = FlatStyle.Flat,
-                Tag = "Ghost",
-            };
-            confirmPasswordToggle.FlatAppearance.BorderSize = 0;
-            confirmPasswordToggle.Click += (s, e) => TogglePassword(confirmPasswordTextBox, confirmPasswordToggle, ref confirmPasswordVisible);
-
-            rowY += rowGap;
-            var countryLabel = new Label
-            {
-                Text = "Country",
-                Location = new Point(labelX, rowY + 2),
-                Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-            };
-            countryCombo = new ComboBox
-            {
-                Location = new Point(inputX, rowY + 24),
-                Size = new Size(inputW, 30),
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Font = DesignTokens.Typography.BodyMedium,
-            };
+            y = AddComboField(fieldsScroll, y, "Country", w, out countryCombo);
             countryCombo.Items.AddRange(new object[] { "Palestine", "Jordan", "Lebanon", "Egypt", "US", "UK" });
             countryCombo.SelectedIndex = 0;
 
-            rowY += rowGap;
-            var genderLabel = new Label
-            {
-                Text = "Gender",
-                Location = new Point(labelX, rowY + 2),
-                Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-            };
-            genderGroup = new GroupBox
-            {
-                Location = new Point(inputX, rowY + 24),
-                Size = new Size(inputW, 40),
-            };
-            maleRadio = new RadioButton { Text = "Male", Location = new Point(12, 10), Size = new Size(80, 22) };
-            femaleRadio = new RadioButton { Text = "Female", Location = new Point(inputW / 2 + 10, 10), Size = new Size(90, 22) };
-            genderGroup.Controls.Add(maleRadio);
-            genderGroup.Controls.Add(femaleRadio);
-            maleRadio.Checked = true;
+            y = AddGenderField(fieldsScroll, y, w, out maleRadio, out femaleRadio);
 
-            rowY += rowGap + 20;
-            signUpButton = new Button
-            {
-                Text = "Sign Up",
-                Size = new Size(inputW, DesignTokens.Sizing.ButtonHeight),
-                Location = new Point(inputX, rowY),
-                FlatStyle = FlatStyle.Flat,
-                Font = DesignTokens.Typography.ButtonLabel,
-                Tag = "Primary",
-                Cursor = Cursors.Hand,
-            };
-            signUpButton.Click += SignUpButton_Click;
-
-            rowY += 75;
             messageLabel = new Label
             {
-                Location = new Point(leftX, rowY),
-                Size = new Size(formW, 40),
+                Location = new Point(0, y),
+                Size = new Size(w, 28),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Error",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = Theme.Current.ErrorColor,
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
             };
+            fieldsScroll.Controls.Add(messageLabel);
 
-            this.Controls.AddRange(new Control[] {
-                headerLabel, subheadLabel,
-                usernameLabel, userNameTextBox,
-                passwordLabel, passwordTextBox, passwordToggle,
-                confirmLabel, confirmPasswordTextBox, confirmPasswordToggle,
-                countryLabel, countryCombo,
-                genderLabel, genderGroup,
-                signUpButton,
-                messageLabel
-            });
+            formCard.Controls.Add(fieldsScroll);
         }
 
-        private static void TogglePassword(TextBox box, Button toggle, ref bool visible)
+        private static int AddComboField(Panel parent, int y, string label, int width, out ComboBox combo)
         {
-            visible = !visible;
-            box.PasswordChar = visible ? '\0' : '*';
-            toggle.Text = visible ? "\U0001f648" : "\U0001f441";
+            int blockH = 22 + 8 + 36;
+            var block = new Panel
+            {
+                Location = new Point(0, y),
+                Size = new Size(width, blockH),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+            CatalogUi.EnableDoubleBuffer(block);
+            block.Paint += (s, e) =>
+            {
+                var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
+                CatalogUi.PaintInset(e.Graphics, inset, 10);
+            };
+            block.Controls.Add(new Label
+            {
+                Text = label,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = CatalogUi.MutedText,
+                Location = new Point(0, 0),
+                Size = new Size(width, 18),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+            combo = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                FlatStyle = FlatStyle.Flat,
+                Size = new Size(width - 20, 28),
+                Location = new Point(10, 30),
+                BackColor = CatalogUi.InsetBack,
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 11),
+                Tag = "NoTheme",
+            };
+            block.Controls.Add(combo);
+            parent.Controls.Add(block);
+            return y + blockH + 14;
+        }
+
+        private static int AddGenderField(Panel parent, int y, int width, out RadioButton male, out RadioButton female)
+        {
+            int blockH = 22 + 8 + 40;
+            var block = new Panel
+            {
+                Location = new Point(0, y),
+                Size = new Size(width, blockH),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+            CatalogUi.EnableDoubleBuffer(block);
+            block.Paint += (s, e) =>
+            {
+                var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
+                CatalogUi.PaintInset(e.Graphics, inset, 10);
+            };
+            block.Controls.Add(new Label
+            {
+                Text = "Gender",
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = CatalogUi.MutedText,
+                Location = new Point(0, 0),
+                Size = new Size(width, 18),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+
+            var host = new Panel
+            {
+                Location = new Point(10, 30),
+                Size = new Size(width - 20, 32),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+
+            male = new RadioButton
+            {
+                Text = "Male",
+                Location = new Point(8, 6),
+                AutoSize = true,
+                ForeColor = Color.White,
+                BackColor = Color.Transparent,
+                Checked = true,
+                Tag = "NoTheme",
+            };
+            female = new RadioButton
+            {
+                Text = "Female",
+                Location = new Point(width / 2, 6),
+                AutoSize = true,
+                ForeColor = Color.White,
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+            host.Controls.Add(male);
+            host.Controls.Add(female);
+            block.Controls.Add(host);
+            parent.Controls.Add(block);
+
+            return y + blockH + 14;
         }
 
         private void SignUpButton_Click(object sender, EventArgs e)
         {
             messageLabel.Text = "";
+            messageLabel.ForeColor = Theme.Current.ErrorColor;
+
             string username = userNameTextBox.Text.Trim();
             string password = passwordTextBox.Text;
             string confirm = confirmPasswordTextBox.Text;
@@ -241,25 +260,21 @@ namespace AdvancedProgramming
                 messageLabel.Text = "Username is required";
                 return;
             }
-
             if (string.IsNullOrEmpty(password))
             {
                 messageLabel.Text = "Password is required";
                 return;
             }
-
             if (password.Length < 4)
             {
                 messageLabel.Text = "Password must be at least 4 characters";
                 return;
             }
-
             if (password != confirm)
             {
                 messageLabel.Text = "Passwords do not match";
                 return;
             }
-
             if (userManager.UsernameExists(username))
             {
                 messageLabel.Text = "Username already exists";
@@ -268,7 +283,7 @@ namespace AdvancedProgramming
 
             if (userManager.SignUp(username, password, country, gender))
             {
-                messageLabel.Tag = "Success";
+                messageLabel.ForeColor = Theme.Current.SuccessColor;
                 messageLabel.Text = "Account created successfully!";
                 userNameTextBox.Text = "";
                 passwordTextBox.Text = "";
@@ -279,6 +294,26 @@ namespace AdvancedProgramming
                 CurrentUser.Score = 0;
                 SignUpSuccess?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            ApplyLayout();
+        }
+
+        private void ApplyLayout()
+        {
+            if (formCard == null)
+                return;
+
+            int cx = Width / 2;
+            int cardY = 88;
+            int cardH = Math.Max(420, Height - cardY - 80);
+            formCard.SetBounds(cx - CardWidth / 2, cardY, CardWidth, cardH);
+
+            fieldsScroll.SetBounds(28, 82, CardWidth - 56, cardH - 100);
+            signUpPill.Location = new Point(cx - signUpPill.Width / 2, formCard.Bottom + 16);
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using AdvancedProgramming.Components;
 using AdvancedProgramming.Session;
 
-
 namespace AdvancedProgramming.Forms
 {
     public class LogInForm : UserControl
@@ -13,171 +12,141 @@ namespace AdvancedProgramming.Forms
         public event EventHandler BackRequested;
         public event EventHandler HomeRequested;
 
+        private const int CardWidth = 400;
+
+        private Toolbar toolbar;
+        private Button btnBack;
+        private Button btnHome;
+        private Panel authCard;
         private TextBox usernameTextBox;
         private TextBox passwordTextBox;
-        private Button logInButton;
-        private Button passwordToggle;
-        private bool passwordVisible = false;
+        private Label passwordToggle;
         private Label messageLabel;
-        private Toolbar toolbar;
+        private Panel loginPill;
+        private bool passwordVisible;
 
         public LogInForm()
         {
-            this.SuspendLayout();
-            this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            toolbar = new Toolbar(this, "Log In");
-            this.Controls.Add(toolbar);
-            InitializeLogInComponents();
-            this.ResumeLayout(false);
-            toolbar.CloseRequested += (s, e) => Application.Exit();
-            Theme.StylePage(this);
-
-            FormAccessibility.SetShortcutHint(logInButton, "Enter", "Sign in");
-            FormAccessibility.SetShortcutHint(usernameTextBox, "Tab", "Username");
+            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
+            CatalogUi.EnableDoubleBuffer(this);
+            DoubleBuffered = true;
+            InitializeComponent();
         }
 
         public void SubmitLogin()
         {
-            LogInButton_Click(logInButton, EventArgs.Empty);
+            LogInButton_Click(null, EventArgs.Empty);
         }
 
-        private void InitializeLogInComponents()
+        private void InitializeComponent()
         {
-            int cx = this.Width / 2;
-            int formW = 400;
-            int leftX = cx - formW / 2;
-            int inputW = DesignTokens.Sizing.InputWidth;
-            int inputX = cx - inputW / 2;
-            int rowY = 176;
-            int rowGap = 72;
+            var accent = Theme.Current.AccentColor;
+            BackColor = CatalogUi.PageBack;
+            SuspendLayout();
 
-            var headerLabel = new Label
+            toolbar = new Toolbar(this, "Log In");
+            toolbar.CloseRequested += (s, e) => Application.Exit();
+            Controls.Add(toolbar);
+
+            (btnBack, btnHome) = PageBackButton.Create(
+                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+            Controls.Add(btnBack);
+            Controls.Add(btnHome);
+            btnBack.BringToFront();
+            btnHome.BringToFront();
+
+            authCard = CatalogUi.CreateCard(Color.FromArgb(50, accent), 20);
+            BuildAuthCard(accent);
+            Controls.Add(authCard);
+
+            loginPill = CatalogUi.CreateActionPill(
+                "Log In \u2192",
+                true,
+                accent,
+                (s, e) => LogInButton_Click(s, e));
+            Controls.Add(loginPill);
+
+            FormAccessibility.SetShortcutHint(loginPill, "Enter", "Sign in");
+            FormAccessibility.SetShortcutHint(usernameTextBox, "Tab", "Username");
+            FormAccessibility.SetShortcutHint(btnBack, "Esc", "Go back");
+
+            ResumeLayout(false);
+            ApplyLayout();
+        }
+
+        private void BuildAuthCard(Color accent)
+        {
+            authCard.Controls.Add(new Label
             {
                 Text = "Welcome back",
-                Font = DesignTokens.Typography.DisplaySmall,
-                AutoSize = false,
-                Size = new Size(formW, 45),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(leftX, 90),
-            };
-            var subheadLabel = new Label
+                Font = new Font("Segoe UI", 22, FontStyle.Bold),
+                ForeColor = Color.White,
+                Location = new Point(28, 24),
+                Size = new Size(CardWidth - 56, 32),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+
+            authCard.Controls.Add(new Label
             {
                 Text = "Sign in to continue solving challenges",
-                Font = DesignTokens.Typography.BodyMedium,
-                AutoSize = false,
-                Size = new Size(formW, 24),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(leftX, 139),
-                Tag = "Secondary",
+                Font = new Font("Segoe UI", 10),
+                ForeColor = CatalogUi.MutedText,
+                Location = new Point(28, 58),
+                Size = new Size(CardWidth - 56, 22),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+
+            var fields = new Panel
+            {
+                Location = new Point(28, 96),
+                Size = new Size(CardWidth - 56, 200),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
             };
 
-            int labelY = rowY;
-            var userNameLabel = new Label
-            {
-                Text = "Username",
-                Location = new Point(inputX, labelY),
-                Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-            };
-            usernameTextBox = new TextBox
-            {
-                Location = new Point(inputX, labelY + DesignTokens.Sizing.LabelHeight + 6),
-                Size = new Size(inputW, DesignTokens.Sizing.InputHeight),
-                Font = DesignTokens.Typography.BodyMedium,
-            };
+            int y = 0;
+            int w = CardWidth - 56;
+            CatalogUi.AddFormField(fields, ref y, "Username", w, out usernameTextBox);
+            CatalogUi.AddPasswordField(fields, ref y, "Password", w, out passwordTextBox, out passwordToggle);
+            passwordToggle.Click += (s, e) =>
+                CatalogUi.TogglePasswordVisibility(passwordTextBox, passwordToggle, ref passwordVisible);
 
-            rowY += rowGap;
-            labelY = rowY;
-            var passwordLabel = new Label
-            {
-                Text = "Password",
-                Location = new Point(inputX, labelY),
-                Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-            };
-            passwordTextBox = new TextBox
-            {
-                Location = new Point(inputX, labelY + DesignTokens.Sizing.LabelHeight + 6),
-                Size = new Size(inputW - 40, DesignTokens.Sizing.InputHeight),
-                PasswordChar = '*',
-                Font = DesignTokens.Typography.BodyMedium,
-            };
-            passwordToggle = new Button
-            {
-                Text = "\U0001f441",
-                Location = new Point(inputX + inputW - 38, labelY + DesignTokens.Sizing.LabelHeight + 6),
-                Size = new Size(36, DesignTokens.Sizing.InputHeight),
-                FlatStyle = FlatStyle.Flat,
-                Tag = "Ghost",
-                Font = DesignTokens.Typography.BodyMedium,
-            };
-            passwordToggle.FlatAppearance.BorderSize = 0;
-            passwordToggle.Click += PasswordToggle_Click;
-
-            rowY += rowGap + 8;
-            logInButton = new Button
-            {
-                Text = "Log In",
-                Size = new Size(inputW, DesignTokens.Sizing.ButtonHeight),
-                Location = new Point(inputX, rowY),
-                FlatStyle = FlatStyle.Flat,
-                Font = DesignTokens.Typography.ButtonLabel,
-                Tag = "Primary",
-                Cursor = Cursors.Hand,
-            };
-            logInButton.Click += LogInButton_Click;
-
-            rowY += DesignTokens.Sizing.ButtonHeight + 24;
             messageLabel = new Label
             {
                 Text = "",
-                Location = new Point(leftX, rowY),
-                Size = new Size(formW, 40),
+                Location = new Point(0, y),
+                Size = new Size(w, 28),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Error",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = Theme.Current.ErrorColor,
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
             };
+            fields.Controls.Add(messageLabel);
 
-            var (btnBack, btnHome) = PageBackButton.Create(
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
-                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
-
-            this.Controls.AddRange(new Control[] {
-                headerLabel, subheadLabel,
-                userNameLabel, usernameTextBox,
-                passwordLabel, passwordTextBox, passwordToggle,
-                logInButton, btnBack, btnHome,
-                messageLabel
-            });
-        }
-
-        private void PasswordToggle_Click(object sender, EventArgs e)
-        {
-            passwordVisible = !passwordVisible;
-            passwordTextBox.PasswordChar = passwordVisible ? '\0' : '*';
-            passwordToggle.Text = passwordVisible ? "\U0001f648" : "\U0001f441";
+            authCard.Controls.Add(fields);
         }
 
         private void LogInButton_Click(object sender, EventArgs e)
         {
-            string password = passwordTextBox.Text;
             string username = usernameTextBox.Text;
+            string password = passwordTextBox.Text;
             var user = new UserManagement();
 
             messageLabel.Text = "";
+            messageLabel.ForeColor = Theme.Current.ErrorColor;
 
             if (string.IsNullOrEmpty(username))
             {
                 messageLabel.Text = "Username is required";
-                messageLabel.Tag = "Error";
                 return;
             }
             if (string.IsNullOrEmpty(password))
             {
                 messageLabel.Text = "Password is required";
-                messageLabel.Tag = "Error";
                 return;
             }
 
@@ -194,8 +163,26 @@ namespace AdvancedProgramming.Forms
             else
             {
                 messageLabel.Text = "Invalid username or password";
-                messageLabel.Tag = "Error";
             }
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            ApplyLayout();
+        }
+
+        private void ApplyLayout()
+        {
+            if (authCard == null)
+                return;
+
+            int cx = Width / 2;
+            int cardH = 340;
+            int cardY = Math.Max(100, (Height - cardH - 70) / 2);
+
+            authCard.SetBounds(cx - CardWidth / 2, cardY, CardWidth, cardH);
+            loginPill.Location = new Point(cx - loginPill.Width / 2, authCard.Bottom + 20);
         }
     }
 }

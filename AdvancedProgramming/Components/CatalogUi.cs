@@ -248,6 +248,108 @@ namespace AdvancedProgramming.Components
             return pill;
         }
 
+        public static TextBox CreateInput(int width, int height = 36, bool password = false)
+        {
+            return new TextBox
+            {
+                Size = new Size(width, height),
+                BorderStyle = BorderStyle.None,
+                BackColor = InsetBack,
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 11),
+                PasswordChar = password ? '*' : '\0',
+                Tag = "NoTheme",
+            };
+        }
+
+        public static int AddFormField(Panel parent, ref int y, string label, int width, out TextBox input, int height = 36)
+        {
+            int blockH = 22 + 8 + height;
+            var block = new Panel
+            {
+                Location = new Point(0, y),
+                Size = new Size(width, blockH),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+            EnableDoubleBuffer(block);
+            block.Paint += (s, e) =>
+            {
+                var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
+                PaintInset(e.Graphics, inset, 10);
+            };
+            block.Controls.Add(new Label
+            {
+                Text = label,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = MutedText,
+                Location = new Point(0, 0),
+                Size = new Size(width, 18),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+            input = CreateInput(width - 20, height);
+            input.Location = new Point(10, 30);
+            block.Controls.Add(input);
+            parent.Controls.Add(block);
+            y += blockH + 14;
+            return y;
+        }
+
+        public static int AddPasswordField(Panel parent, ref int y, string label, int width, out TextBox input, out Label toggle, int height = 36)
+        {
+            int blockH = 22 + 8 + height;
+            var block = new Panel
+            {
+                Location = new Point(0, y),
+                Size = new Size(width, blockH),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+            EnableDoubleBuffer(block);
+            block.Paint += (s, e) =>
+            {
+                var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
+                PaintInset(e.Graphics, inset, 10);
+            };
+            block.Controls.Add(new Label
+            {
+                Text = label,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = MutedText,
+                Location = new Point(0, 0),
+                Size = new Size(width, 18),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+            input = CreateInput(width - 56, height, password: true);
+            input.Location = new Point(10, 30);
+            toggle = new Label
+            {
+                Text = "\U0001f441",
+                Size = new Size(32, height),
+                Location = new Point(width - 40, 30),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font("Segoe UI", 11),
+                ForeColor = MutedText,
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Hand,
+                Tag = "NoTheme",
+            };
+            block.Controls.Add(input);
+            block.Controls.Add(toggle);
+            parent.Controls.Add(block);
+            y += blockH + 14;
+            return y;
+        }
+
+        public static void TogglePasswordVisibility(TextBox box, Label toggle, ref bool visible)
+        {
+            visible = !visible;
+            box.PasswordChar = visible ? '\0' : '*';
+            toggle.Text = visible ? "\U0001f648" : "\U0001f441";
+        }
+
         public static void EnableDoubleBuffer(Control control)
         {
             typeof(Control).InvokeMember(
