@@ -9,334 +9,266 @@ namespace AdvancedProgramming.Forms
 {
     public class ProblemDisplayForm : AppForm
     {
-        private const int SideMargin = 40;
-        private const int HeaderTop = AppSizes.ContentTop;
-        private const int ContentWidth = 800;
-        private static readonly Font CodeFont = new Font("Consolas", 10);
-        private static readonly Font BodyFont = new Font("Segoe UI", 10);
-        private static readonly Font TitleFont = new Font("Segoe UI", 11);
+        private const int Margin = 40;
+        private const int BlockW = 800;
+        private const int BodyH = 448;
+        private static readonly Font Body = new Font("Segoe UI", 10);
+        private static readonly Font Title = new Font("Segoe UI", 11);
+        private static readonly Font Code = new Font("Consolas", 10);
 
-        private Toolbar toolbar;
+        private readonly string problemName;
+        private Problem problem;
+        private Color accent;
+        private bool open;
+        private bool showSolution;
+
         private Panel headerCard;
         private Panel contentCard;
         private Panel statementPanel;
         private Panel examplePanel;
-        private Panel tabStatementPill;
-        private Panel tabExamplePill;
+        private Panel tabStatement;
+        private Panel tabExample;
         private Panel actionPanel;
-        private RichTextBox solutionBox;
         private Panel solutionPanel;
-        private Panel exampleOutputHost;
-        private PanelStars panelStars;
-        private Label comingSoonLabel;
-
-        private Problem problemChoice;
-        private Color levelAccent;
-        private bool isAvailable;
-        private bool solutionVisible;
-
-        private readonly string problemName;
+        private Panel solutionPill;
+        private RichTextBox solutionBox;
 
         public ProblemDisplayForm(string problemName)
         {
             this.problemName = problemName;
-            InitializeComponent(problemName);
-        }
-
-        private void InitializeComponent(string problemName)
-        {
-            problemChoice = ProblemLoadReadJs.GetByName(problemName);
-            if (problemChoice == null)
+            problem = ProblemLoadReadJs.GetByName(problemName);
+            if (problem == null)
             {
                 MessageBox.Show("Problem not found", "MiniCamp Puzzle",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            isAvailable = ProblemCatalog.IsAvailable(problemName);
-            levelAccent = Theme.GetLevelColor(problemChoice.level);
-            string displayTitle = string.IsNullOrWhiteSpace(problemChoice.title)
-                ? problemName
-                : problemChoice.title;
-
+            open = StauationProblem.IsAvailable(problemName);
+            accent = Theme.GetLevelColor(problem.level);
             BackColor = AppColors.PageBack;
-            SuspendLayout();
+            Build();
+            Layout();
+        }
 
-            toolbar = new Toolbar(this, "MiniCamp Puzzle");
+        private void Build()
+        {
+            var toolbar = new Toolbar(this, "MiniCamp Puzzle");
             toolbar.CloseRequested += (s, e) => Application.Exit();
             Controls.Add(toolbar);
 
-            Button btnBack = MakeNavButton("\u2190 Back", 16, BackButton_Click);
-            Button btnHome = MakeNavButton("Home", 104, HomeButton_Click);
-            Controls.Add(btnBack);
-            Controls.Add(btnHome);
-            btnBack.BringToFront();
-            btnHome.BringToFront();
+            var back = MakeNavButton("\u2190 Back", 16, (s, e) => Close());
+            var home = MakeNavButton("Home", 104, (s, e) => ShowAsMainForm(new LevelProblemForm()));
+            Controls.Add(back);
+            Controls.Add(home);
+            back.BringToFront();
+            home.BringToFront();
 
-            Color border = isAvailable
-                ? Color.FromArgb(50, levelAccent)
-                : AppColors.DefaultBorder;
-
-            headerCard = AppUi.CreateCard(border, 20);
-            BuildHeader(displayTitle);
+            string title = string.IsNullOrWhiteSpace(problem.title) ? problemName : problem.title;
+            headerCard = CreateCard(open ? Color.FromArgb(50, accent) : AppColors.DefaultBorder, 20);
+            headerCard.Controls.Add(MkLabel(title, new Font("Segoe UI", 22, FontStyle.Bold), 24, 20, BlockW - 48, 36));
+            var badge = CreateBadge(problem.level);
+            badge.Location = new Point(24, 64);
+            headerCard.Controls.Add(badge);
+            var chip = CreateTypeChip(problem.type);
+            chip.Location = new Point(116, 70);
+            headerCard.Controls.Add(chip);
+            headerCard.Controls.Add(MkLabel(
+                "Coming soon — only Easy problems are open in the editor right now.",
+                new Font("Segoe UI", 9), 24, 96, 520, 22, AppColors.Warning, !open));
             Controls.Add(headerCard);
 
-            contentCard = AppUi.CreateCard(AppColors.DefaultBorder, 20);
-            BuildContentCard();
+            contentCard = CreateCard(AppColors.DefaultBorder, 20);
+            statementPanel = ScrollPanel();
+            examplePanel = ScrollPanel();
+            examplePanel.Visible = false;
+            BuildTabs();
+            FillStatement();
+            FillExample();
+            contentCard.Controls.Add(statementPanel);
+            contentCard.Controls.Add(examplePanel);
             Controls.Add(contentCard);
 
             actionPanel = new Panel { BackColor = Color.Transparent };
-            BuildActions();
+            EventHandler solve = open ? (EventHandler)((s, e) => ShowOtherForm(new SubmitForm(problemName))) : null;
+            actionPanel.Controls.Add(CreateActionPill(open ? "Solve \u2192" : "Coming Soon", open, accent, solve));
+            if (open && !string.IsNullOrWhiteSpace(problem.solution))
+            {
+                solutionPill = CreateActionPill("Show Solution", true, accent, ToggleSolution);
+                actionPanel.Controls.Add(solutionPill);
+            }
             Controls.Add(actionPanel);
-
-            LayoutControls();
         }
 
-        private void BackButton_Click(object sender, EventArgs e) => Close();
-
-        private void HomeButton_Click(object sender, EventArgs e) =>
-            ShowAsMainForm(new LevelProblemForm());
-
-        private void SolveButton_Click(object sender, EventArgs e) =>
-            ShowOtherForm(new SubmitForm(problemName));
-
-        private void LayoutControls()
+        private void BuildTabs()
         {
-            int contentW = AppSizes.FormWidth - SideMargin * 2;
-            int left = SideMargin;
-            int cx = AppSizes.FormWidth / 2;
-
-            int headerH = isAvailable ? 100 : 124;
-            headerCard.SetBounds(left, HeaderTop, contentW, headerH);
-
-            if (headerCard.Controls.Count > 0 && headerCard.Controls[0] is Label titleLbl)
-                titleLbl.Width = contentW - 48;
-
-            int contentTop = headerCard.Bottom + 16;
-            int actionH = 48;
-            int contentH = 448;
-
-            contentCard.SetBounds(left, contentTop, contentW, contentH);
-
-            int scrollTop = 64;
-            int scrollPad = 20;
-            statementPanel.SetBounds(scrollPad, scrollTop, contentW - scrollPad * 2, contentH - scrollTop - 16);
-            examplePanel.SetBounds(scrollPad, scrollTop, contentW - scrollPad * 2, contentH - scrollTop - 16);
-
-            int totalActionW = 0;
-            foreach (Control c in actionPanel.Controls)
-                totalActionW += c.Width + 12;
-            if (totalActionW > 0)
-                totalActionW -= 12;
-
-            actionPanel.SetBounds(cx - totalActionW / 2, contentCard.Bottom + 12, totalActionW, actionH);
-            int ax = 0;
-            foreach (Control c in actionPanel.Controls)
-            {
-                c.Location = new Point(ax, 4);
-                ax += c.Width + 12;
-            }
+            var strip = new Panel { Location = new Point(20, 16), Size = new Size(400, 40), BackColor = Color.Transparent };
+            tabStatement = CreateTabPill("Statement", true, accent);
+            tabStatement.Location = new Point(0, 2);
+            WireTabPill(tabStatement, () => PickTab(0));
+            tabExample = CreateTabPill("Example", false, accent);
+            tabExample.Location = new Point(tabStatement.Width + 10, 2);
+            WireTabPill(tabExample, () => PickTab(1));
+            strip.Controls.Add(tabStatement);
+            strip.Controls.Add(tabExample);
+            contentCard.Controls.Add(strip);
         }
 
-        private void BuildHeader(string displayTitle)
+        private void PickTab(int i)
         {
-            headerCard.Controls.Add(new Label
-            {
-                Text = displayTitle,
-                Font = new Font("Segoe UI", 22, FontStyle.Bold),
-                ForeColor = Color.White,
-                AutoSize = false,
-                Location = new Point(24, 20),
-                Size = new Size(800, 36),
-                BackColor = Color.Transparent,
-            });
-
-            var badge = AppUi.CreateBadge(problemChoice.level);
-            badge.Location = new Point(24, 64);
-            headerCard.Controls.Add(badge);
-
-            var typeChip = AppUi.CreateTypeChip(problemChoice.type);
-            typeChip.Location = new Point(116, 70);
-            headerCard.Controls.Add(typeChip);
-
-            comingSoonLabel = new Label
-            {
-                Text = "Coming soon — only Easy problems are open in the editor right now.",
-                Font = new Font("Segoe UI", 9),
-                ForeColor = AppColors.Warning,
-                AutoSize = false,
-                Size = new Size(520, 22),
-                Location = new Point(24, 96),
-                BackColor = Color.Transparent,
-                Visible = !isAvailable,
-            };
-            headerCard.Controls.Add(comingSoonLabel);
+            statementPanel.Visible = i == 0;
+            examplePanel.Visible = i == 1;
+            SetTabSelected(tabStatement, i == 0, accent);
+            SetTabSelected(tabExample, i == 1, accent);
         }
 
-        private void BuildContentCard()
-        {
-            var tabStrip = new Panel
-            {
-                Location = new Point(20, 16),
-                Size = new Size(400, 40),
-                BackColor = Color.Transparent,
-            };
-
-            tabStatementPill = AppUi.CreateTabPill("Statement", true, levelAccent);
-            tabStatementPill.Location = new Point(0, 2);
-            AppUi.WireTabPill(tabStatementPill, () => SelectTab(0));
-
-            tabExamplePill = AppUi.CreateTabPill("Example", false, levelAccent);
-            tabExamplePill.Location = new Point(tabStatementPill.Width + 10, 2);
-            AppUi.WireTabPill(tabExamplePill, () => SelectTab(1));
-
-            tabStrip.Controls.Add(tabStatementPill);
-            tabStrip.Controls.Add(tabExamplePill);
-
-            statementPanel = CreateScrollPanel();
-            BuildStatementTab(statementPanel);
-
-            examplePanel = CreateScrollPanel();
-            examplePanel.Visible = false;
-            BuildExampleTab(examplePanel);
-
-            contentCard.Controls.Add(tabStrip);
-            contentCard.Controls.Add(statementPanel);
-            contentCard.Controls.Add(examplePanel);
-        }
-
-        private static Panel CreateScrollPanel() =>
-            new Panel { AutoScroll = true, BackColor = Color.Transparent };
-
-        private void SelectTab(int index)
-        {
-            statementPanel.Visible = index == 0;
-            examplePanel.Visible = index == 1;
-            AppUi.SetTabSelected(tabStatementPill, index == 0, levelAccent);
-            AppUi.SetTabSelected(tabExamplePill, index == 1, levelAccent);
-        }
-
-        private void BuildStatementTab(Panel parent)
+        private void FillStatement()
         {
             int y = 8;
-            y = AppUi.AddReadOnlySection(parent, ref y, "Description", problemChoice.description, TitleFont, ContentWidth);
-            y = AppUi.AddReadOnlySection(parent, ref y, "Input format", problemChoice.input, BodyFont, ContentWidth);
-            y = AppUi.AddReadOnlySection(parent, ref y, "Output format", problemChoice.output, BodyFont, ContentWidth);
-            AppUi.AddReadOnlySection(parent, ref y, "Constraints", problemChoice.Constraints, BodyFont, ContentWidth);
+            y = Section(statementPanel, ref y, "Description", problem.description, Title);
+            y = Section(statementPanel, ref y, "Input format", problem.input, Body);
+            y = Section(statementPanel, ref y, "Output format", problem.output, Body);
+            Section(statementPanel, ref y, "Constraints", problem.Constraints, Body);
         }
 
-        private void BuildExampleTab(Panel parent)
+        private void FillExample()
         {
             int y = 8;
-            bool isPattern = string.Equals(problemChoice.type, "pattren", StringComparison.OrdinalIgnoreCase);
+            var ex = problem.Example;
+            bool stars = string.Equals(problem.type, "pattren", StringComparison.OrdinalIgnoreCase);
 
-            y = AppUi.AddReadOnlySection(parent, ref y, "Sample input",
-                problemChoice.Example?.input ?? "", CodeFont, ContentWidth);
+            y = Section(examplePanel, ref y, "Sample input", ex?.input ?? "", Code);
 
-            int outputH = isPattern ? 100
-                : AppUi.MeasureWrappedText(problemChoice.Example?.output ?? "", CodeFont, ContentWidth - 72) + 4;
-            int blockH = 22 + 8 + outputH;
-            exampleOutputHost = AppUi.CreateInsetBlock("Sample output", ContentWidth - 32, blockH);
-            exampleOutputHost.Location = new Point(16, y);
-
-            int bodyTop = 34;
-            if (isPattern)
-            {
-                panelStars = new PanelStars
-                {
-                    Location = new Point(12, bodyTop),
-                    Size = new Size(ContentWidth - 72, 88),
-                };
-                exampleOutputHost.Controls.Add(panelStars);
-            }
+            int outH = stars ? 100 : MeasureWrappedText(ex?.output ?? "", Code, BlockW - 72) + 4;
+            var outBlock = CreateInsetBlock("Sample output", BlockW - 32, 30 + outH);
+            outBlock.Location = new Point(16, y);
+            if (stars)
+                outBlock.Controls.Add(new PanelStars { Location = new Point(12, 34), Size = new Size(BlockW - 72, 88) });
             else
             {
-                var outputBox = AppUi.CreateReadOnlyBox(
-                    problemChoice.Example?.output ?? "", CodeFont, ContentWidth - 72, outputH);
-                outputBox.Location = new Point(12, bodyTop);
-                exampleOutputHost.Controls.Add(outputBox);
+                var box = CreateReadOnlyBox(ex?.output ?? "", Code, BlockW - 72, outH);
+                box.Location = new Point(12, 34);
+                outBlock.Controls.Add(box);
             }
+            examplePanel.Controls.Add(outBlock);
+            y += outBlock.Height + 12;
 
-            parent.Controls.Add(exampleOutputHost);
-            y += exampleOutputHost.Height + 12;
+            y = Section(examplePanel, ref y, "Explanation", ex?.explanation ?? "", Body);
 
-            y = AppUi.AddReadOnlySection(parent, ref y, "Explanation",
-                problemChoice.Example?.explanation ?? "", BodyFont, ContentWidth);
-
-            int solutionH = GetCodeViewHeight(problemChoice.solution, 120, 240);
-            solutionPanel = AppUi.CreateInsetBlock("Reference solution", ContentWidth - 32, 22 + 20 + solutionH);
+            int solH = SolutionHeight(problem.solution);
+            solutionPanel = CreateInsetBlock("Reference solution", BlockW - 32, 42 + solH);
             solutionPanel.Visible = false;
             solutionPanel.Location = new Point(16, y);
-
             solutionBox = new RichTextBox
             {
                 Location = new Point(12, 34),
-                Size = new Size(ContentWidth - 72, solutionH),
+                Size = new Size(BlockW - 72, solH),
                 BorderStyle = BorderStyle.None,
                 BackColor = AppColors.InsetBack,
                 ReadOnly = true,
                 TabStop = false,
             };
             solutionPanel.Controls.Add(solutionBox);
-            parent.Controls.Add(solutionPanel);
+            examplePanel.Controls.Add(solutionPanel);
         }
 
-        private void BuildActions()
+        private int Section(Panel panel, ref int y, string caption, string text, Font font) =>
+            AddReadOnlySection(panel, ref y, caption, text, font, BlockW);
+
+        private void ToggleSolution(object sender, EventArgs e)
         {
-            actionPanel.Controls.Clear();
-
-            string solveText = isAvailable ? "Solve \u2192" : "Coming Soon";
-            EventHandler onSolve = isAvailable ? (EventHandler)SolveButton_Click : null;
-            var solvePill = AppUi.CreateActionPill(solveText, isAvailable, levelAccent, onSolve);
-            solvePill.Name = "solvePill";
-            actionPanel.Controls.Add(solvePill);
-
-            if (isAvailable && !string.IsNullOrWhiteSpace(problemChoice.solution))
+            if (string.IsNullOrWhiteSpace(problem.solution))
             {
-                var solutionPill = AppUi.CreateActionPill(
-                    "Show Solution", true, levelAccent, (s, e) => ToggleSolution());
-                solutionPill.Name = "solutionPill";
-                solutionPill.Location = new Point(solvePill.Right + 12, 0);
-                actionPanel.Controls.Add(solutionPill);
-            }
-        }
-
-        private void ToggleSolution()
-        {
-            if (string.IsNullOrWhiteSpace(problemChoice?.solution))
-            {
-                MessageBox.Show(
-                    "No solution is available for this problem yet.",
-                    "Solution",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                MessageBox.Show("No solution is available for this problem yet.", "Solution",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            solutionVisible = !solutionVisible;
-            solutionPanel.Visible = solutionVisible;
+            showSolution = !showSolution;
+            solutionPanel.Visible = showSolution;
+            if (solutionPill != null && solutionPill.Controls[0] is Label lbl)
+                lbl.Text = showSolution ? "Hide Solution" : "Show Solution";
+            if (!showSolution)
+                return;
 
+            PickTab(1);
+            ShowSolution(solutionBox, problem.solution);
+        }
+
+        private static void ShowSolution(RichTextBox box, string code)
+        {
+            box.Text = NormalizeSolution(code);
+            box.Font = Code;
+            box.BackColor = AppColors.InsetBack;
+            box.ForeColor = AppColors.Text;
+        }
+
+        private static string NormalizeSolution(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+                return string.Empty;
+            return code.Replace("\\n", "\n").Replace("\\r", "\r").Replace("\\t", "\t")
+                .Replace("\r\n", "\n").Replace("\r", "\n")
+                .Replace("\n", Environment.NewLine);
+        }
+
+        private static int SolutionHeight(string code, int min = 120, int max = 240)
+        {
+            code = NormalizeSolution(code);
+            if (code.Length == 0)
+                return min;
+            int lines = 1;
+            foreach (char c in code)
+                if (c == '\n')
+                    lines++;
+            return Math.Min(max, Math.Max(min, lines * 18 + 16));
+        }
+
+        private void Layout()
+        {
+            if (headerCard == null)
+                return;
+
+            int w = AppSizes.FormWidth - Margin * 2;
+            int cx = AppSizes.FormWidth / 2;
+            headerCard.SetBounds(Margin, AppSizes.ContentTop, w, open ? 100 : 124);
+            if (headerCard.Controls[0] is Label t)
+                t.Width = w - 48;
+
+            contentCard.SetBounds(Margin, headerCard.Bottom + 16, w, BodyH);
+            int top = 64, pad = 20;
+            int sw = w - pad * 2, sh = BodyH - top - 16;
+            statementPanel.SetBounds(pad, top, sw, sh);
+            examplePanel.SetBounds(pad, top, sw, sh);
+
+            int aw = 0;
+            foreach (Control c in actionPanel.Controls)
+                aw += c.Width + 12;
+            if (aw > 0)
+                aw -= 12;
+            actionPanel.SetBounds(cx - aw / 2, contentCard.Bottom + 12, aw, 48);
+            int x = 0;
             foreach (Control c in actionPanel.Controls)
             {
-                if (c.Name == "solutionPill" && c.Controls.Count > 0 && c.Controls[0] is Label lbl)
-                    lbl.Text = solutionVisible ? "Hide Solution" : "Show Solution";
+                c.Location = new Point(x, 4);
+                x += c.Width + 12;
             }
+        }
 
-            if (solutionVisible)
+        private static Panel ScrollPanel() =>
+            new Panel { AutoScroll = true, BackColor = Color.Transparent };
+
+        private static Label MkLabel(string text, Font font, int x, int y, int w, int h,
+            Color? fore = null, bool visible = true) =>
+            new Label
             {
-                SelectTab(1);
-                CSharpCodeHighlighter.Apply(solutionBox, problemChoice.solution ?? string.Empty);
-            }
-        }
-
-        private static int GetCodeViewHeight(string code, int minHeight, int maxHeight)
-        {
-            string normalized = CSharpCodeHighlighter.NormalizeCode(code);
-            if (string.IsNullOrEmpty(normalized))
-                return minHeight;
-
-            int lines = normalized.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Length;
-            return Math.Min(maxHeight, Math.Max(minHeight, lines * 18 + 16));
-        }
+                Text = text,
+                Font = font,
+                ForeColor = fore ?? Color.White,
+                Location = new Point(x, y),
+                Size = new Size(w, h),
+                BackColor = Color.Transparent,
+                Visible = visible,
+            };
     }
 }

@@ -12,17 +12,17 @@ namespace AdvancedProgramming.Forms
 {
     public class FailedForm : AppForm
     {
-        private const int SideMargin = 40;
+        private const int spaceEdg = 40;
 
         private Toolbar toolbar;
-        private Panel headerCard;
+        private Panel HeadContent;
         private Panel resultsCard;
         private Panel resultsScroll;
-        private Label headerLabel;
+        private Label HeadLabel;
         private Label summaryLabel;
 
         private List<CodeRunnerTestResult> testResults;
-        private Color resultAccent;
+        private Color resultColor;
         private bool allPassed;
 
         public FailedForm(string name, List<CodeRunnerTestResult> results)
@@ -36,7 +36,7 @@ namespace AdvancedProgramming.Forms
         {
             int passedCount = testResults.Count(r => r.Passed);
             allPassed = testResults.Count > 0 && passedCount == testResults.Count;
-            resultAccent = allPassed ? AppColors.Success : AppColors.Error;
+            resultColor = allPassed ? AppColors.Success : AppColors.Error;
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             toolbar.CloseRequested += (s, e) => Application.Exit();
@@ -49,11 +49,11 @@ namespace AdvancedProgramming.Forms
             backButton.BringToFront();
             homeButton.BringToFront();
 
-            headerCard = AppUi.CreateCard(Color.FromArgb(50, resultAccent), 20);
+            HeadContent = CreateCard(Color.FromArgb(50, resultColor), 20);
             BuildHeader(passedCount);
-            Controls.Add(headerCard);
+            Controls.Add(HeadContent);
 
-            resultsCard = AppUi.CreateCard(AppColors.DefaultBorder, 20);
+            resultsCard = CreateCard(AppColors.DefaultBorder, 20);
             resultsScroll = new Panel
             {
                 AutoScroll = true,
@@ -62,9 +62,9 @@ namespace AdvancedProgramming.Forms
             resultsCard.Controls.Add(resultsScroll);
             Controls.Add(resultsCard);
 
-            int contentW = AppSizes.FormWidth - SideMargin * 2;
-            headerCard.SetBounds(SideMargin, AppSizes.ContentTop, contentW, 108);
-            resultsCard.SetBounds(SideMargin, 224, contentW, 556);
+            int contentW = AppSizes.FormWidth - spaceEdg * 2;
+            HeadContent.SetBounds(spaceEdg, AppSizes.ContentTop, contentW, 108);
+            resultsCard.SetBounds(spaceEdg, 224, contentW, 556);
             resultsScroll.SetBounds(0, 0, contentW, 556);
         }
 
@@ -83,7 +83,7 @@ namespace AdvancedProgramming.Forms
             string icon = allPassed ? "\u2705" : "\u274c";
             string headerText = allPassed ? "All Tests Passed" : "Some Tests Failed";
 
-            headerCard.Controls.Add(new Label
+            HeadContent.Controls.Add(new Label
             {
                 Text = icon,
                 Font = new Font("Segoe UI", 40),
@@ -93,11 +93,11 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             });
 
-            headerLabel = new Label
+            HeadLabel = new Label
             {
                 Text = headerText,
                 Font = new Font("Segoe UI", 20, FontStyle.Bold),
-                ForeColor = resultAccent,
+                ForeColor = resultColor,
                 Location = new Point(92, 18),
                 Size = new Size(500, 32),
                 BackColor = Color.Transparent,
@@ -113,9 +113,9 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             };
 
-            headerCard.Controls.Add(headerLabel);
-            headerCard.Controls.Add(summaryLabel);
-            headerCard.Controls.Add(new Label
+            HeadContent.Controls.Add(HeadLabel);
+            HeadContent.Controls.Add(summaryLabel);
+            HeadContent.Controls.Add(new Label
             {
                 Text = allPassed ? "Score updated — great work!" : "Review the details below and try again.",
                 Font = new Font("Segoe UI", 9),
@@ -134,7 +134,7 @@ namespace AdvancedProgramming.Forms
                 return;
 
             int y = 12;
-            int cardW = AppSizes.FormWidth - SideMargin * 2 - 32;
+            int cardW = AppSizes.FormWidth - spaceEdg * 2 - 32;
 
             for (int i = 0; i < testCases.Count; i++)
             {
@@ -152,7 +152,7 @@ namespace AdvancedProgramming.Forms
         private Panel CreateTestCaseCard(int index, TestCase testCase, CodeRunnerTestResult result, bool passed, int width)
         {
             Color accent = passed ? AppColors.Success : AppColors.Error;
-            Panel card = AppUi.CreateCard(Color.FromArgb(50, accent), 14);
+            Panel card = CreateCard(Color.FromArgb(50, accent), 14);
             card.Width = width;
 
             card.Controls.Add(new Label
@@ -165,7 +165,7 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             });
 
-            Panel statusPill = AppUi.CreateStatusPill(passed ? "PASSED" : "FAILED", accent);
+            Panel statusPill = CreateStatusPill(passed ? "PASSED" : "FAILED", accent);
             statusPill.Location = new Point(width - statusPill.Width - 16, 12);
             card.Controls.Add(statusPill);
 
@@ -196,7 +196,7 @@ namespace AdvancedProgramming.Forms
             block.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
-                AppUi.PaintInset(e.Graphics, inset, 10);
+PaintInset(e.Graphics, inset, 10);
             };
 
             block.Controls.Add(new Label

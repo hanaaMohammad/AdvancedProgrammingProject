@@ -25,7 +25,7 @@ namespace AdvancedProgramming.Forms
             Controls.Add(toolbar);
             toolbar.CloseRequested += (s, e) => Application.Exit();
 
-            Button btnBack = new Button
+            Button buttonBack = new Button
             {
                 Text = "\u2190 Back",
                 Location = new Point(16, AppSizes.NavTop),
@@ -34,10 +34,10 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
                 ForeColor = AppColors.Text,
             };
-            btnBack.FlatAppearance.BorderSize = 0;
-            btnBack.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+            buttonBack.FlatAppearance.BorderSize = 0;
+            buttonBack.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
 
-            Button btnHome = new Button
+            Button buttonHome = new Button
             {
                 Text = "Home",
                 Location = new Point(104, AppSizes.NavTop),
@@ -46,8 +46,8 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
                 ForeColor = AppColors.Text,
             };
-            btnHome.FlatAppearance.BorderSize = 0;
-            btnHome.Click += (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty);
+            buttonHome.FlatAppearance.BorderSize = 0;
+            buttonHome.Click += (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty);
 
             Controls.Add(new Label
             {
@@ -79,10 +79,10 @@ namespace AdvancedProgramming.Forms
                 TextAlign = ContentAlignment.MiddleCenter,
             });
 
-            Controls.Add(btnBack);
-            Controls.Add(btnHome);
-            btnBack.BringToFront();
-            btnHome.BringToFront();
+            Controls.Add(buttonBack);
+            Controls.Add(buttonHome);
+            //buttonBack.BringToFront();
+            //buttonHome.BringToFront();
         }
     }
 }

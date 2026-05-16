@@ -8,8 +8,8 @@ namespace AdvancedProgramming
     {
         public event EventHandler CloseRequested;
 
-        private Button btnMinimize;
-        private Button btnClose;
+        private Button buttonMinimize;
+        private Button buttonClose;
         private Label titleLabel;
         private Point dragOffset;
 
@@ -29,17 +29,17 @@ namespace AdvancedProgramming
                 BackColor = Color.Transparent,
             };
 
-            btnMinimize = CreateWindowButton("\u2014");
-            btnMinimize.Click += MinimizeButton_Click;
+            buttonMinimize = CreateWindowButton("\u2014");
+            buttonMinimize.Click += MinimizeButton_Click;
 
-            btnClose = CreateWindowButton("\u2715");
-            btnClose.Click += CloseButton_Click;
+            buttonClose = CreateWindowButton("\u2715");
+            buttonClose.Click += CloseButton_Click;
 
             Controls.Add(titleLabel);
-            Controls.Add(btnMinimize);
-            Controls.Add(btnClose);
+            Controls.Add(buttonMinimize);
+            Controls.Add(buttonClose);
 
-            Resize += (s, e) => RepositionControls();
+          Resize += (s, e) => RepositionControls();
 
             MouseDown += Toolbar_MouseDown;
             MouseMove += Toolbar_MouseMove;
@@ -65,6 +65,8 @@ namespace AdvancedProgramming
         {
             if (e.Button == MouseButtons.Left)
                 dragOffset = new Point(-e.X, -e.Y);
+            // امممممم هون فكرنا عشان الفورم يزيح الزاوية الى تنزاح مش مكان مسكة الماوس بصير مرتب 
+
         }
 
         private void Toolbar_MouseMove(object sender, MouseEventArgs e)
@@ -90,19 +92,20 @@ namespace AdvancedProgramming
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.Transparent,
                 ForeColor = AppColors.Text,
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+               
                 TabStop = false,
                 Font = new Font("Segoe UI", 12F),
             };
-            btn.FlatAppearance.BorderSize = 0;
+           btn.FlatAppearance.BorderSize = 0;
+       
             return btn;
         }
 
         private void RepositionControls()
         {
             titleLabel.Location = new Point(24, (Height - titleLabel.Height) / 2);
-            btnMinimize.Location = new Point(Width - 84, 7);
-            btnClose.Location = new Point(Width - 42, 7);
+            buttonMinimize.Location = new Point(Width - 84, 7);
+            buttonClose.Location = new Point(Width - 42, 7);
         }
     }
 }

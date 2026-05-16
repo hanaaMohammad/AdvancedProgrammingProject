@@ -2,7 +2,7 @@ using System;
 
 namespace AdvancedProgramming.ProblemClasses
 {
-    public static class ProblemCatalog
+    public static class StauationProblem
     {
         public static bool IsAvailable(Problem problem) =>
             problem != null &&

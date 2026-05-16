@@ -53,17 +53,17 @@ namespace AdvancedProgramming.Forms
             btnBack.BringToFront();
             btnHome.BringToFront();
 
-            headerCard = AppUi.CreateCard(Color.FromArgb(50, levelAccent), 20);
+            headerCard = CreateCard(Color.FromArgb(50, levelAccent), 20);
             headerCard.SetBounds(SideMargin, AppSizes.ContentTop, ContentW, 118);
             BuildHeader(displayTitle, problem?.level, problem?.type);
             Controls.Add(headerCard);
 
-            editorCard = AppUi.CreateCard(AppColors.DefaultBorder, 20);
+            editorCard = CreateCard(AppColors.DefaultBorder, 20);
             editorCard.SetBounds(SideMargin, 234, ContentW, 494);
             BuildEditor();
             Controls.Add(editorCard);
 
-            runPill = AppUi.CreateActionPill("Run Tests \u2192", true, levelAccent, RunTestsButton_Click);
+            runPill = CreateActionPill("Run Tests \u2192", true, levelAccent, RunTestsButton_Click);
             runPill.Location = new Point(AppSizes.FormWidth / 2 - runPill.Width / 2, 746);
             Controls.Add(runPill);
 
@@ -101,7 +101,7 @@ namespace AdvancedProgramming.Forms
 
             if (!string.IsNullOrWhiteSpace(level))
             {
-                Panel badge = AppUi.CreateBadge(level);
+                Panel badge = CreateBadge(level);
                 badge.Location = new Point(metaX, metaY);
                 headerCard.Controls.Add(badge);
                 metaX += badge.Width + 12;
@@ -161,7 +161,7 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             };
             editorHost.Paint += (s, e) =>
-                AppUi.PaintInset(e.Graphics, editorHost.ClientRectangle, 12);
+PaintInset(e.Graphics, editorHost.ClientRectangle, 12);
 
             codeEditor = new TextBox
             {

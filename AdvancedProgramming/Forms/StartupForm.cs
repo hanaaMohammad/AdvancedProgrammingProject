@@ -29,7 +29,7 @@ namespace AdvancedProgramming
             Controls.Add(toolbar);
 
             Color accent = AppColors.Accent;
-            heroCard = AppUi.CreateCard(Color.FromArgb(60, accent), 24);
+            heroCard = CreateCard(Color.FromArgb(60, accent), 24);
             heroCard.SetBounds(centerX - 220, 200, 440, 320);
 
             PictureBox logo = CreateLogo();
@@ -82,7 +82,7 @@ namespace AdvancedProgramming
             heroCard.Controls.Add(tagline);
             Controls.Add(heroCard);
 
-            loginPill = AppUi.CreateActionPill("Log In \u2192", true, accent, LoginButton_Click);
+            loginPill = CreateActionPill("Log In \u2192", true, accent, LoginButton_Click);
             signUpPill = CreateSecondaryPill("Sign Up", accent, SignUpButton_Click);
 
             int pillY = 548;

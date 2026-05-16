@@ -49,10 +49,10 @@ namespace AdvancedProgramming.Forms
             btnBack.BringToFront();
             btnHome.BringToFront();
 
-            formCard = AppUi.CreateCard(Color.FromArgb(50, accent), 20);
+            formCard = CreateCard(Color.FromArgb(50, accent), 20);
             Controls.Add(formCard);
 
-            signUpPill = AppUi.CreateActionPill("Sign Up \u2192", true, accent, SignUpButton_Click);
+            signUpPill = CreateActionPill("Sign Up \u2192", true, accent, SignUpButton_Click);
             Controls.Add(signUpPill);
 
             BuildFormCard();
@@ -106,10 +106,10 @@ namespace AdvancedProgramming.Forms
             int y = 0;
             int w = CardWidth - 56;
 
-            AppUi.AddFormField(fieldsScroll, ref y, "Username", w, out userNameTextBox, 36);
-            AppUi.AddPasswordField(fieldsScroll, ref y, "Password", w, out passwordTextBox, out passwordToggle, 36);
+AddFormField(fieldsScroll, ref y, "Username", w, out userNameTextBox, 36);
+AddPasswordField(fieldsScroll, ref y, "Password", w, out passwordTextBox, out passwordToggle, 36);
             passwordToggle.Click += PasswordToggle_Click;
-            AppUi.AddPasswordField(fieldsScroll, ref y, "Confirm Password", w, out confirmPasswordTextBox, out confirmPasswordToggle, 36);
+AddPasswordField(fieldsScroll, ref y, "Confirm Password", w, out confirmPasswordTextBox, out confirmPasswordToggle, 36);
             confirmPasswordToggle.Click += ConfirmPasswordToggle_Click;
 
             y = AddComboField(fieldsScroll, y, "Country", w, out countryCombo);
@@ -134,12 +134,12 @@ namespace AdvancedProgramming.Forms
 
         private void PasswordToggle_Click(object sender, EventArgs e)
         {
-            AppUi.TogglePasswordVisibility(passwordTextBox, passwordToggle, ref passwordVisible);
+TogglePasswordVisibility(passwordTextBox, passwordToggle, ref passwordVisible);
         }
 
         private void ConfirmPasswordToggle_Click(object sender, EventArgs e)
         {
-            AppUi.TogglePasswordVisibility(confirmPasswordTextBox, confirmPasswordToggle, ref confirmPasswordVisible);
+TogglePasswordVisibility(confirmPasswordTextBox, confirmPasswordToggle, ref confirmPasswordVisible);
         }
 
         private int AddComboField(Panel parent, int y, string label, int width, out ComboBox combo)
@@ -154,7 +154,7 @@ namespace AdvancedProgramming.Forms
             block.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
-                AppUi.PaintInset(e.Graphics, inset, 10);
+PaintInset(e.Graphics, inset, 10);
             };
             block.Controls.Add(new Label
             {
@@ -192,7 +192,7 @@ namespace AdvancedProgramming.Forms
             block.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
-                AppUi.PaintInset(e.Graphics, inset, 10);
+PaintInset(e.Graphics, inset, 10);
             };
             block.Controls.Add(new Label
             {

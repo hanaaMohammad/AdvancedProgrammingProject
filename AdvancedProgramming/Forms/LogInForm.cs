@@ -41,12 +41,12 @@ namespace AdvancedProgramming.Forms
             btnBack.BringToFront();
             btnHome.BringToFront();
 
-            authCard = AppUi.CreateCard(Color.FromArgb(50, accent), 20);
+            authCard = CreateCard(Color.FromArgb(50, accent), 20);
             authCard.SetBounds(centerX - CardWidth / 2, 195, CardWidth, 340);
             BuildAuthCard();
             Controls.Add(authCard);
 
-            loginPill = AppUi.CreateActionPill("Log In \u2192", true, accent, LogInButton_Click);
+            loginPill = CreateActionPill("Log In \u2192", true, accent, LogInButton_Click);
             loginPill.Location = new Point(centerX - loginPill.Width / 2, 555);
             Controls.Add(loginPill);
         }
@@ -92,8 +92,8 @@ namespace AdvancedProgramming.Forms
 
             int y = 0;
             int w = CardWidth - 56;
-            AppUi.AddFormField(fields, ref y, "Username", w, out usernameTextBox, 36);
-            AppUi.AddPasswordField(fields, ref y, "Password", w, out passwordTextBox, out passwordToggle, 36);
+AddFormField(fields, ref y, "Username", w, out usernameTextBox, 36);
+AddPasswordField(fields, ref y, "Password", w, out passwordTextBox, out passwordToggle, 36);
             passwordToggle.Click += PasswordToggle_Click;
 
             messageLabel = new Label
@@ -112,7 +112,7 @@ namespace AdvancedProgramming.Forms
 
         private void PasswordToggle_Click(object sender, EventArgs e)
         {
-            AppUi.TogglePasswordVisibility(passwordTextBox, passwordToggle, ref passwordVisible);
+TogglePasswordVisibility(passwordTextBox, passwordToggle, ref passwordVisible);
         }
 
         private void LogInButton_Click(object sender, EventArgs e)
