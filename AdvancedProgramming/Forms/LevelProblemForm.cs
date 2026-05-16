@@ -37,6 +37,7 @@ namespace AdvancedProgramming.Forms
         {
             "Happy Number",
             "Lucky Numbers in a Matrix",
+            "Find the Single Number",
         };
 
         public LevelProblemForm()

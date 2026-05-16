@@ -11,6 +11,8 @@ namespace AdvancedProgramming.Forms
 {
     public class SubmitForm : UserControl
     {
+        public static string LastSubmittedCode { get; set; }
+
         public event EventHandler<CodeRunnerTestResultList> TestResultsReady;
         public event EventHandler BackRequested;
         public event EventHandler HomeRequested;
@@ -127,6 +129,12 @@ namespace AdvancedProgramming.Forms
                 ButtonRun_Click(buttonRun, EventArgs.Empty);
         }
 
+        public void RestoreCode(string code)
+        {
+            if (!string.IsNullOrEmpty(code))
+                codeEditor.Text = code;
+        }
+
         private async void ButtonRun_Click(object sender, EventArgs e)
         {
             if (isRunning) return;
@@ -169,6 +177,8 @@ namespace AdvancedProgramming.Forms
                     userMgmt.UpdateScore(CurrentUser.Username, passedCount * 10);
                     CurrentUser.Score = userMgmt.GetScore(CurrentUser.Username);
                 }
+
+                LastSubmittedCode = code;
 
                 TestResultsReady?.Invoke(this, new CodeRunnerTestResultList
                 {

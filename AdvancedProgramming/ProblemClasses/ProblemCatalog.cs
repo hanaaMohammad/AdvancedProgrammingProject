@@ -11,7 +11,7 @@ namespace AdvancedProgramming.ProblemClasses
 
         public static bool IsAvailable(string title)
         {
-            return string.Equals(title, StarterProblemTitle, StringComparison.Ordinal);
+            return true;
         }
 
         public static string GetListLabel(string title)

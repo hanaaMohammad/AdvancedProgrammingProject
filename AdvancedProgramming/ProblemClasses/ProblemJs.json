@@ -37,220 +37,67 @@
           "explanation": "a is a vowel letter."
         },
         "TestCase": [
-          {
-            "input": "A",
-            "output": true
-          },
-          {
-            "input": "a",
-            "output": true
-          },
-          {
-            "input": "B",
-            "output": false
-          },
-          {
-            "input": "b",
-            "output": false
-          },
-          {
-            "input": "C",
-            "output": false
-          },
-          {
-            "input": "c",
-            "output": false
-          },
-          {
-            "input": "D",
-            "output": false
-          },
-          {
-            "input": "d",
-            "output": false
-          },
-          {
-            "input": "E",
-            "output": true
-          },
-          {
-            "input": "e",
-            "output": true
-          },
-          {
-            "input": "F",
-            "output": false
-          },
-          {
-            "input": "f",
-            "output": false
-          },
-          {
-            "input": "G",
-            "output": false
-          },
-          {
-            "input": "g",
-            "output": false
-          },
-          {
-            "input": "H",
-            "output": false
-          },
-          {
-            "input": "h",
-            "output": false
-          },
-          {
-            "input": "I",
-            "output": true
-          },
-          {
-            "input": "i",
-            "output": true
-          },
-          {
-            "input": "J",
-            "output": false
-          },
-          {
-            "input": "j",
-            "output": false
-          },
-          {
-            "input": "K",
-            "output": false
-          },
-          {
-            "input": "k",
-            "output": false
-          },
-          {
-            "input": "L",
-            "output": false
-          },
-          {
-            "input": "l",
-            "output": false
-          },
-          {
-            "input": "M",
-            "output": false
-          },
-          {
-            "input": "m",
-            "output": false
-          },
-          {
-            "input": "N",
-            "output": false
-          },
-          {
-            "input": "n",
-            "output": false
-          },
-          {
-            "input": "O",
-            "output": true
-          },
-          {
-            "input": "o",
-            "output": true
-          },
-          {
-            "input": "P",
-            "output": false
-          },
-          {
-            "input": "p",
-            "output": false
-          },
-          {
-            "input": "Q",
-            "output": false
-          },
-          {
-            "input": "q",
-            "output": false
-          },
-          {
-            "input": "R",
-            "output": false
-          },
-          {
-            "input": "r",
-            "output": false
-          },
-          {
-            "input": "S",
-            "output": false
-          },
-          {
-            "input": "s",
-            "output": false
-          },
-          {
-            "input": "T",
-            "output": false
-          },
-          {
-            "input": "t",
-            "output": false
-          },
-          {
-            "input": "U",
-            "output": true
-          },
-          {
-            "input": "u",
-            "output": true
-          },
-          {
-            "input": "V",
-            "output": false
-          },
-          {
-            "input": "v",
-            "output": false
-          },
-          {
-            "input": "W",
-            "output": false
-          },
-          {
-            "input": "w",
-            "output": false
-          },
-          {
-            "input": "X",
-            "output": false
-          },
-          {
-            "input": "x",
-            "output": false
-          },
-          {
-            "input": "Y",
-            "output": false
-          },
-          {
-            "input": "y",
-            "output": false
-          },
-          {
-            "input": "Z",
-            "output": false
-          },
-          {
-            "input": "z",
-            "output": false
-          }
-        ]
+          { "input": "A", "output": "vowel" },
+          { "input": "a", "output": "vowel" },
+          { "input": "B", "output": "consonant" },
+          { "input": "b", "output": "consonant" },
+          { "input": "C", "output": "consonant" },
+          { "input": "c", "output": "consonant" },
+          { "input": "D", "output": "consonant" },
+          { "input": "d", "output": "consonant" },
+          { "input": "E", "output": "vowel" },
+          { "input": "e", "output": "vowel" },
+          { "input": "F", "output": "consonant" },
+          { "input": "f", "output": "consonant" },
+          { "input": "G", "output": "consonant" },
+          { "input": "g", "output": "consonant" },
+          { "input": "H", "output": "consonant" },
+          { "input": "h", "output": "consonant" },
+          { "input": "I", "output": "vowel" },
+          { "input": "i", "output": "vowel" },
+          { "input": "J", "output": "consonant" },
+          { "input": "j", "output": "consonant" },
+          { "input": "K", "output": "consonant" },
+          { "input": "k", "output": "consonant" },
+          { "input": "L", "output": "consonant" },
+          { "input": "l", "output": "consonant" },
+          { "input": "M", "output": "consonant" },
+          { "input": "m", "output": "consonant" },
+          { "input": "N", "output": "consonant" },
+          { "input": "n", "output": "consonant" },
+          { "input": "O", "output": "vowel" },
+          { "input": "o", "output": "vowel" },
+          { "input": "P", "output": "consonant" },
+          { "input": "p", "output": "consonant" },
+          { "input": "Q", "output": "consonant" },
+          { "input": "q", "output": "consonant" },
+          { "input": "R", "output": "consonant" },
+          { "input": "r", "output": "consonant" },
+          { "input": "S", "output": "consonant" },
+          { "input": "s", "output": "consonant" },
+          { "input": "T", "output": "consonant" },
+          { "input": "t", "output": "consonant" },
+          { "input": "U", "output": "vowel" },
+          { "input": "u", "output": "vowel" },
+          { "input": "V", "output": "consonant" },
+          { "input": "v", "output": "consonant" },
+          { "input": "W", "output": "consonant" },
+          { "input": "w", "output": "consonant" },
+          { "input": "X", "output": "consonant" },
+          { "input": "x", "output": "consonant" },
+          { "input": "Y", "output": "consonant" },
+          { "input": "y", "output": "consonant" },
+          { "input": "Z", "output": "consonant" },
+          { "input": "z", "output": "consonant" }
+        ],
+        "solution": "using System;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        char ch = Console.ReadLine()[0];\n        string vowels = \"aeiouAEIOU\";\n        if (vowels.IndexOf(ch) >= 0)\n            Console.WriteLine(\"vowel\");\n        else\n            Console.WriteLine(\"consonant\");\n    }\n}"
       },
 
       {
         "title": "Print Fibonacci Series",
         "description": "Print the Fibonacci series up to a given number of terms.",
+        "input": "N: the number of terms (1 <= N <= 10)",
+        "output": "The first N terms of the Fibonacci sequence separated by spaces.",
         "type": "Math",
         "level": "easy",
         "Example": {
@@ -300,9 +147,9 @@
             "output": "0 1 1 2 3 5 8 13 21 34"
           }
         ],
-        "Constraints": "1 <= N <= 10"
-      }
-   ,
+        "Constraints": "1 <= N <= 10",
+        "solution": "using System;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        int n = int.Parse(Console.ReadLine());\n        int a = 0, b = 1;\n        for (int i = 0; i < n; i++)\n        {\n            Console.Write(a);\n            if (i < n - 1) Console.Write(\" \");\n            int temp = a + b;\n            a = b;\n            b = temp;\n        }\n    }\n}"
+      },
 
   
       {
@@ -330,11 +177,14 @@
             "input": "1 2 8 10 10 12 19 | 0",
             "output": "-1"
           }
-        ]
+        ],
+        "solution": "using System;\nusing System.Linq;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        var parts = Console.ReadLine().Split('|');\n        int[] arr = parts[0].Trim().Split(' ').Select(int.Parse).ToArray();\n        int x = int.Parse(parts[1].Trim());\n        int lo = 0, hi = arr.Length - 1, ans = -1;\n        while (lo <= hi)\n        {\n            int mid = (lo + hi) / 2;\n            if (arr[mid] <= x) { ans = mid; lo = mid + 1; }\n            else hi = mid - 1;\n        }\n        Console.WriteLine(ans >= 0 ? arr[ans].ToString() : \"-1\");\n    }\n}"
       },
       {
         "title": "Move All Zeroes to End",
         "description": "Move all zeroes to the end of the array while maintaining the relative order of non-zero elements.",
+        "input": "Array elements separated by space.",
+        "output": "Array with all zeroes moved to the end, preserving relative order of non-zero elements.",
         "type": "array",
         "Constraints": "Array size ( 1 _ to 10 elements) ",
         "level": "medium",
@@ -356,7 +206,8 @@
             "input": "0 0",
             "output": "0 0"
           }
-        ]
+        ],
+        "solution": "using System;\nusing System.Linq;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        int[] arr = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();\n        int[] result = new int[arr.Length];\n        int pos = 0;\n        foreach (int x in arr)\n            if (x != 0) result[pos++] = x;\n        Console.WriteLine(string.Join(\" \", result));\n    }\n}"
       },
       {
         "title": "T-primes",
@@ -388,13 +239,15 @@
             "input": "8 10",
             "output": "9"
           }
-        ]
-      }
-    ,
+        ],
+        "solution": "using System;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        string[] parts = Console.ReadLine().Split(' ');\n        int L = int.Parse(parts[0]), R = int.Parse(parts[1]);\n        for (int n = L; n <= R; n++)\n        {\n            int root = (int)Math.Sqrt(n);\n            if (root * root != n) continue;\n            bool isPrime = root >= 2;\n            for (int d = 2; d * d <= root; d++)\n                if (root % d == 0) { isPrime = false; break; }\n            if (isPrime) Console.Write(n + \" \");\n        }\n    }\n}"
+      },
    
       {
         "title": "Happy Number",
         "description": "Determine if a number is a happy number.",
+        "input": "A single integer N (1 <= N <= 10).",
+        "output": "true if N is a happy number, false otherwise.",
         "type": "math",
         "Constraints": "Number range (1 to 10)",
         "level": "hard",
@@ -416,11 +269,14 @@
             "input": "7",
             "output": "true"
           }
-        ]
+        ],
+        "solution": "using System;\nusing System.Collections.Generic;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        int n = int.Parse(Console.ReadLine());\n        var seen = new HashSet<int>();\n        while (n != 1 && !seen.Contains(n))\n        {\n            seen.Add(n);\n            int sum = 0;\n            while (n > 0) { int d = n % 10; sum += d * d; n /= 10; }\n            n = sum;\n        }\n        Console.WriteLine(n == 1 ? \"true\" : \"false\");\n    }\n}"
       },
       {
         "title": "Lucky Numbers in a Matrix",
         "description": "Find all lucky numbers in a given matrix.",
+        "input": "A matrix in JSON array format (e.g. [[3,7,8],[9,11,13],[15,16,17]]).",
+        "output": "The lucky number that is the minimum in its row and maximum in its column.",
         "type": "matrix",
         "Constraints": "Matrix size max 3x3 for simplicity",
         "level": "hard",
@@ -442,10 +298,41 @@
             "input": "[[5]]",
             "output": "5"
           }
-        ]
+        ],
+        "solution": "using System;\nusing System.Linq;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        string s = Console.ReadLine();\n        int[][] mat = s.Trim('[', ']').Split('},{')\n            .Select(row => row.Split(',').Select(int.Parse).ToArray()).ToArray();\n        int rows = mat.Length, cols = mat[0].Length;\n        int[] rowMin = mat.Select(r => r.Min()).ToArray();\n        for (int i = 0; i < rows; i++)\n            for (int j = 0; j < cols; j++)\n            {\n                bool maxInCol = true;\n                for (int k = 0; k < rows; k++)\n                    if (mat[k][j] > mat[i][j]) { maxInCol = false; break; }\n                if (maxInCol && mat[i][j] == rowMin[i])\n                {\n                    Console.WriteLine(mat[i][j]);\n                    return;\n                }\n            }\n    }\n}"
+      },
+      {
+        "title": "Find the Single Number",
+        "description": "Given a non-empty array of integers, every element appears twice except for one. Find that single one. Use O(1) extra space for an extra challenge.",
+        "input": "N: size of array (1 <= N <= 9)\narr: array elements separated by space",
+        "output": "The element that appears only once.",
+        "type": "array",
+        "Constraints": "Array size (1 to 9 elements)",
+        "level": "hard",
+        "Example": {
+          "input": "5\n4 1 2 1 2",
+          "output": "4",
+          "explanation": "4 appears once, 1 and 2 appear twice."
+        },
+        "TestCase": [
+          {
+            "input": "5\n4 1 2 1 2",
+            "output": "4"
+          },
+          {
+            "input": "3\n2 2 1",
+            "output": "1"
+          },
+          {
+            "input": "9\n1 3 2 5 4 5 4 3 2",
+            "output": "1"
+          },
+          {
+            "input": "1\n42",
+            "output": "42"
+          }
+        ],
+        "solution": "using System;\nusing System.Linq;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        int N = int.Parse(Console.ReadLine());\n        int[] arr = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();\n        int result = 0;\n        for (int i = 0; i < N; i++)\n            result ^= arr[i];\n        Console.WriteLine(result);\n    }\n}"
       }
-    
-
-
-  ]
+]
 

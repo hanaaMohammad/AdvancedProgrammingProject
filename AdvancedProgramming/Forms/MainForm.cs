@@ -158,26 +158,21 @@ namespace AdvancedProgramming
             page.TestResultsReady += (s, results) => NavigateToResult(problemName, results);
             page.BackRequested += (s, e) => GoBack();
             page.HomeRequested += (s, e) => NavigateToHome();
+            if (SubmitForm.LastSubmittedCode != null)
+            {
+                page.RestoreCode(SubmitForm.LastSubmittedCode);
+                SubmitForm.LastSubmittedCode = null;
+            }
             ShowPage(page);
         }
 
         private void NavigateToResult(string problemName, Service.CodeRunnerTestResultList results)
         {
             backStack.Push(() => NavigateToResult(problemName, results));
-            if (results.AllPassed)
-            {
-                var page = new AcceptedForm();
-                page.BackRequested += (s, e) => GoBack();
-                page.HomeRequested += (s, e) => NavigateToHome();
-                ShowPage(page);
-            }
-            else
-            {
-                var page = new FailedForm(problemName, results.Results);
-                page.BackRequested += (s, e) => GoBack();
-                page.HomeRequested += (s, e) => NavigateToHome();
-                ShowPage(page);
-            }
+            var page = new FailedForm(problemName, results.Results);
+            page.BackRequested += (s, e) => GoBack();
+            page.HomeRequested += (s, e) => NavigateToHome();
+            ShowPage(page);
         }
 
         private void NavigateToUser()

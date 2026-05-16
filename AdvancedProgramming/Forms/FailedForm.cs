@@ -14,15 +14,12 @@ namespace AdvancedProgramming.Forms
         public event EventHandler BackRequested;
         public event EventHandler HomeRequested;
 
-        private Timer animTimer;
-        private List<Panel> resultPanels = new List<Panel>();
-        private List<int> targetTops = new List<int>();
-        private int currentAnimIndex = 0;
         private Toolbar toolbar;
         private Button backButton;
         private Button homeButton;
         private List<CodeRunnerTestResult> testResults;
         private Label headerLabel;
+        private Label summaryLabel;
 
         public FailedForm(string name, List<CodeRunnerTestResult> results)
         {
@@ -42,9 +39,20 @@ namespace AdvancedProgramming.Forms
 
             int cx = this.Width / 2;
 
+            int passedCount = 0;
+            foreach (var r in testResults)
+            {
+                if (r.Passed)
+                    passedCount++;
+            }
+
+            string icon = passedCount == testResults.Count ? "\u2705" : "\u274c";
+            Color headerColor = passedCount == testResults.Count ? Theme.Current.SuccessColor : Theme.Current.ErrorColor;
+            string headerText = passedCount == testResults.Count ? "All Tests Passed" : "Some tests failed";
+
             var iconLabel = new Label
             {
-                Text = "\u274c",
+                Text = icon,
                 Font = new Font("Segoe UI", 48F, FontStyle.Regular),
                 AutoSize = false,
                 Size = new Size(80, 80),
@@ -55,18 +63,18 @@ namespace AdvancedProgramming.Forms
 
             headerLabel = new Label
             {
-                Text = "Some tests failed",
+                Text = headerText,
                 Font = DesignTokens.Typography.HeadingLarge,
                 Size = new Size(400, 40),
                 Location = new Point(cx - 200, 160),
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Theme.Current.ErrorColor,
+                ForeColor = headerColor,
                 BackColor = Color.Transparent,
             };
 
-            var descLabel = new Label
+            summaryLabel = new Label
             {
-                Text = "Review the details below and try again",
+                Text = $"{passedCount} / {testResults.Count} test cases passed",
                 Font = DesignTokens.Typography.BodyMedium,
                 Size = new Size(400, 25),
                 Location = new Point(cx - 200, 200),
@@ -81,7 +89,7 @@ namespace AdvancedProgramming.Forms
 
             this.Controls.Add(iconLabel);
             this.Controls.Add(headerLabel);
-            this.Controls.Add(descLabel);
+            this.Controls.Add(summaryLabel);
             this.Controls.Add(backButton);
             this.Controls.Add(homeButton);
 
@@ -110,7 +118,7 @@ namespace AdvancedProgramming.Forms
                     Width = 620,
                     Height = 100,
                     Left = cx - 310,
-                    Top = -150,
+                    Top = targetTop,
                     BackColor = Theme.Current.SurfaceColor,
                 };
 
@@ -131,7 +139,7 @@ namespace AdvancedProgramming.Forms
                 };
 
                 string detailText = testCase.ToString();
-                if (!passed && testResults != null && i < testResults.Count)
+                if (testResults != null && i < testResults.Count)
                 {
                     var result = testResults[i];
                     detailText += "\nExpected: " + result.ExpectedOutput + "\nActual: " + result.ActualOutput;
@@ -151,31 +159,7 @@ namespace AdvancedProgramming.Forms
                 panel.Controls.Add(statusLabel);
                 panel.Controls.Add(detailLabel);
                 this.Controls.Add(panel);
-                resultPanels.Add(panel);
-                targetTops.Add(targetTop);
             }
-
-            animTimer = new Timer();
-            animTimer.Interval = 16;
-            animTimer.Tick += AnimatePanels;
-            animTimer.Start();
-        }
-
-        private void AnimatePanels(object sender, EventArgs e)
-        {
-            if (currentAnimIndex >= resultPanels.Count)
-            {
-                animTimer.Stop();
-                return;
-            }
-
-            Panel panel = resultPanels[currentAnimIndex];
-            int target = targetTops[currentAnimIndex];
-
-            if (panel.Top < target)
-                panel.Top += 10;
-            else
-                currentAnimIndex++;
         }
     }
 }
