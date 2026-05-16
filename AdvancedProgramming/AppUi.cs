@@ -3,11 +3,13 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace AdvancedProgramming.Components
+namespace AdvancedProgramming
 {
-    // Small helpers to draw rounded cards and buttons (same look as before).
-    public static class UiHelper
+    // Shared drawing helpers for cards, pills, and read-only content blocks.
+    public static class AppUi
     {
+        private const int CaptionHeight = 22;
+
         public static void PaintCard(Graphics g, Rectangle bounds, Color borderAccent, int radius)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -21,10 +23,7 @@ namespace AdvancedProgramming.Components
             }
         }
 
-        public static void PaintInset(Graphics g, Rectangle bounds)
-        {
-            PaintInset(g, bounds, 12);
-        }
+        public static void PaintInset(Graphics g, Rectangle bounds) => PaintInset(g, bounds, 12);
 
         public static void PaintInset(Graphics g, Rectangle bounds, int radius)
         {
@@ -48,9 +47,8 @@ namespace AdvancedProgramming.Components
             return card;
         }
 
-        public static Label CreateTypeChip(string type)
-        {
-            return new Label
+        public static Label CreateTypeChip(string type) =>
+            new Label
             {
                 Text = type ?? "",
                 AutoSize = true,
@@ -58,7 +56,6 @@ namespace AdvancedProgramming.Components
                 ForeColor = AppColors.MutedText,
                 BackColor = Color.Transparent,
             };
-        }
 
         public static Panel CreateBadge(string level)
         {
@@ -120,6 +117,13 @@ namespace AdvancedProgramming.Components
                 BackColor = Color.Transparent,
             });
             return pill;
+        }
+
+        public static void WireTabPill(Panel pill, Action onSelect)
+        {
+            pill.Click += (s, e) => onSelect();
+            foreach (Control c in pill.Controls)
+                c.Click += (s, e) => onSelect();
         }
 
         public static void SetTabSelected(Panel pill, bool selected, Color accent)
@@ -223,9 +227,8 @@ namespace AdvancedProgramming.Components
             return pill;
         }
 
-        public static TextBox CreateInput(int width, int height, bool password)
-        {
-            return new TextBox
+        public static TextBox CreateInput(int width, int height, bool password) =>
+            new TextBox
             {
                 Size = new Size(width, height),
                 BorderStyle = BorderStyle.None,
@@ -234,11 +237,75 @@ namespace AdvancedProgramming.Components
                 Font = new Font("Segoe UI", 11),
                 PasswordChar = password ? '*' : '\0',
             };
+
+        public static TextBox CreateReadOnlyBox(string text, Font font, int width, int height) =>
+            new TextBox
+            {
+                Text = text ?? string.Empty,
+                ReadOnly = true,
+                Multiline = true,
+                Font = font,
+                Size = new Size(width, height),
+                BorderStyle = BorderStyle.None,
+                BackColor = AppColors.InsetBack,
+                ForeColor = Color.White,
+                TabStop = false,
+            };
+
+        public static int MeasureWrappedText(string text, Font font, int width, int minHeight = 40)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return minHeight;
+            var size = TextRenderer.MeasureText(text, font, new Size(width, 0), TextFormatFlags.WordBreak);
+            return size.Height + 12;
+        }
+
+        public static Panel CreateInsetBlock(string caption, int width, int height, int insetRadius = 12)
+        {
+            var block = new Panel
+            {
+                Width = width,
+                Height = height,
+                BackColor = Color.Transparent,
+            };
+            block.Paint += (s, e) =>
+            {
+                var inset = new Rectangle(0, CaptionHeight + 6, block.Width, block.Height - CaptionHeight - 6);
+                PaintInset(e.Graphics, inset, insetRadius);
+            };
+            block.Controls.Add(new Label
+            {
+                Text = caption,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = AppColors.MutedText,
+                Location = new Point(0, 0),
+                Size = new Size(width, CaptionHeight),
+                BackColor = Color.Transparent,
+            });
+            return block;
+        }
+
+        public static int AddReadOnlySection(Panel parent, ref int y, string caption, string text, Font font, int contentWidth, int padX = 16, int insetRadius = 10)
+        {
+            int blockW = contentWidth - padX * 2;
+            int textH = Math.Max(48, MeasureWrappedText(text, font, blockW - 24));
+            int blockH = CaptionHeight + 14 + textH;
+
+            var block = CreateInsetBlock(caption, blockW, blockH, insetRadius);
+            block.Location = new Point(padX, y);
+
+            var body = CreateReadOnlyBox(text, font, blockW - 24, textH);
+            body.Location = new Point(12, CaptionHeight + 12);
+            block.Controls.Add(body);
+
+            parent.Controls.Add(block);
+            y += blockH + 12;
+            return y;
         }
 
         public static int AddFormField(Panel parent, ref int y, string label, int width, out TextBox input, int height)
         {
-            int blockH = 22 + 8 + height;
+            int blockH = CaptionHeight + 8 + height;
             var block = new Panel
             {
                 Location = new Point(0, y),
@@ -247,7 +314,7 @@ namespace AdvancedProgramming.Components
             };
             block.Paint += (s, e) =>
             {
-                var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
+                var inset = new Rectangle(0, CaptionHeight, block.Width, block.Height - CaptionHeight);
                 PaintInset(e.Graphics, inset, 10);
             };
             block.Controls.Add(new Label
@@ -269,7 +336,7 @@ namespace AdvancedProgramming.Components
 
         public static int AddPasswordField(Panel parent, ref int y, string label, int width, out TextBox input, out Label toggle, int height)
         {
-            int blockH = 22 + 8 + height;
+            int blockH = CaptionHeight + 8 + height;
             var block = new Panel
             {
                 Location = new Point(0, y),
@@ -278,7 +345,7 @@ namespace AdvancedProgramming.Components
             };
             block.Paint += (s, e) =>
             {
-                var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
+                var inset = new Rectangle(0, CaptionHeight, block.Width, block.Height - CaptionHeight);
                 PaintInset(e.Graphics, inset, 10);
             };
             block.Controls.Add(new Label

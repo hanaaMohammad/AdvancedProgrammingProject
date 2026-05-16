@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using AdvancedProgramming;
 using AdvancedProgramming.Components;
 using AdvancedProgramming.Forms;
 
@@ -28,7 +29,7 @@ namespace AdvancedProgramming
             Controls.Add(toolbar);
 
             Color accent = AppColors.Accent;
-            heroCard = UiHelper.CreateCard(Color.FromArgb(60, accent), 24);
+            heroCard = AppUi.CreateCard(Color.FromArgb(60, accent), 24);
             heroCard.SetBounds(centerX - 220, 200, 440, 320);
 
             PictureBox logo = CreateLogo();
@@ -81,7 +82,7 @@ namespace AdvancedProgramming
             heroCard.Controls.Add(tagline);
             Controls.Add(heroCard);
 
-            loginPill = UiHelper.CreateActionPill("Log In \u2192", true, accent, LoginButton_Click);
+            loginPill = AppUi.CreateActionPill("Log In \u2192", true, accent, LoginButton_Click);
             signUpPill = CreateSecondaryPill("Sign Up", accent, SignUpButton_Click);
 
             int pillY = 548;

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
+using AdvancedProgramming;
 using AdvancedProgramming.Components;
 using AdvancedProgramming.ProblemClasses;
 
@@ -141,7 +142,7 @@ namespace AdvancedProgramming.Forms
                 Graphics g = e.Graphics;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 Rectangle rect = new Rectangle(0, 0, card.Width - 1, card.Height - 1);
-                using (GraphicsPath path = UiHelper.RoundedRect(rect, 20))
+                using (GraphicsPath path = AppUi.RoundedRect(rect, 20))
                 using (LinearGradientBrush brush = new LinearGradientBrush(
                     rect, AppColors.CardTop, AppColors.CardBottom, 90f))
                 {
@@ -174,7 +175,7 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             };
 
-            Panel badge = UiHelper.CreateBadge(problem.level);
+            Panel badge = AppUi.CreateBadge(problem.level);
             badge.Location = new Point(20, 165);
 
             Label typeLabel = new Label
@@ -188,7 +189,7 @@ namespace AdvancedProgramming.Forms
             };
 
             string actionText = isAvailable ? "Solve →" : "Coming Soon";
-            Panel actionPill = UiHelper.CreateActionPill(actionText, isAvailable, difficultyColor, null);
+            Panel actionPill = AppUi.CreateActionPill(actionText, isAvailable, difficultyColor, null);
             actionPill.Location = new Point(card.Width - actionPill.Width - 20, 168);
 
             card.Controls.Add(title);

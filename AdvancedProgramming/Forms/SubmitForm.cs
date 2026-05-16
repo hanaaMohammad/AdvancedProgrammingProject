@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AdvancedProgramming;
 using AdvancedProgramming.Components;
 using AdvancedProgramming.ProblemClasses;
 using AdvancedProgramming.Service;
@@ -52,17 +53,17 @@ namespace AdvancedProgramming.Forms
             btnBack.BringToFront();
             btnHome.BringToFront();
 
-            headerCard = UiHelper.CreateCard(Color.FromArgb(50, levelAccent), 20);
+            headerCard = AppUi.CreateCard(Color.FromArgb(50, levelAccent), 20);
             headerCard.SetBounds(SideMargin, AppSizes.ContentTop, ContentW, 118);
             BuildHeader(displayTitle, problem?.level, problem?.type);
             Controls.Add(headerCard);
 
-            editorCard = UiHelper.CreateCard(AppColors.DefaultBorder, 20);
+            editorCard = AppUi.CreateCard(AppColors.DefaultBorder, 20);
             editorCard.SetBounds(SideMargin, 234, ContentW, 494);
             BuildEditor();
             Controls.Add(editorCard);
 
-            runPill = UiHelper.CreateActionPill("Run Tests \u2192", true, levelAccent, RunTestsButton_Click);
+            runPill = AppUi.CreateActionPill("Run Tests \u2192", true, levelAccent, RunTestsButton_Click);
             runPill.Location = new Point(AppSizes.FormWidth / 2 - runPill.Width / 2, 746);
             Controls.Add(runPill);
 
@@ -100,7 +101,7 @@ namespace AdvancedProgramming.Forms
 
             if (!string.IsNullOrWhiteSpace(level))
             {
-                Panel badge = UiHelper.CreateBadge(level);
+                Panel badge = AppUi.CreateBadge(level);
                 badge.Location = new Point(metaX, metaY);
                 headerCard.Controls.Add(badge);
                 metaX += badge.Width + 12;
@@ -160,7 +161,7 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             };
             editorHost.Paint += (s, e) =>
-                UiHelper.PaintInset(e.Graphics, editorHost.ClientRectangle, 12);
+                AppUi.PaintInset(e.Graphics, editorHost.ClientRectangle, 12);
 
             codeEditor = new TextBox
             {

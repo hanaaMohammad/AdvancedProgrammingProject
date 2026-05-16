@@ -1,4 +1,5 @@
-﻿using AdvancedProgramming.Components;
+﻿using AdvancedProgramming;
+using AdvancedProgramming.Components;
 using AdvancedProgramming.Session;
 using System;
 using System.Drawing;
@@ -37,7 +38,7 @@ namespace AdvancedProgramming.Forms
             Controls.Add(homeBtn);
             homeBtn.BringToFront();
 
-            headerCard = UiHelper.CreateCard(Color.FromArgb(50, accent), 20);
+            headerCard = AppUi.CreateCard(Color.FromArgb(50, accent), 20);
             headerCard.Controls.Add(new Label
             {
                 Text = "Your Profile",
@@ -58,7 +59,7 @@ namespace AdvancedProgramming.Forms
             });
             Controls.Add(headerCard);
 
-            profileCard = UiHelper.CreateCard(AppColors.DefaultBorder, 20);
+            profileCard = AppUi.CreateCard(AppColors.DefaultBorder, 20);
             BuildProfileCard();
             Controls.Add(profileCard);
 
@@ -82,7 +83,7 @@ namespace AdvancedProgramming.Forms
             avatarHost.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 0, avatarHost.Width - 1, avatarHost.Height - 1);
-                UiHelper.PaintInset(e.Graphics, inset, 14);
+                AppUi.PaintInset(e.Graphics, inset, 14);
             };
 
             pictureUser = new PictureBox
@@ -107,7 +108,7 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             };
 
-            Panel scorePill = UiHelper.CreateStatusPill("Score: " + CurrentUser.Score, AppColors.Success);
+            Panel scorePill = AppUi.CreateStatusPill("Score: " + CurrentUser.Score, AppColors.Success);
             scorePill.Location = new Point(infoX, 72);
 
             AddInfoRow(profileCard, "Gender", CurrentUser.Gender, infoX, 120, infoW);
@@ -129,7 +130,7 @@ namespace AdvancedProgramming.Forms
             row.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 0, row.Width - 1, row.Height - 1);
-                UiHelper.PaintInset(e.Graphics, inset, 10);
+                AppUi.PaintInset(e.Graphics, inset, 10);
             };
             row.Controls.Add(new Label
             {

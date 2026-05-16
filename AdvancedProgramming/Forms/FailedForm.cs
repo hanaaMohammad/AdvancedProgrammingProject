@@ -1,4 +1,5 @@
-﻿using AdvancedProgramming.Components;
+﻿using AdvancedProgramming;
+using AdvancedProgramming.Components;
 using AdvancedProgramming.ProblemClasses;
 using AdvancedProgramming.Service;
 using System;
@@ -48,11 +49,11 @@ namespace AdvancedProgramming.Forms
             backButton.BringToFront();
             homeButton.BringToFront();
 
-            headerCard = UiHelper.CreateCard(Color.FromArgb(50, resultAccent), 20);
+            headerCard = AppUi.CreateCard(Color.FromArgb(50, resultAccent), 20);
             BuildHeader(passedCount);
             Controls.Add(headerCard);
 
-            resultsCard = UiHelper.CreateCard(AppColors.DefaultBorder, 20);
+            resultsCard = AppUi.CreateCard(AppColors.DefaultBorder, 20);
             resultsScroll = new Panel
             {
                 AutoScroll = true,
@@ -151,7 +152,7 @@ namespace AdvancedProgramming.Forms
         private Panel CreateTestCaseCard(int index, TestCase testCase, CodeRunnerTestResult result, bool passed, int width)
         {
             Color accent = passed ? AppColors.Success : AppColors.Error;
-            Panel card = UiHelper.CreateCard(Color.FromArgb(50, accent), 14);
+            Panel card = AppUi.CreateCard(Color.FromArgb(50, accent), 14);
             card.Width = width;
 
             card.Controls.Add(new Label
@@ -164,7 +165,7 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             });
 
-            Panel statusPill = UiHelper.CreateStatusPill(passed ? "PASSED" : "FAILED", accent);
+            Panel statusPill = AppUi.CreateStatusPill(passed ? "PASSED" : "FAILED", accent);
             statusPill.Location = new Point(width - statusPill.Width - 16, 12);
             card.Controls.Add(statusPill);
 
@@ -195,7 +196,7 @@ namespace AdvancedProgramming.Forms
             block.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
-                UiHelper.PaintInset(e.Graphics, inset, 10);
+                AppUi.PaintInset(e.Graphics, inset, 10);
             };
 
             block.Controls.Add(new Label

@@ -1,3 +1,4 @@
+using AdvancedProgramming;
 using AdvancedProgramming.Components;
 using AdvancedProgramming.ProblemClasses;
 using System;
@@ -10,6 +11,10 @@ namespace AdvancedProgramming.Forms
     {
         private const int SideMargin = 40;
         private const int HeaderTop = AppSizes.ContentTop;
+        private const int ContentWidth = 800;
+        private static readonly Font CodeFont = new Font("Consolas", 10);
+        private static readonly Font BodyFont = new Font("Segoe UI", 10);
+        private static readonly Font TitleFont = new Font("Segoe UI", 11);
 
         private Toolbar toolbar;
         private Panel headerCard;
@@ -29,7 +34,6 @@ namespace AdvancedProgramming.Forms
         private Color levelAccent;
         private bool isAvailable;
         private bool solutionVisible;
-        private int selectedTab;
 
         private readonly string problemName;
 
@@ -73,11 +77,11 @@ namespace AdvancedProgramming.Forms
                 ? Color.FromArgb(50, levelAccent)
                 : AppColors.DefaultBorder;
 
-            headerCard = UiHelper.CreateCard(border, 20);
+            headerCard = AppUi.CreateCard(border, 20);
             BuildHeader(displayTitle);
             Controls.Add(headerCard);
 
-            contentCard = UiHelper.CreateCard(AppColors.DefaultBorder, 20);
+            contentCard = AppUi.CreateCard(AppColors.DefaultBorder, 20);
             BuildContentCard();
             Controls.Add(contentCard);
 
@@ -88,20 +92,13 @@ namespace AdvancedProgramming.Forms
             LayoutControls();
         }
 
-        private void BackButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+        private void BackButton_Click(object sender, EventArgs e) => Close();
 
-        private void HomeButton_Click(object sender, EventArgs e)
-        {
+        private void HomeButton_Click(object sender, EventArgs e) =>
             ShowAsMainForm(new LevelProblemForm());
-        }
 
-        private void SolveButton_Click(object sender, EventArgs e)
-        {
+        private void SolveButton_Click(object sender, EventArgs e) =>
             ShowOtherForm(new SubmitForm(problemName));
-        }
 
         private void LayoutControls()
         {
@@ -143,7 +140,7 @@ namespace AdvancedProgramming.Forms
 
         private void BuildHeader(string displayTitle)
         {
-            var title = new Label
+            headerCard.Controls.Add(new Label
             {
                 Text = displayTitle,
                 Font = new Font("Segoe UI", 22, FontStyle.Bold),
@@ -152,13 +149,15 @@ namespace AdvancedProgramming.Forms
                 Location = new Point(24, 20),
                 Size = new Size(800, 36),
                 BackColor = Color.Transparent,
-            };
+            });
 
-            var badge = UiHelper.CreateBadge(problemChoice.level);
+            var badge = AppUi.CreateBadge(problemChoice.level);
             badge.Location = new Point(24, 64);
+            headerCard.Controls.Add(badge);
 
-            var typeChip = UiHelper.CreateTypeChip(problemChoice.type);
+            var typeChip = AppUi.CreateTypeChip(problemChoice.type);
             typeChip.Location = new Point(116, 70);
+            headerCard.Controls.Add(typeChip);
 
             comingSoonLabel = new Label
             {
@@ -171,10 +170,6 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
                 Visible = !isAvailable,
             };
-
-            headerCard.Controls.Add(title);
-            headerCard.Controls.Add(badge);
-            headerCard.Controls.Add(typeChip);
             headerCard.Controls.Add(comingSoonLabel);
         }
 
@@ -187,17 +182,13 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             };
 
-            tabStatementPill = UiHelper.CreateTabPill("Statement", true, levelAccent);
+            tabStatementPill = AppUi.CreateTabPill("Statement", true, levelAccent);
             tabStatementPill.Location = new Point(0, 2);
-            tabStatementPill.Click += (s, e) => SelectTab(0);
-            foreach (Control c in tabStatementPill.Controls)
-                c.Click += (s, e) => SelectTab(0);
+            AppUi.WireTabPill(tabStatementPill, () => SelectTab(0));
 
-            tabExamplePill = UiHelper.CreateTabPill("Example", false, levelAccent);
+            tabExamplePill = AppUi.CreateTabPill("Example", false, levelAccent);
             tabExamplePill.Location = new Point(tabStatementPill.Width + 10, 2);
-            tabExamplePill.Click += (s, e) => SelectTab(1);
-            foreach (Control c in tabExamplePill.Controls)
-                c.Click += (s, e) => SelectTab(1);
+            AppUi.WireTabPill(tabExamplePill, () => SelectTab(1));
 
             tabStrip.Controls.Add(tabStatementPill);
             tabStrip.Controls.Add(tabExamplePill);
@@ -214,82 +205,78 @@ namespace AdvancedProgramming.Forms
             contentCard.Controls.Add(examplePanel);
         }
 
-        private static Panel CreateScrollPanel()
-        {
-            return new Panel
-            {
-                AutoScroll = true,
-                BackColor = Color.Transparent,
-            };
-        }
+        private static Panel CreateScrollPanel() =>
+            new Panel { AutoScroll = true, BackColor = Color.Transparent };
 
         private void SelectTab(int index)
         {
-            selectedTab = index;
             statementPanel.Visible = index == 0;
             examplePanel.Visible = index == 1;
-            UiHelper.SetTabSelected(tabStatementPill, index == 0, levelAccent);
-            UiHelper.SetTabSelected(tabExamplePill, index == 1, levelAccent);
+            AppUi.SetTabSelected(tabStatementPill, index == 0, levelAccent);
+            AppUi.SetTabSelected(tabExamplePill, index == 1, levelAccent);
         }
 
         private void BuildStatementTab(Panel parent)
         {
             int y = 8;
-            int w = 800;
-            y = AddSection(parent, ref y, "Description", problemChoice.description, new Font("Segoe UI", 11), w);
-            y = AddSection(parent, ref y, "Input format", problemChoice.input, new Font("Segoe UI", 10), w);
-            y = AddSection(parent, ref y, "Output format", problemChoice.output, new Font("Segoe UI", 10), w);
-            AddSection(parent, ref y, "Constraints", problemChoice.Constraints, new Font("Segoe UI", 10), w);
+            y = AppUi.AddReadOnlySection(parent, ref y, "Description", problemChoice.description, TitleFont, ContentWidth);
+            y = AppUi.AddReadOnlySection(parent, ref y, "Input format", problemChoice.input, BodyFont, ContentWidth);
+            y = AppUi.AddReadOnlySection(parent, ref y, "Output format", problemChoice.output, BodyFont, ContentWidth);
+            AppUi.AddReadOnlySection(parent, ref y, "Constraints", problemChoice.Constraints, BodyFont, ContentWidth);
         }
 
         private void BuildExampleTab(Panel parent)
         {
             int y = 8;
-            int w = 800;
             bool isPattern = string.Equals(problemChoice.type, "pattren", StringComparison.OrdinalIgnoreCase);
 
-            y = AddSection(parent, ref y, "Sample input", problemChoice.Example?.input ?? "", new Font("Consolas", 10), w);
+            y = AppUi.AddReadOnlySection(parent, ref y, "Sample input",
+                problemChoice.Example?.input ?? "", CodeFont, ContentWidth);
 
-            int outputH = isPattern ? 100 : MeasureTextHeight(problemChoice.Example?.output ?? "", new Font("Consolas", 10), w - 48) + 16;
-            exampleOutputHost = CreateInsetSection("Sample output", w, 22 + 8 + outputH);
+            int outputH = isPattern ? 100
+                : AppUi.MeasureWrappedText(problemChoice.Example?.output ?? "", CodeFont, ContentWidth - 72) + 4;
+            int blockH = 22 + 8 + outputH;
+            exampleOutputHost = AppUi.CreateInsetBlock("Sample output", ContentWidth - 32, blockH);
             exampleOutputHost.Location = new Point(16, y);
 
+            int bodyTop = 34;
             if (isPattern)
             {
                 panelStars = new PanelStars
                 {
-                    Location = new Point(12, 22 + 12),
-                    Size = new Size(w - 72, 88),
+                    Location = new Point(12, bodyTop),
+                    Size = new Size(ContentWidth - 72, 88),
                 };
                 exampleOutputHost.Controls.Add(panelStars);
             }
             else
             {
-                var outputBox = CreateInsetTextBox(problemChoice.Example?.output ?? "", new Font("Consolas", 10), w - 72, outputH - 8);
-                outputBox.Location = new Point(12, 22 + 12);
+                var outputBox = AppUi.CreateReadOnlyBox(
+                    problemChoice.Example?.output ?? "", CodeFont, ContentWidth - 72, outputH);
+                outputBox.Location = new Point(12, bodyTop);
                 exampleOutputHost.Controls.Add(outputBox);
             }
 
             parent.Controls.Add(exampleOutputHost);
             y += exampleOutputHost.Height + 12;
 
-            y = AddSection(parent, ref y, "Explanation", problemChoice.Example?.explanation ?? "", new Font("Segoe UI", 10), w);
+            y = AppUi.AddReadOnlySection(parent, ref y, "Explanation",
+                problemChoice.Example?.explanation ?? "", BodyFont, ContentWidth);
 
-            solutionPanel = CreateInsetSection("Reference solution", w, 200);
+            int solutionH = GetCodeViewHeight(problemChoice.solution, 120, 240);
+            solutionPanel = AppUi.CreateInsetBlock("Reference solution", ContentWidth - 32, 22 + 20 + solutionH);
             solutionPanel.Visible = false;
             solutionPanel.Location = new Point(16, y);
 
-            int solutionH = GetCodeViewHeight(problemChoice.solution, 120, 240);
             solutionBox = new RichTextBox
             {
-                Location = new Point(12, 22 + 12),
-                Size = new Size(w - 72, solutionH),
+                Location = new Point(12, 34),
+                Size = new Size(ContentWidth - 72, solutionH),
                 BorderStyle = BorderStyle.None,
                 BackColor = AppColors.InsetBack,
                 ReadOnly = true,
                 TabStop = false,
             };
-            solutionPanel.Height = 22 + 20 + solutionH;
             solutionPanel.Controls.Add(solutionBox);
             parent.Controls.Add(solutionPanel);
         }
@@ -299,108 +286,19 @@ namespace AdvancedProgramming.Forms
             actionPanel.Controls.Clear();
 
             string solveText = isAvailable ? "Solve \u2192" : "Coming Soon";
-            EventHandler onSolve = null;
-            if (isAvailable)
-                onSolve = SolveButton_Click;
-            var solvePill = UiHelper.CreateActionPill(solveText, isAvailable, levelAccent, onSolve);
+            EventHandler onSolve = isAvailable ? (EventHandler)SolveButton_Click : null;
+            var solvePill = AppUi.CreateActionPill(solveText, isAvailable, levelAccent, onSolve);
             solvePill.Name = "solvePill";
-
             actionPanel.Controls.Add(solvePill);
 
             if (isAvailable && !string.IsNullOrWhiteSpace(problemChoice.solution))
             {
-                var solutionPill = UiHelper.CreateActionPill(
-                    "Show Solution",
-                    true,
-                    levelAccent,
-                    (s, e) => ToggleSolution());
+                var solutionPill = AppUi.CreateActionPill(
+                    "Show Solution", true, levelAccent, (s, e) => ToggleSolution());
                 solutionPill.Name = "solutionPill";
                 solutionPill.Location = new Point(solvePill.Right + 12, 0);
                 actionPanel.Controls.Add(solutionPill);
             }
-
-        }
-
-        private Panel CreateInsetSection(string caption, int width, int height)
-        {
-            var section = new Panel
-            {
-                Width = width,
-                Height = height,
-                BackColor = Color.Transparent,
-            };
-            int captionH = 22;
-            section.Paint += (s, e) =>
-            {
-                var inset = new Rectangle(0, captionH + 6, section.Width, section.Height - captionH - 6);
-                UiHelper.PaintInset(e.Graphics, inset, 12);
-            };
-
-            section.Controls.Add(new Label
-            {
-                Text = caption,
-                Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                ForeColor = AppColors.MutedText,
-                Location = new Point(0, 0),
-                Size = new Size(width, captionH),
-                BackColor = Color.Transparent,
-            });
-
-            return section;
-        }
-
-        private static TextBox CreateInsetTextBox(string text, Font font, int width, int height)
-        {
-            return new TextBox
-            {
-                Text = text ?? string.Empty,
-                ReadOnly = true,
-                Multiline = true,
-                Font = font,
-                Size = new Size(width, height),
-                BorderStyle = BorderStyle.None,
-                BackColor = AppColors.InsetBack,
-                ForeColor = Color.White,
-                TabStop = false,
-            };
-        }
-
-        private int AddSection(Panel parent, ref int y, string caption, string text, Font font, int contentWidth)
-        {
-            int blockW = contentWidth - 32;
-            int textH = Math.Max(48, MeasureTextHeight(text, font, blockW - 24));
-            int blockH = 22 + 14 + textH;
-
-            var block = new Panel
-            {
-                Location = new Point(16, y),
-                Size = new Size(blockW, blockH),
-                BackColor = Color.Transparent,
-            };
-            int captionH = 22;
-            block.Paint += (s, e) =>
-            {
-                var inset = new Rectangle(0, captionH + 6, block.Width, block.Height - captionH - 6);
-                UiHelper.PaintInset(e.Graphics, inset, 10);
-            };
-
-            block.Controls.Add(new Label
-            {
-                Text = caption,
-                Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                ForeColor = AppColors.MutedText,
-                Location = new Point(0, 0),
-                Size = new Size(blockW, captionH),
-                BackColor = Color.Transparent,
-            });
-
-            var body = CreateInsetTextBox(text, font, blockW - 24, textH);
-            body.Location = new Point(12, captionH + 12);
-            block.Controls.Add(body);
-
-            parent.Controls.Add(block);
-            y += blockH + 12;
-            return y;
         }
 
         private void ToggleSolution()
@@ -431,14 +329,6 @@ namespace AdvancedProgramming.Forms
             }
         }
 
-        private static int MeasureTextHeight(string text, Font font, int width)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return 40;
-            var size = TextRenderer.MeasureText(text, font, new Size(width, 0), TextFormatFlags.WordBreak);
-            return size.Height + 12;
-        }
-
         private static int GetCodeViewHeight(string code, int minHeight, int maxHeight)
         {
             string normalized = CSharpCodeHighlighter.NormalizeCode(code);
@@ -448,6 +338,5 @@ namespace AdvancedProgramming.Forms
             int lines = normalized.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Length;
             return Math.Min(maxHeight, Math.Max(minHeight, lines * 18 + 16));
         }
-
     }
 }

@@ -109,8 +109,8 @@
     <Compile Include="CodeRun\CSharpExecutor.cs" />
     <Compile Include="AppColors.cs" />
     <Compile Include="AppSizes.cs" />
+    <Compile Include="AppUi.cs" />
     <Compile Include="Components\CSharpCodeHighlighter.cs" />
-    <Compile Include="Components\UiHelper.cs" />
     <Compile Include="Components\PanelStars.cs">
       <SubType>Component</SubType>
     </Compile>
