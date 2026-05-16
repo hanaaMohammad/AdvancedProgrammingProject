@@ -20,5 +20,10 @@ namespace AdvancedProgramming.ProblemClasses
         {
             return problemsList.FirstOrDefault(p => p.title == title);
         }
+
+        public List<Problem> GetAllProblems()
+        {
+            return problemsList;
+        }
     }
 }
