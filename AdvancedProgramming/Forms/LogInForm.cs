@@ -48,9 +48,8 @@ namespace AdvancedProgramming.Forms
             int leftX = cx - formW / 2;
             int inputW = DesignTokens.Sizing.InputWidth;
             int inputX = cx - inputW / 2;
-            int labelX = cx - inputW / 2;
-            int rowY = 180;
-            int rowGap = 60;
+            int rowY = 176;
+            int rowGap = 72;
 
             var headerLabel = new Label
             {
@@ -59,7 +58,7 @@ namespace AdvancedProgramming.Forms
                 AutoSize = false,
                 Size = new Size(formW, 45),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(leftX, 120),
+                Location = new Point(leftX, 90),
             };
             var subheadLabel = new Label
             {
@@ -68,37 +67,39 @@ namespace AdvancedProgramming.Forms
                 AutoSize = false,
                 Size = new Size(formW, 24),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(leftX, 165),
+                Location = new Point(leftX, 139),
                 Tag = "Secondary",
             };
 
+            int labelY = rowY;
             var userNameLabel = new Label
             {
                 Text = "Username",
-                Location = new Point(labelX, rowY + 2),
+                Location = new Point(inputX, labelY),
                 Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
                 Font = DesignTokens.Typography.BodySmall,
                 Tag = "Secondary",
             };
             usernameTextBox = new TextBox
             {
-                Location = new Point(inputX, rowY + 26),
+                Location = new Point(inputX, labelY + DesignTokens.Sizing.LabelHeight + 6),
                 Size = new Size(inputW, DesignTokens.Sizing.InputHeight),
                 Font = DesignTokens.Typography.BodyMedium,
             };
 
             rowY += rowGap;
+            labelY = rowY;
             var passwordLabel = new Label
             {
                 Text = "Password",
-                Location = new Point(labelX, rowY + 2),
+                Location = new Point(inputX, labelY),
                 Size = new Size(inputW, DesignTokens.Sizing.LabelHeight),
                 Font = DesignTokens.Typography.BodySmall,
                 Tag = "Secondary",
             };
             passwordTextBox = new TextBox
             {
-                Location = new Point(inputX, rowY + 26),
+                Location = new Point(inputX, labelY + DesignTokens.Sizing.LabelHeight + 6),
                 Size = new Size(inputW - 40, DesignTokens.Sizing.InputHeight),
                 PasswordChar = '*',
                 Font = DesignTokens.Typography.BodyMedium,
@@ -106,7 +107,7 @@ namespace AdvancedProgramming.Forms
             passwordToggle = new Button
             {
                 Text = "\U0001f441",
-                Location = new Point(inputX + inputW - 38, rowY + 26),
+                Location = new Point(inputX + inputW - 38, labelY + DesignTokens.Sizing.LabelHeight + 6),
                 Size = new Size(36, DesignTokens.Sizing.InputHeight),
                 FlatStyle = FlatStyle.Flat,
                 Tag = "Ghost",
@@ -115,7 +116,7 @@ namespace AdvancedProgramming.Forms
             passwordToggle.FlatAppearance.BorderSize = 0;
             passwordToggle.Click += PasswordToggle_Click;
 
-            rowY += rowGap + 20;
+            rowY += rowGap + 8;
             logInButton = new Button
             {
                 Text = "Log In",
@@ -128,7 +129,7 @@ namespace AdvancedProgramming.Forms
             };
             logInButton.Click += LogInButton_Click;
 
-            rowY += 80;
+            rowY += DesignTokens.Sizing.ButtonHeight + 24;
             messageLabel = new Label
             {
                 Text = "",

@@ -55,7 +55,7 @@ namespace AdvancedProgramming
             int inputW = DesignTokens.Sizing.InputWidth;
             int inputX = cx - inputW / 2;
             int labelX = cx - inputW / 2;
-            int rowY = 130;
+            int rowY = 160;
             int rowGap = 56;
 
             var headerLabel = new Label
@@ -74,7 +74,7 @@ namespace AdvancedProgramming
                 AutoSize = false,
                 Size = new Size(formW, 22),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(leftX, 122),
+                Location = new Point(leftX, 124),
                 Tag = "Secondary",
             };
 
