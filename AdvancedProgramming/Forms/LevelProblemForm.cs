@@ -51,7 +51,7 @@ namespace AdvancedProgramming.Forms
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
-            toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+            toolbar.CloseRequested += (s, e) => Application.Exit();
 
             PageBackButton.AddTo(this,
                 (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),

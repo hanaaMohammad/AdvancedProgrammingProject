@@ -41,7 +41,7 @@ namespace AdvancedProgramming
                 (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
                 (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
             this.ResumeLayout(false);
-            toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+            toolbar.CloseRequested += (s, e) => Application.Exit();
             Theme.StylePage(this);
             userManager = new UserManagement();
             DatabaseManager.InitializeDatabase();

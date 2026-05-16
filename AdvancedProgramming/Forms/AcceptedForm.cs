@@ -17,7 +17,7 @@ namespace AdvancedProgramming.Forms
         {
             this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
             InitializeComponent();
-            toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+            toolbar.CloseRequested += (s, e) => Application.Exit();
         }
 
         private void InitializeComponent()

@@ -29,7 +29,7 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(toolbar);
             InitializeLogInComponents();
             this.ResumeLayout(false);
-            toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+            toolbar.CloseRequested += (s, e) => Application.Exit();
             Theme.StylePage(this);
 
             FormAccessibility.SetShortcutHint(logInButton, "Enter", "Sign in");

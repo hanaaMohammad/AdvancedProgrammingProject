@@ -37,7 +37,7 @@ namespace AdvancedProgramming.Forms
                 InitializeComponent();
                 LoadProblem(name);
                 DisplayTestResults();
-                toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
+                toolbar.CloseRequested += (s, e) => Application.Exit();
             }
             catch { }
         }
