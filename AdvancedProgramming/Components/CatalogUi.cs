@@ -7,6 +7,11 @@ namespace AdvancedProgramming.Components
 {
     public static class CatalogUi
     {
+        public const int ToolbarHeight = 52;
+        public const int NavBarTop = 56;
+        public const int NavBarHeight = 32;
+        public const int ContentTop = NavBarTop + NavBarHeight + 12;
+
         public static readonly Color PageBack = Color.FromArgb(7, 11, 20);
         public static readonly Color CardTop = Color.FromArgb(20, 28, 45);
         public static readonly Color CardBottom = Color.FromArgb(17, 24, 39);

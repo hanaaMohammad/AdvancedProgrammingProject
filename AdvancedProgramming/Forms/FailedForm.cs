@@ -15,7 +15,7 @@ namespace AdvancedProgramming.Forms
         public event EventHandler HomeRequested;
 
         private const int SideMargin = 40;
-        private const int HeaderTop = 72;
+        private const int HeaderTop = CatalogUi.ContentTop;
 
         private Toolbar toolbar;
         private Panel headerCard;

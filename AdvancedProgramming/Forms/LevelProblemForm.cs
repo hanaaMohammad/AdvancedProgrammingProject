@@ -44,6 +44,8 @@ namespace AdvancedProgramming.Forms
 
             int cx = this.Width / 2;
 
+            int pageTitleY = CatalogUi.ContentTop;
+
             Label titleLabel = new Label
             {
                 Text = "Problem Solving",
@@ -51,7 +53,7 @@ namespace AdvancedProgramming.Forms
                 ForeColor = Color.White,
                 AutoSize = false,
                 Size = new Size(600, 60),
-                Location = new Point(cx - 300, 70),
+                Location = new Point(cx - 300, pageTitleY),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.Transparent
             };
@@ -63,7 +65,7 @@ namespace AdvancedProgramming.Forms
                 ForeColor = Color.FromArgb(170, 170, 170),
                 AutoSize = false,
                 Size = new Size(500, 30),
-                Location = new Point(cx - 250, 130),
+                Location = new Point(cx - 250, pageTitleY + 60),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.Transparent
             };
@@ -71,7 +73,7 @@ namespace AdvancedProgramming.Forms
             searchBox = new TextBox
             {
                 Size = new Size(420, 42),
-                Location = new Point(cx - 210, 180),
+                Location = new Point(cx - 210, pageTitleY + 110),
                 Font = new Font("Segoe UI", 11),
                 BackColor = Color.FromArgb(20, 28, 45),
                 ForeColor = Color.White,
@@ -85,8 +87,8 @@ namespace AdvancedProgramming.Forms
 
             cardPanel = new FlowLayoutPanel
             {
-                Location = new Point(40, 250),
-                Size = new Size(this.Width - 80, this.Height - 270),
+                Location = new Point(40, pageTitleY + 180),
+                Size = new Size(this.Width - 80, this.Height - (pageTitleY + 200)),
                 AutoScroll = true,
                 WrapContents = true,
                 FlowDirection = FlowDirection.LeftToRight,
@@ -400,7 +402,8 @@ namespace AdvancedProgramming.Forms
 
             if (cardPanel != null)
             {
-                cardPanel.Size = new Size(this.Width - 80, this.Height - 270);
+                cardPanel.Size = new Size(this.Width - 80, this.Height - (CatalogUi.ContentTop + 200));
+                cardPanel.Location = new Point(40, CatalogUi.ContentTop + 180);
 
                 ArrangeCards();
             }

@@ -6,9 +6,7 @@ namespace AdvancedProgramming.Components
 {
     public static class PageBackButton
     {
-        private const int Top = 52 + DesignTokens.Spacing.Sm;
         private const int Width = 80;
-        private const int Height = 30;
         private const int Gap = 8;
 
         public static (Button back, Button home) Create(EventHandler onBack, EventHandler onHome)
@@ -47,8 +45,8 @@ namespace AdvancedProgramming.Components
             var btn = new Button
             {
                 Text = text,
-                Location = new Point(x, Top),
-                Size = new Size(Width, Height),
+                Location = new Point(x, CatalogUi.NavBarTop),
+                Size = new Size(Width, CatalogUi.NavBarHeight),
                 FlatStyle = FlatStyle.Flat,
                 Font = DesignTokens.Typography.BodySmall,
                 Tag = "Ghost",

@@ -179,7 +179,7 @@ namespace AdvancedProgramming.Forms
 
             int cx = Width / 2;
             int cardH = 340;
-            int cardY = Math.Max(100, (Height - cardH - 70) / 2);
+            int cardY = Math.Max(CatalogUi.ContentTop, (Height - cardH - 70) / 2);
 
             authCard.SetBounds(cx - CardWidth / 2, cardY, CardWidth, cardH);
             loginPill.Location = new Point(cx - loginPill.Width / 2, authCard.Bottom + 20);

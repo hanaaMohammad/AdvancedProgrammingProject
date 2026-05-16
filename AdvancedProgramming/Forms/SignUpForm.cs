@@ -308,7 +308,7 @@ namespace AdvancedProgramming
                 return;
 
             int cx = Width / 2;
-            int cardY = 88;
+            int cardY = CatalogUi.ContentTop;
             int cardH = Math.Max(420, Height - cardY - 80);
             formCard.SetBounds(cx - CardWidth / 2, cardY, CardWidth, cardH);
 
