@@ -12,6 +12,7 @@ namespace AdvancedProgramming.Forms
     public class Failed : UserControl
     {
         public event EventHandler BackRequested;
+        public event EventHandler HomeRequested;
 
         private Timer animTimer;
         private Problem problem;
@@ -21,6 +22,7 @@ namespace AdvancedProgramming.Forms
         private int currentAnimIndex = 0;
         private Toolbar toolbar;
         private Button backButton;
+        private Button homeButton;
         private List<CodeRunnerTestResult> testResults;
         private Label headerLabel;
 
@@ -82,12 +84,15 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
             };
 
-            backButton = PageBackButton.Create((s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
+            (backButton, homeButton) = PageBackButton.Create(
+                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
 
             this.Controls.Add(iconLabel);
             this.Controls.Add(headerLabel);
             this.Controls.Add(descLabel);
             this.Controls.Add(backButton);
+            this.Controls.Add(homeButton);
 
             Theme.StylePage(this);
         }

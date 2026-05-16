@@ -13,9 +13,11 @@ namespace AdvancedProgramming.Forms
     {
         public event EventHandler<CodeRunnerTestResultList> TestResultsReady;
         public event EventHandler BackRequested;
+        public event EventHandler HomeRequested;
 
         private Toolbar toolbar;
         private Button btnBack;
+        private Button btnHome;
         private Button buttonRun;
         private Label labelProblemName;
         private Label labelCodePrompt;
@@ -40,7 +42,9 @@ namespace AdvancedProgramming.Forms
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
 
-            btnBack = PageBackButton.Create((s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
+            (btnBack, btnHome) = PageBackButton.Create(
+                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
 
             labelProblemName = new Label
             {
@@ -97,7 +101,9 @@ namespace AdvancedProgramming.Forms
             loadingOverlay = new LoadingOverlay();
 
             this.Controls.Add(btnBack);
+            this.Controls.Add(btnHome);
             btnBack.BringToFront();
+            btnHome.BringToFront();
             this.Controls.Add(labelProblemName);
             this.Controls.Add(labelCodePrompt);
             this.Controls.Add(languageCombo);
@@ -191,6 +197,7 @@ namespace AdvancedProgramming.Forms
             isRunning = running;
             buttonRun.Enabled = !running;
             btnBack.Enabled = !running;
+            btnHome.Enabled = !running;
             codeEditor.Enabled = !running;
             languageCombo.Enabled = !running;
 

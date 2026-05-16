@@ -10,6 +10,7 @@ namespace AdvancedProgramming.Forms
     {
         public event EventHandler<string> ProblemSelected;
         public event EventHandler BackRequested;
+        public event EventHandler HomeRequested;
 
         private Button easyButton;
         private Button mediumButton;
@@ -52,7 +53,9 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(toolbar);
             toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
 
-            PageBackButton.AddTo(this, (s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
+            PageBackButton.AddTo(this,
+                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
 
             int cx = this.Width / 2;
             int btnW = 220;

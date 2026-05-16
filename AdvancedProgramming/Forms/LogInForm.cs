@@ -11,6 +11,7 @@ namespace AdvancedProgramming.Forms
     {
         public event EventHandler LoginSuccess;
         public event EventHandler BackRequested;
+        public event EventHandler HomeRequested;
 
         private TextBox usernameTextBox;
         private TextBox passwordTextBox;
@@ -138,13 +139,15 @@ namespace AdvancedProgramming.Forms
                 Tag = "Error",
             };
 
-            var btnBack = PageBackButton.Create((s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
+            var (btnBack, btnHome) = PageBackButton.Create(
+                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
 
             this.Controls.AddRange(new Control[] {
                 headerLabel, subheadLabel,
                 userNameLabel, usernameTextBox,
                 passwordLabel, passwordTextBox, passwordToggle,
-                logInButton, btnBack,
+                logInButton, btnBack, btnHome,
                 messageLabel
             });
         }

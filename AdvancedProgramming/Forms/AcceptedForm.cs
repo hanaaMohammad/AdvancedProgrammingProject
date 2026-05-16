@@ -9,6 +9,7 @@ namespace AdvancedProgramming.Forms
     public class AcceptedForm : UserControl
     {
         public event EventHandler BackRequested;
+        public event EventHandler HomeRequested;
 
         private Toolbar toolbar;
 
@@ -26,7 +27,9 @@ namespace AdvancedProgramming.Forms
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
 
-            var btnBack = PageBackButton.Create((s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
+            var (btnBack, btnHome) = PageBackButton.Create(
+                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
 
             var iconLabel = new Label
             {
@@ -64,7 +67,9 @@ namespace AdvancedProgramming.Forms
             this.Controls.Add(titleLabel);
             this.Controls.Add(descLabel);
             this.Controls.Add(btnBack);
+            this.Controls.Add(btnHome);
             btnBack.BringToFront();
+            btnHome.BringToFront();
 
             Theme.StylePage(this);
         }

@@ -109,6 +109,7 @@ namespace AdvancedProgramming
             var page = new LogInForm();
             page.LoginSuccess += (s, e) => NavigateToHome();
             page.BackRequested += (s, e) => GoBack();
+            page.HomeRequested += (s, e) => NavigateToStartup();
             ShowPage(page);
         }
 
@@ -118,6 +119,7 @@ namespace AdvancedProgramming
             var page = new SignUpForm();
             page.SignUpSuccess += (s, e) => NavigateToHome();
             page.BackRequested += (s, e) => GoBack();
+            page.HomeRequested += (s, e) => NavigateToStartup();
             ShowPage(page);
         }
 
@@ -136,6 +138,7 @@ namespace AdvancedProgramming
             var page = new LevelProblemForm();
             page.ProblemSelected += (s, problem) => NavigateToProblemDisplay(problem);
             page.BackRequested += (s, e) => GoBack();
+            page.HomeRequested += (s, e) => NavigateToHome();
             ShowPage(page);
         }
 
@@ -145,6 +148,7 @@ namespace AdvancedProgramming
             var page = new ProblemDisplayForm(problemName);
             page.SolveRequested += (s, e) => NavigateToSubmit(problemName);
             page.BackRequested += (s, e) => GoBack();
+            page.HomeRequested += (s, e) => NavigateToHome();
             ShowPage(page);
         }
 
@@ -154,6 +158,7 @@ namespace AdvancedProgramming
             var page = new SubmitForm(problemName);
             page.TestResultsReady += (s, results) => NavigateToResult(problemName, results);
             page.BackRequested += (s, e) => GoBack();
+            page.HomeRequested += (s, e) => NavigateToHome();
             ShowPage(page);
         }
 
@@ -164,12 +169,14 @@ namespace AdvancedProgramming
             {
                 var page = new AcceptedForm();
                 page.BackRequested += (s, e) => GoBack();
+                page.HomeRequested += (s, e) => NavigateToHome();
                 ShowPage(page);
             }
             else
             {
                 var page = new Failed(problemName, results.Results);
                 page.BackRequested += (s, e) => GoBack();
+                page.HomeRequested += (s, e) => NavigateToHome();
                 ShowPage(page);
             }
         }
@@ -179,6 +186,7 @@ namespace AdvancedProgramming
             backStack.Push(() => NavigateToUser());
             var page = new UserForm();
             page.BackRequested += (s, e) => GoBack();
+            page.HomeRequested += (s, e) => NavigateToHome();
             ShowPage(page);
         }
 
@@ -189,7 +197,7 @@ namespace AdvancedProgramming
             if (backStack.Count > 1)
             {
                 backStack.Pop();
-                var prev = backStack.Peek();
+                var prev = backStack.Pop();
                 prev();
             }
         }

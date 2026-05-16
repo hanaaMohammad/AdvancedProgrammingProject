@@ -12,6 +12,7 @@ namespace AdvancedProgramming
     {
         public event EventHandler SignUpSuccess;
         public event EventHandler BackRequested;
+        public event EventHandler HomeRequested;
 
         private TextBox userNameTextBox;
         private TextBox passwordTextBox;
@@ -36,7 +37,9 @@ namespace AdvancedProgramming
             InitializeSignUpComponents();
             toolbar = new Toolbar(this, "Sign Up");
             this.Controls.Add(toolbar);
-            PageBackButton.AddTo(this, (s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
+            PageBackButton.AddTo(this,
+                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
             this.ResumeLayout(false);
             toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
             Theme.StylePage(this);

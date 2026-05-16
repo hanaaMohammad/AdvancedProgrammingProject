@@ -11,6 +11,7 @@ namespace AdvancedProgramming.Forms
     {
         public event EventHandler SolveRequested;
         public event EventHandler BackRequested;
+        public event EventHandler HomeRequested;
 
         private const int ContentWidth = 760;
         private const int ContentTop = 188;
@@ -18,6 +19,7 @@ namespace AdvancedProgramming.Forms
 
         private Toolbar toolbar;
         private Button btnBack;
+        private Button btnHome;
         private Label titleLabel;
         private Label levelLabel;
         private Label subtitleLabel;
@@ -75,7 +77,9 @@ namespace AdvancedProgramming.Forms
             toolbar.CloseRequested += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
             Controls.Add(toolbar);
 
-            btnBack = PageBackButton.Create((s, e) => BackRequested?.Invoke(this, EventArgs.Empty));
+            (btnBack, btnHome) = PageBackButton.Create(
+                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
 
             titleLabel = new Label
             {
@@ -172,7 +176,9 @@ namespace AdvancedProgramming.Forms
             actionPanel.Controls.Add(showSolutionButton);
 
             Controls.Add(btnBack);
+            Controls.Add(btnHome);
             btnBack.BringToFront();
+            btnHome.BringToFront();
             Controls.Add(titleLabel);
             Controls.Add(levelLabel);
             Controls.Add(subtitleLabel);
