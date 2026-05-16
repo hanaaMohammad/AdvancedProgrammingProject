@@ -204,13 +204,13 @@ namespace AdvancedProgramming.Forms
             int y = DesignTokens.Spacing.Sm;
             int fieldW = ContentWidth - DesignTokens.Spacing.Md * 4;
 
-            y = AddField(tabStatement, "Description", problemChoice.description, y, fieldW, 130,
+            y = AddField(tabStatement, "Description", problemChoice.description, y, fieldW,
                 DesignTokens.Typography.BodyMedium, out descriptionBox);
-            y = AddField(tabStatement, "Input format", problemChoice.input, y, fieldW, 72,
+            y = AddField(tabStatement, "Input format", problemChoice.input, y, fieldW,
                 DesignTokens.Typography.BodySmall, out inputBox);
-            y = AddField(tabStatement, "Output format", problemChoice.output, y, fieldW, 72,
+            y = AddField(tabStatement, "Output format", problemChoice.output, y, fieldW,
                 DesignTokens.Typography.BodySmall, out outputBox);
-            AddField(tabStatement, "Constraints", problemChoice.Constraints, y, fieldW, 72,
+            AddField(tabStatement, "Constraints", problemChoice.Constraints, y, fieldW,
                 DesignTokens.Typography.BodySmall, out constraintsBox);
         }
 
@@ -220,13 +220,18 @@ namespace AdvancedProgramming.Forms
             int fieldW = ContentWidth - DesignTokens.Spacing.Md * 4;
             bool isPattern = string.Equals(problemChoice.type, "pattren", StringComparison.OrdinalIgnoreCase);
 
-            y = AddField(tabExample, "Sample input", problemChoice.Example?.input ?? "", y, fieldW, 88,
+            y = AddField(tabExample, "Sample input", problemChoice.Example?.input ?? "", y, fieldW,
                 DesignTokens.Typography.Code, out inputExampleBox);
+
+            int outputBoxHeight = isPattern
+                ? 88
+                : MeasureTextHeight(problemChoice.Example?.output ?? "", DesignTokens.Typography.Code, fieldW);
+            int outputHostHeight = DesignTokens.Sizing.LabelHeight + 4 + outputBoxHeight;
 
             exampleOutputHost = new Panel
             {
                 Location = new Point(DesignTokens.Spacing.Md, y),
-                Size = new Size(fieldW, isPattern ? 110 : 88),
+                Size = new Size(fieldW, outputHostHeight),
             };
 
             var lblOutput = new Label
@@ -254,7 +259,7 @@ namespace AdvancedProgramming.Forms
                     problemChoice.Example?.output ?? "",
                     DesignTokens.Typography.Code,
                     fieldW,
-                    88);
+                    outputBoxHeight);
                 outputExampleBox.Location = new Point(0, DesignTokens.Sizing.LabelHeight + 4);
                 exampleOutputHost.Controls.Add(outputExampleBox);
             }
@@ -262,7 +267,7 @@ namespace AdvancedProgramming.Forms
             tabExample.Controls.Add(exampleOutputHost);
             y += exampleOutputHost.Height + DesignTokens.Spacing.Md;
 
-            y = AddField(tabExample, "Explanation", problemChoice.Example?.explanation ?? "", y, fieldW, 88,
+            y = AddField(tabExample, "Explanation", problemChoice.Example?.explanation ?? "", y, fieldW,
                 DesignTokens.Typography.BodySmall, out explanationBox);
 
             solutionPanel = new Panel
@@ -309,7 +314,6 @@ namespace AdvancedProgramming.Forms
             string text,
             int y,
             int width,
-            int height,
             Font font,
             out TextBox box)
         {
@@ -322,6 +326,7 @@ namespace AdvancedProgramming.Forms
                 Size = new Size(width, DesignTokens.Sizing.LabelHeight),
             };
 
+            int height = MeasureTextHeight(text, font, width);
             box = CreateReadOnlyBox(text, font, width, height);
             box.Location = new Point(DesignTokens.Spacing.Md, y + DesignTokens.Sizing.LabelHeight + 4);
 
@@ -331,6 +336,16 @@ namespace AdvancedProgramming.Forms
             return y + DesignTokens.Sizing.LabelHeight + height + DesignTokens.Spacing.Md;
         }
 
+        private static int MeasureTextHeight(string text, Font font, int width)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return 40;
+            var proposedSize = new Size(width - 8, 0);
+            var size = TextRenderer.MeasureText(text, font, proposedSize,
+                TextFormatFlags.WordBreak);
+            return size.Height + 8;
+        }
+
         private static TextBox CreateReadOnlyBox(string text, Font font, int width, int height)
         {
             return new TextBox
@@ -338,7 +353,6 @@ namespace AdvancedProgramming.Forms
                 Text = text ?? string.Empty,
                 ReadOnly = true,
                 Multiline = true,
-                ScrollBars = ScrollBars.Vertical,
                 Font = font,
                 Size = new Size(width, height),
                 BorderStyle = BorderStyle.FixedSingle,

@@ -35,10 +35,10 @@ namespace AdvancedProgramming.Components
             box.BackColor = Theme.Current.InputBackColor;
             box.ForeColor = Theme.Current.TextColor;
             box.BorderStyle = BorderStyle.FixedSingle;
-            box.WordWrap = false;
-            box.ScrollBars = RichTextBoxScrollBars.Both;
+            box.WordWrap = true;
+            box.ScrollBars = RichTextBoxScrollBars.None;
             box.DetectUrls = false;
-            box.ShortcutsEnabled = false;
+            box.ShortcutsEnabled = true;
 
             if (string.IsNullOrEmpty(normalized))
             {
