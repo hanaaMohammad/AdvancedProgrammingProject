@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using AdvancedProgramming.Components;
 
 namespace AdvancedProgramming
 {
@@ -70,7 +71,7 @@ namespace AdvancedProgramming
 
         private void UpdateOverlayColor()
         {
-            var baseColor = Theme.Current.FormBackColor;
+            var baseColor = CatalogUi.PageBack;
             BackColor = Color.FromArgb(200, baseColor.R, baseColor.G, baseColor.B);
         }
 

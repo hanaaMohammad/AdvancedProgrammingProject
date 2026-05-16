@@ -1,6 +1,5 @@
 using AdvancedProgramming.Components;
 using AdvancedProgramming.ProblemClasses;
-
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -13,44 +12,40 @@ namespace AdvancedProgramming.Forms
         public event EventHandler BackRequested;
         public event EventHandler HomeRequested;
 
-        private const int ContentWidth = 760;
-        private const int ContentTop = 188;
-        private const int ContentHeight = 400;
+        private const int SideMargin = 40;
+        private const int HeaderTop = 72;
 
         private Toolbar toolbar;
-        private Button btnBack;
-        private Button btnHome;
-        private Label titleLabel;
-        private Label levelLabel;
-        private Label subtitleLabel;
-        private Label comingSoonLabel;
-        private TabControl tabControl;
-        private TabPage tabStatement;
-        private TabPage tabExample;
-        private RichTextBox solutionBox;
+        private Panel headerCard;
+        private Panel contentCard;
+        private Panel statementPanel;
+        private Panel examplePanel;
+        private Panel tabStatementPill;
+        private Panel tabExamplePill;
         private Panel actionPanel;
-        private Label labelSolution;
+        private RichTextBox solutionBox;
         private Panel solutionPanel;
         private Panel exampleOutputHost;
-        private Components.PanelStars panelStars;
-        private Button solveButton;
-        private Button showSolutionButton;
-        private string problemName;
-        private Problem problemChoice;
-        private bool solutionVisible;
-        private bool isAvailable;
+        private PanelStars panelStars;
+        private Label comingSoonLabel;
 
-        public ProblemDisplayForm(string problem)
+        private Problem problemChoice;
+        private Color levelAccent;
+        private bool isAvailable;
+        private bool solutionVisible;
+        private int selectedTab;
+
+        public ProblemDisplayForm(string problemName)
         {
             Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            InitializeComponent(problem);
+            CatalogUi.EnableDoubleBuffer(this);
+            DoubleBuffered = true;
+            InitializeComponent(problemName);
         }
 
-        private void InitializeComponent(string problem)
+        private void InitializeComponent(string problemName)
         {
-            problemName = problem;
             problemChoice = ProblemLoadReadJs.GetByName(problemName);
-
             if (problemChoice == null)
             {
                 MessageBox.Show("Problem not found", "MiniCamp Puzzle",
@@ -59,287 +54,275 @@ namespace AdvancedProgramming.Forms
             }
 
             isAvailable = ProblemCatalog.IsAvailable(problemName);
+            levelAccent = Theme.GetLevelColor(problemChoice.level);
             string displayTitle = string.IsNullOrWhiteSpace(problemChoice.title)
                 ? problemName
                 : problemChoice.title;
-            SuspendLayout();
 
-            int cx = Width / 2;
+            BackColor = CatalogUi.PageBack;
+            SuspendLayout();
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             toolbar.CloseRequested += (s, e) => Application.Exit();
             Controls.Add(toolbar);
 
-            (btnBack, btnHome) = PageBackButton.Create(
+            var (btnBack, btnHome) = PageBackButton.Create(
                 (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
                 (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
-
-            titleLabel = new Label
-            {
-                Text = displayTitle,
-                Font = DesignTokens.Typography.DisplaySmall,
-                AutoSize = false,
-                Size = new Size(ContentWidth, 52),
-                Location = new Point(cx - ContentWidth / 2, 84),
-                TextAlign = ContentAlignment.MiddleCenter,
-            };
-
-            levelLabel = new Label
-            {
-                Text = Theme.FormatLevel(problemChoice.level),
-                Font = DesignTokens.Typography.HeadingSmall,
-                AutoSize = false,
-                Size = new Size(ContentWidth, 26),
-                Location = new Point(cx - ContentWidth / 2, 136),
-                TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Theme.GetLevelColor(problemChoice.level),
-                BackColor = Color.Transparent,
-            };
-
-            subtitleLabel = new Label
-            {
-                Text = "Read the statement, then choose Solve when you are ready",
-                Font = DesignTokens.Typography.BodyLarge,
-                AutoSize = false,
-                Size = new Size(ContentWidth, 24),
-                Location = new Point(cx - ContentWidth / 2, 162),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Tag = "Secondary",
-            };
-
-            comingSoonLabel = new Label
-            {
-                Text = "This problem is coming soon. Only the starter problem can be opened in the editor.",
-                Font = DesignTokens.Typography.BodySmall,
-                AutoSize = false,
-                Size = new Size(520, 36),
-                Location = new Point(cx - 260, ContentTop - 28),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Tag = "Warning",
-                Visible = !isAvailable,
-            };
-
-            tabControl = new TabControl
-            {
-                Font = DesignTokens.Typography.BodyMedium,
-                Size = new Size(ContentWidth, ContentHeight),
-                Location = new Point(cx - ContentWidth / 2, ContentTop),
-                Padding = new Point(DesignTokens.Spacing.Md, DesignTokens.Spacing.Sm),
-            };
-
-            tabStatement = new TabPage("Statement")
-            {
-                Padding = new Padding(DesignTokens.Spacing.Md),
-                AutoScroll = true,
-            };
-            tabExample = new TabPage("Example")
-            {
-                Padding = new Padding(DesignTokens.Spacing.Md),
-                AutoScroll = true,
-            };
-
-            BuildStatementTab();
-            BuildExampleTab();
-
-            tabControl.TabPages.Add(tabStatement);
-            tabControl.TabPages.Add(tabExample);
-
-            actionPanel = new Panel
-            {
-                BackColor = Color.Transparent,
-                Size = new Size(ContentWidth, DesignTokens.Sizing.ButtonHeight),
-            };
-
-            solveButton = CreateActionButton(
-                isAvailable ? "Solve" : "Coming Soon",
-                isAvailable ? "Primary" : "Secondary",
-                isAvailable);
-            solveButton.Click += (s, e) =>
-            {
-                if (isAvailable)
-                    SolveRequested?.Invoke(this, EventArgs.Empty);
-            };
-
-            bool hasSolution = !string.IsNullOrWhiteSpace(problemChoice.solution);
-            showSolutionButton = CreateActionButton("Show Solution", "Secondary", hasSolution);
-            showSolutionButton.Visible = isAvailable;
-            showSolutionButton.Click += (s, e) => ToggleSolution();
-
-            actionPanel.Controls.Add(solveButton);
-            actionPanel.Controls.Add(showSolutionButton);
-
             Controls.Add(btnBack);
             Controls.Add(btnHome);
             btnBack.BringToFront();
             btnHome.BringToFront();
-            Controls.Add(titleLabel);
-            Controls.Add(levelLabel);
-            Controls.Add(subtitleLabel);
-            Controls.Add(comingSoonLabel);
-            Controls.Add(tabControl);
+
+            Color border = isAvailable
+                ? Color.FromArgb(50, levelAccent)
+                : CatalogUi.DefaultBorder;
+
+            headerCard = CatalogUi.CreateCard(border, 20);
+            BuildHeader(displayTitle);
+            Controls.Add(headerCard);
+
+            contentCard = CatalogUi.CreateCard(CatalogUi.DefaultBorder, 20);
+            BuildContentCard();
+            Controls.Add(contentCard);
+
+            actionPanel = new Panel
+            {
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+            BuildActions();
             Controls.Add(actionPanel);
 
-            FormAccessibility.SetShortcutHint(solveButton, "Enter", "Open code editor");
             FormAccessibility.SetShortcutHint(btnBack, "Esc", "Go back");
-            FormAccessibility.SetShortcutHint(tabControl, "Ctrl+Tab", "Switch tabs");
-
-            Theme.StylePage(this);
-            Theme.Apply(this);
-            StyleTabControl();
-            ApplySolutionHighlight();
+            FormAccessibility.SetShortcutHint(tabStatementPill, "Tab", "Statement and example tabs");
 
             ResumeLayout(false);
             ApplyLayout();
         }
 
-        private void BuildStatementTab()
+        private void BuildHeader(string displayTitle)
         {
-            int y = DesignTokens.Spacing.Sm;
-            int fieldW = ContentWidth - DesignTokens.Spacing.Md * 4;
+            var title = new Label
+            {
+                Text = displayTitle,
+                Font = new Font("Segoe UI", 22, FontStyle.Bold),
+                ForeColor = Color.White,
+                AutoSize = false,
+                Location = new Point(24, 20),
+                Size = new Size(800, 36),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
 
-            y = AddField(tabStatement, "Description", problemChoice.description, y, fieldW,
-                DesignTokens.Typography.BodyMedium, out _);
-            y = AddField(tabStatement, "Input format", problemChoice.input, y, fieldW,
-                DesignTokens.Typography.BodySmall, out _);
-            y = AddField(tabStatement, "Output format", problemChoice.output, y, fieldW,
-                DesignTokens.Typography.BodySmall, out _);
-            AddField(tabStatement, "Constraints", problemChoice.Constraints, y, fieldW,
-                DesignTokens.Typography.BodySmall, out _);
+            var badge = CatalogUi.CreateBadge(problemChoice.level);
+            badge.Location = new Point(24, 64);
+
+            var typeChip = CatalogUi.CreateTypeChip(problemChoice.type);
+            typeChip.Location = new Point(116, 70);
+
+            comingSoonLabel = new Label
+            {
+                Text = "Coming soon — only Easy problems are open in the editor right now.",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = Theme.Current.WarningColor,
+                AutoSize = false,
+                Size = new Size(520, 22),
+                Location = new Point(24, 96),
+                BackColor = Color.Transparent,
+                Visible = !isAvailable,
+                Tag = "NoTheme",
+            };
+
+            headerCard.Controls.Add(title);
+            headerCard.Controls.Add(badge);
+            headerCard.Controls.Add(typeChip);
+            headerCard.Controls.Add(comingSoonLabel);
         }
 
-        private void BuildExampleTab()
+        private void BuildContentCard()
         {
-            int y = DesignTokens.Spacing.Sm;
-            int fieldW = ContentWidth - DesignTokens.Spacing.Md * 4;
+            var tabStrip = new Panel
+            {
+                Location = new Point(20, 16),
+                Size = new Size(400, 40),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+
+            tabStatementPill = CatalogUi.CreateTabPill("Statement", true, levelAccent);
+            tabStatementPill.Location = new Point(0, 2);
+            tabStatementPill.Click += (s, e) => SelectTab(0);
+            foreach (Control c in tabStatementPill.Controls)
+                c.Click += (s, e) => SelectTab(0);
+
+            tabExamplePill = CatalogUi.CreateTabPill("Example", false, levelAccent);
+            tabExamplePill.Location = new Point(tabStatementPill.Width + 10, 2);
+            tabExamplePill.Click += (s, e) => SelectTab(1);
+            foreach (Control c in tabExamplePill.Controls)
+                c.Click += (s, e) => SelectTab(1);
+
+            tabStrip.Controls.Add(tabStatementPill);
+            tabStrip.Controls.Add(tabExamplePill);
+
+            statementPanel = CreateScrollPanel();
+            BuildStatementTab(statementPanel);
+
+            examplePanel = CreateScrollPanel();
+            examplePanel.Visible = false;
+            BuildExampleTab(examplePanel);
+
+            contentCard.Controls.Add(tabStrip);
+            contentCard.Controls.Add(statementPanel);
+            contentCard.Controls.Add(examplePanel);
+        }
+
+        private static Panel CreateScrollPanel()
+        {
+            return new Panel
+            {
+                AutoScroll = true,
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+        }
+
+        private void SelectTab(int index)
+        {
+            selectedTab = index;
+            statementPanel.Visible = index == 0;
+            examplePanel.Visible = index == 1;
+            CatalogUi.SetTabSelected(tabStatementPill, index == 0, levelAccent);
+            CatalogUi.SetTabSelected(tabExamplePill, index == 1, levelAccent);
+        }
+
+        private void BuildStatementTab(Panel parent)
+        {
+            int y = 8;
+            int w = 800;
+            y = AddSection(parent, ref y, "Description", problemChoice.description, new Font("Segoe UI", 11), w);
+            y = AddSection(parent, ref y, "Input format", problemChoice.input, DesignTokens.Typography.BodySmall, w);
+            y = AddSection(parent, ref y, "Output format", problemChoice.output, DesignTokens.Typography.BodySmall, w);
+            AddSection(parent, ref y, "Constraints", problemChoice.Constraints, DesignTokens.Typography.BodySmall, w);
+        }
+
+        private void BuildExampleTab(Panel parent)
+        {
+            int y = 8;
+            int w = 800;
             bool isPattern = string.Equals(problemChoice.type, "pattren", StringComparison.OrdinalIgnoreCase);
 
-            y = AddField(tabExample, "Sample input", problemChoice.Example?.input ?? "", y, fieldW,
-                DesignTokens.Typography.Code, out _);
+            y = AddSection(parent, ref y, "Sample input", problemChoice.Example?.input ?? "", DesignTokens.Typography.Code, w);
 
-            int outputBoxHeight = isPattern
-                ? 88
-                : MeasureTextHeight(problemChoice.Example?.output ?? "", DesignTokens.Typography.Code, fieldW);
-            int outputHostHeight = DesignTokens.Sizing.LabelHeight + 4 + outputBoxHeight;
-
-            exampleOutputHost = new Panel
-            {
-                Location = new Point(DesignTokens.Spacing.Md, y),
-                Size = new Size(fieldW, outputHostHeight),
-            };
-
-            var lblOutput = new Label
-            {
-                Text = "Sample output",
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-                Location = new Point(0, 0),
-                Size = new Size(fieldW, DesignTokens.Sizing.LabelHeight),
-            };
-            exampleOutputHost.Controls.Add(lblOutput);
+            int outputH = isPattern ? 100 : MeasureTextHeight(problemChoice.Example?.output ?? "", DesignTokens.Typography.Code, w - 48) + 16;
+            exampleOutputHost = CreateInsetSection("Sample output", w, DesignTokens.Sizing.LabelHeight + 8 + outputH);
+            exampleOutputHost.Location = new Point(16, y);
 
             if (isPattern)
             {
-                panelStars = new Components.PanelStars
+                panelStars = new PanelStars
                 {
-                    Location = new Point(0, DesignTokens.Sizing.LabelHeight + 4),
-                    Size = new Size(fieldW, 88),
+                    Location = new Point(12, DesignTokens.Sizing.LabelHeight + 12),
+                    Size = new Size(w - 72, 88),
                 };
                 exampleOutputHost.Controls.Add(panelStars);
             }
             else
             {
-                var outputBox = CreateReadOnlyBox(
-                    problemChoice.Example?.output ?? "",
-                    DesignTokens.Typography.Code,
-                    fieldW,
-                    outputBoxHeight);
-                outputBox.Location = new Point(0, DesignTokens.Sizing.LabelHeight + 4);
+                var outputBox = CreateInsetTextBox(problemChoice.Example?.output ?? "", DesignTokens.Typography.Code, w - 72, outputH - 8);
+                outputBox.Location = new Point(12, DesignTokens.Sizing.LabelHeight + 12);
                 exampleOutputHost.Controls.Add(outputBox);
             }
 
-            tabExample.Controls.Add(exampleOutputHost);
-            y += exampleOutputHost.Height + DesignTokens.Spacing.Md;
+            parent.Controls.Add(exampleOutputHost);
+            y += exampleOutputHost.Height + 12;
 
-            y = AddField(tabExample, "Explanation", problemChoice.Example?.explanation ?? "", y, fieldW,
-                DesignTokens.Typography.BodySmall, out _);
+            y = AddSection(parent, ref y, "Explanation", problemChoice.Example?.explanation ?? "", DesignTokens.Typography.BodySmall, w);
 
-            solutionPanel = new Panel
-            {
-                Location = new Point(DesignTokens.Spacing.Md, y),
-                Size = new Size(fieldW, 180),
-                Visible = false,
-            };
+            solutionPanel = CreateInsetSection("Reference solution", w, 200);
+            solutionPanel.Visible = false;
+            solutionPanel.Location = new Point(16, y);
 
-            labelSolution = new Label
-            {
-                Text = "Reference solution",
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-                Location = new Point(0, 0),
-                Size = new Size(fieldW, DesignTokens.Sizing.LabelHeight),
-            };
-
-            int solutionHeight = GetCodeViewHeight(problemChoice.solution, 140, 260);
+            int solutionH = GetCodeViewHeight(problemChoice.solution, 120, 240);
             solutionBox = new RichTextBox
             {
-                Location = new Point(0, DesignTokens.Sizing.LabelHeight + 4),
-                Size = new Size(fieldW, solutionHeight),
-                Tag = "NoTheme",
+                Location = new Point(12, DesignTokens.Sizing.LabelHeight + 12),
+                Size = new Size(w - 72, solutionH),
+                BorderStyle = BorderStyle.None,
+                BackColor = CatalogUi.InsetBack,
+                ReadOnly = true,
                 TabStop = false,
+                Tag = "NoTheme",
+            };
+            solutionPanel.Height = DesignTokens.Sizing.LabelHeight + 20 + solutionH;
+            solutionPanel.Controls.Add(solutionBox);
+            parent.Controls.Add(solutionPanel);
+        }
+
+        private void BuildActions()
+        {
+            actionPanel.Controls.Clear();
+
+            string solveText = isAvailable ? "Solve \u2192" : "Coming Soon";
+            EventHandler onSolve = isAvailable
+                ? (EventHandler)((s, e) => SolveRequested?.Invoke(this, EventArgs.Empty))
+                : null;
+            var solvePill = CatalogUi.CreateActionPill(solveText, isAvailable, levelAccent, onSolve);
+            solvePill.Name = "solvePill";
+
+            actionPanel.Controls.Add(solvePill);
+
+            if (isAvailable && !string.IsNullOrWhiteSpace(problemChoice.solution))
+            {
+                var solutionPill = CatalogUi.CreateActionPill(
+                    "Show Solution",
+                    true,
+                    levelAccent,
+                    (s, e) => ToggleSolution());
+                solutionPill.Name = "solutionPill";
+                solutionPill.Location = new Point(solvePill.Right + 12, 0);
+                actionPanel.Controls.Add(solutionPill);
+            }
+
+            FormAccessibility.SetShortcutHint(
+                actionPanel.Controls[0],
+                "Enter",
+                "Open code editor");
+        }
+
+        private Panel CreateInsetSection(string caption, int width, int height)
+        {
+            var section = new Panel
+            {
+                Width = width,
+                Height = height,
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+            CatalogUi.EnableDoubleBuffer(section);
+
+            int captionH = DesignTokens.Sizing.LabelHeight;
+            section.Paint += (s, e) =>
+            {
+                var inset = new Rectangle(0, captionH + 6, section.Width, section.Height - captionH - 6);
+                CatalogUi.PaintInset(e.Graphics, inset);
             };
 
-            solutionPanel.Size = new Size(fieldW, DesignTokens.Sizing.LabelHeight + 4 + solutionHeight);
-            solutionPanel.Controls.Add(labelSolution);
-            solutionPanel.Controls.Add(solutionBox);
-            tabExample.Controls.Add(solutionPanel);
-        }
-
-        private void ApplySolutionHighlight()
-        {
-            if (solutionBox == null)
-                return;
-            CSharpCodeHighlighter.Apply(solutionBox, problemChoice?.solution ?? string.Empty);
-        }
-
-        private static int AddField(
-            Control parent,
-            string caption,
-            string text,
-            int y,
-            int width,
-            Font font,
-            out TextBox box)
-        {
-            var label = new Label
+            section.Controls.Add(new Label
             {
                 Text = caption,
-                Font = DesignTokens.Typography.BodySmall,
-                Tag = "Secondary",
-                Location = new Point(DesignTokens.Spacing.Md, y),
-                Size = new Size(width, DesignTokens.Sizing.LabelHeight),
-            };
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = CatalogUi.MutedText,
+                Location = new Point(0, 0),
+                Size = new Size(width, captionH),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
 
-            int height = MeasureTextHeight(text, font, width);
-            box = CreateReadOnlyBox(text, font, width, height);
-            box.Location = new Point(DesignTokens.Spacing.Md, y + DesignTokens.Sizing.LabelHeight + 4);
-
-            parent.Controls.Add(label);
-            parent.Controls.Add(box);
-
-            return y + DesignTokens.Sizing.LabelHeight + height + DesignTokens.Spacing.Md;
+            return section;
         }
 
-        private static int MeasureTextHeight(string text, Font font, int width)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return 40;
-            var proposedSize = new Size(width - 8, 0);
-            var size = TextRenderer.MeasureText(text, font, proposedSize,
-                TextFormatFlags.WordBreak);
-            return size.Height + 8;
-        }
-
-        private static TextBox CreateReadOnlyBox(string text, Font font, int width, int height)
+        private static TextBox CreateInsetTextBox(string text, Font font, int width, int height)
         {
             return new TextBox
             {
@@ -348,35 +331,54 @@ namespace AdvancedProgramming.Forms
                 Multiline = true,
                 Font = font,
                 Size = new Size(width, height),
-                BorderStyle = BorderStyle.FixedSingle,
+                BorderStyle = BorderStyle.None,
+                BackColor = CatalogUi.InsetBack,
+                ForeColor = Color.White,
                 TabStop = false,
+                Tag = "NoTheme",
             };
         }
 
-        private static Button CreateActionButton(string text, string tag, bool enabled)
+        private int AddSection(Panel parent, ref int y, string caption, string text, Font font, int contentWidth)
         {
-            return new Button
+            int blockW = contentWidth - 32;
+            int textH = Math.Max(48, MeasureTextHeight(text, font, blockW - 24));
+            int blockH = DesignTokens.Sizing.LabelHeight + 14 + textH;
+
+            var block = new Panel
             {
-                Text = text,
-                Font = tag == "Primary"
-                    ? DesignTokens.Typography.ButtonLabel
-                    : DesignTokens.Typography.BodyMedium,
-                Size = new Size(DesignTokens.Sizing.ButtonWidthMd, DesignTokens.Sizing.ButtonHeight),
-                FlatStyle = FlatStyle.Flat,
-                Tag = tag,
-                Cursor = enabled ? Cursors.Hand : Cursors.Default,
-                Enabled = enabled,
+                Location = new Point(16, y),
+                Size = new Size(blockW, blockH),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
             };
-        }
+            CatalogUi.EnableDoubleBuffer(block);
 
-        private static int GetCodeViewHeight(string code, int minHeight, int maxHeight)
-        {
-            string normalized = CSharpCodeHighlighter.NormalizeCode(code);
-            if (string.IsNullOrEmpty(normalized))
-                return minHeight;
+            int captionH = DesignTokens.Sizing.LabelHeight;
+            block.Paint += (s, e) =>
+            {
+                var inset = new Rectangle(0, captionH + 6, block.Width, block.Height - captionH - 6);
+                CatalogUi.PaintInset(e.Graphics, inset);
+            };
 
-            int lines = normalized.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Length;
-            return Math.Min(maxHeight, Math.Max(minHeight, lines * 18 + 16));
+            block.Controls.Add(new Label
+            {
+                Text = caption,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = CatalogUi.MutedText,
+                Location = new Point(0, 0),
+                Size = new Size(blockW, captionH),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+
+            var body = CreateInsetTextBox(text, font, blockW - 24, textH);
+            body.Location = new Point(12, captionH + 12);
+            block.Controls.Add(body);
+
+            parent.Controls.Add(block);
+            y += blockH + 12;
+            return y;
         }
 
         private void ToggleSolution()
@@ -392,29 +394,37 @@ namespace AdvancedProgramming.Forms
             }
 
             solutionVisible = !solutionVisible;
-            showSolutionButton.Text = solutionVisible ? "Hide Solution" : "Show Solution";
             solutionPanel.Visible = solutionVisible;
+
+            foreach (Control c in actionPanel.Controls)
+            {
+                if (c.Name == "solutionPill" && c.Controls.Count > 0 && c.Controls[0] is Label lbl)
+                    lbl.Text = solutionVisible ? "Hide Solution" : "Show Solution";
+            }
 
             if (solutionVisible)
             {
-                tabControl.SelectedTab = tabExample;
-                ApplySolutionHighlight();
+                SelectTab(1);
+                CSharpCodeHighlighter.Apply(solutionBox, problemChoice.solution ?? string.Empty);
             }
         }
 
-        private void StyleTabControl()
+        private static int MeasureTextHeight(string text, Font font, int width)
         {
-            if (tabControl == null)
-                return;
+            if (string.IsNullOrWhiteSpace(text))
+                return 40;
+            var size = TextRenderer.MeasureText(text, font, new Size(width, 0), TextFormatFlags.WordBreak);
+            return size.Height + 12;
+        }
 
-            tabControl.BackColor = Theme.Current.SurfaceColor;
-            tabControl.ForeColor = Theme.Current.TextColor;
+        private static int GetCodeViewHeight(string code, int minHeight, int maxHeight)
+        {
+            string normalized = CSharpCodeHighlighter.NormalizeCode(code);
+            if (string.IsNullOrEmpty(normalized))
+                return minHeight;
 
-            foreach (TabPage page in tabControl.TabPages)
-            {
-                page.BackColor = Theme.Current.SurfaceColor;
-                page.ForeColor = Theme.Current.TextColor;
-            }
+            int lines = normalized.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Length;
+            return Math.Min(maxHeight, Math.Max(minHeight, lines * 18 + 16));
         }
 
         protected override void OnResize(EventArgs e)
@@ -425,47 +435,43 @@ namespace AdvancedProgramming.Forms
 
         private void ApplyLayout()
         {
-            if (titleLabel == null)
+            if (headerCard == null)
                 return;
 
+            int contentW = Math.Max(600, Width - SideMargin * 2);
             int cx = Width / 2;
+            int left = cx - contentW / 2;
 
-            titleLabel.Location = new Point(cx - ContentWidth / 2, 84);
-            levelLabel.Location = new Point(cx - ContentWidth / 2, 136);
-            subtitleLabel.Location = new Point(cx - ContentWidth / 2, 162);
-            comingSoonLabel.Location = new Point(cx - comingSoonLabel.Width / 2, ContentTop - 28);
-            tabControl.Location = new Point(cx - ContentWidth / 2, ContentTop);
-            tabControl.Size = new Size(ContentWidth, Math.Max(260, Height - ContentTop - 88));
+            int headerH = isAvailable ? 100 : 124;
+            headerCard.SetBounds(left, HeaderTop, contentW, headerH);
 
-            LayoutActionButtons(cx, tabControl.Bottom + DesignTokens.Spacing.Lg);
-        }
+            if (headerCard.Controls.Count > 0 && headerCard.Controls[0] is Label titleLbl)
+                titleLbl.Width = contentW - 48;
 
-        private void LayoutActionButtons(int cx, int actionY)
-        {
-            if (actionPanel == null || solveButton == null)
-                return;
+            int contentTop = headerCard.Bottom + 16;
+            int actionH = 48;
+            int contentH = Math.Max(280, Height - contentTop - actionH - 24);
 
-            int btnW = DesignTokens.Sizing.ButtonWidthMd;
-            int btnH = DesignTokens.Sizing.ButtonHeight;
-            int gap = DesignTokens.Spacing.Md;
-            bool twoButtons = showSolutionButton != null && showSolutionButton.Visible;
+            contentCard.SetBounds(left, contentTop, contentW, contentH);
 
-            int count = twoButtons ? 2 : 1;
-            int totalW = btnW * count + gap * (count - 1);
-            int startX = cx - totalW / 2;
+            int scrollTop = 64;
+            int scrollPad = 20;
+            statementPanel.SetBounds(scrollPad, scrollTop, contentW - scrollPad * 2, contentH - scrollTop - 16);
+            examplePanel.SetBounds(scrollPad, scrollTop, contentW - scrollPad * 2, contentH - scrollTop - 16);
 
-            solveButton.Location = new Point(0, 0);
-            solveButton.Size = new Size(btnW, btnH);
+            int totalActionW = 0;
+            foreach (Control c in actionPanel.Controls)
+                totalActionW += c.Width + 12;
+            if (totalActionW > 0)
+                totalActionW -= 12;
 
-            if (twoButtons)
+            actionPanel.SetBounds(cx - totalActionW / 2, contentCard.Bottom + 12, totalActionW, actionH);
+            int ax = 0;
+            foreach (Control c in actionPanel.Controls)
             {
-                showSolutionButton.Location = new Point(btnW + gap, 0);
-                showSolutionButton.Size = new Size(btnW, btnH);
+                c.Location = new Point(ax, 4);
+                ax += c.Width + 12;
             }
-
-            actionPanel.Location = new Point(startX, actionY);
-            actionPanel.Size = new Size(totalW, btnH);
         }
-
     }
 }

@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="CodeRun\CSharpExecutor.cs" />
     <Compile Include="Components\CSharpCodeHighlighter.cs" />
+    <Compile Include="Components\CatalogUi.cs" />
     <Compile Include="Components\GraphicsHelper.cs" />
     <Compile Include="Components\PageBackButton.cs" />
     <Compile Include="Components\PanelStars.cs">

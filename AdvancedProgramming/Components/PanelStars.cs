@@ -16,7 +16,7 @@ namespace AdvancedProgramming.Components
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            e.Graphics.Clear(Theme.Current.SurfaceColor);
+            e.Graphics.Clear(CatalogUi.InsetBack);
 
             int startX = Width / 2;
             int startY = 10;

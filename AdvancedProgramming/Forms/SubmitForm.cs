@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AdvancedProgramming.Components;
-using AdvancedProgramming.Service;
 using AdvancedProgramming.ProblemClasses;
+using AdvancedProgramming.Service;
 using AdvancedProgramming.Session;
 
 namespace AdvancedProgramming.Forms
@@ -18,116 +18,189 @@ namespace AdvancedProgramming.Forms
         public event EventHandler BackRequested;
         public event EventHandler HomeRequested;
 
+        private const int SideMargin = 40;
+        private const int HeaderTop = 72;
+
         private Toolbar toolbar;
         private Button btnBack;
         private Button btnHome;
-        private Button buttonRun;
-        private Label labelProblemName;
-        private Label labelCodePrompt;
-        private ComboBox languageCombo;
+        private Panel headerCard;
+        private Panel editorCard;
+        private Panel runPill;
         private TextBox codeEditor;
         private LoadingOverlay loadingOverlay;
+        private string problemName;
+        private Color levelAccent;
         private bool isRunning;
 
         public SubmitForm(string problemName)
         {
-            this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
+            this.problemName = problemName;
+            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
+            CatalogUi.EnableDoubleBuffer(this);
+            DoubleBuffered = true;
             InitializeComponent();
-            labelProblemName.Text = problemName;
             toolbar.CloseRequested += (s, e) => Application.Exit();
         }
 
         private void InitializeComponent()
         {
-            int cx = this.Width / 2;
+            var problem = ProblemLoadReadJs.GetByName(problemName);
+            levelAccent = problem != null
+                ? Theme.GetLevelColor(problem.level)
+                : Theme.Current.AccentColor;
+            string displayTitle = string.IsNullOrWhiteSpace(problem?.title)
+                ? problemName
+                : problem.title;
+
+            BackColor = CatalogUi.PageBack;
             SuspendLayout();
 
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
-            this.Controls.Add(toolbar);
+            Controls.Add(toolbar);
 
             (btnBack, btnHome) = PageBackButton.Create(
                 (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
                 (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+            Controls.Add(btnBack);
+            Controls.Add(btnHome);
+            btnBack.BringToFront();
+            btnHome.BringToFront();
 
-            labelProblemName = new Label
+            Color border = Color.FromArgb(50, levelAccent);
+            headerCard = CatalogUi.CreateCard(border, 20);
+            BuildHeader(displayTitle, problem?.level, problem?.type);
+            Controls.Add(headerCard);
+
+            editorCard = CatalogUi.CreateCard(CatalogUi.DefaultBorder, 20);
+            BuildEditor();
+            Controls.Add(editorCard);
+
+            runPill = CatalogUi.CreateActionPill(
+                "Run Tests \u2192",
+                true,
+                levelAccent,
+                (s, e) => ButtonRun_Click(s, e));
+            Controls.Add(runPill);
+
+            loadingOverlay = new LoadingOverlay();
+            editorCard.Controls.Add(loadingOverlay);
+
+            FormAccessibility.SetShortcutHint(runPill, "Ctrl+Enter", "Run test cases");
+            FormAccessibility.SetShortcutHint(btnBack, "Esc", "Go back");
+            FormAccessibility.SetShortcutHint(codeEditor, "Tab", "Indent code");
+
+            ResumeLayout(false);
+            ApplyLayout();
+        }
+
+        private void BuildHeader(string displayTitle, string level, string type)
+        {
+            var title = new Label
             {
-                Font = DesignTokens.Typography.HeadingMedium,
-                Size = new Size(500, 35),
-                Location = new Point(cx - 250, 80),
-                TextAlign = ContentAlignment.MiddleCenter,
+                Text = displayTitle,
+                Font = new Font("Segoe UI", 20, FontStyle.Bold),
+                ForeColor = Color.White,
+                Location = new Point(24, 18),
+                Size = new Size(700, 32),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
             };
 
-            languageCombo = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Font = DesignTokens.Typography.BodyMedium,
-                Size = new Size(120, 28),
-                Location = new Point(cx - 275, 135),
-                FlatStyle = FlatStyle.Flat,
-            };
-            languageCombo.Items.Add("C#");
-            languageCombo.SelectedIndex = 0;
+            headerCard.Controls.Add(title);
 
-            labelCodePrompt = new Label
+            int metaX = 24;
+            int metaY = 58;
+
+            if (!string.IsNullOrWhiteSpace(level))
             {
-                Text = "Enter your solution:",
-                Font = DesignTokens.Typography.BodySmall,
-                Size = new Size(200, 20),
-                Location = new Point(cx - 275, 168),
-                Tag = "Secondary",
+                var badge = CatalogUi.CreateBadge(level);
+                badge.Location = new Point(metaX, metaY);
+                headerCard.Controls.Add(badge);
+                metaX += badge.Width + 12;
+            }
+
+            var langChip = new Label
+            {
+                Text = "C#",
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = CatalogUi.MutedText,
+                Location = new Point(metaX, metaY + 4),
+                AutoSize = true,
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+            headerCard.Controls.Add(langChip);
+            metaX += 40;
+
+            if (!string.IsNullOrWhiteSpace(type))
+            {
+                var typeChip = CatalogUi.CreateTypeChip(type);
+                typeChip.Location = new Point(metaX, metaY + 4);
+                headerCard.Controls.Add(typeChip);
+            }
+
+            headerCard.Controls.Add(new Label
+            {
+                Text = "Write your solution below, then run against all test cases.",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = CatalogUi.MutedText,
+                Location = new Point(24, 90),
+                Size = new Size(700, 20),
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            });
+        }
+
+        private void BuildEditor()
+        {
+            var prompt = new Label
+            {
+                Text = "Solution",
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = CatalogUi.MutedText,
+                Location = new Point(20, 16),
+                AutoSize = true,
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+
+            var editorHost = new Panel
+            {
+                BackColor = Color.Transparent,
+                Tag = "NoTheme",
+            };
+            CatalogUi.EnableDoubleBuffer(editorHost);
+            editorHost.Paint += (s, e) =>
+            {
+                var inset = editorHost.ClientRectangle;
+                CatalogUi.PaintInset(e.Graphics, inset, 12);
             };
 
             codeEditor = new TextBox
             {
                 Font = DesignTokens.Typography.Code,
-                Location = new Point(cx - 275, 195),
                 Multiline = true,
-                Size = new Size(550, 320),
                 ScrollBars = ScrollBars.Both,
                 AcceptsTab = true,
                 AcceptsReturn = true,
+                BorderStyle = BorderStyle.None,
+                BackColor = CatalogUi.InsetBack,
+                ForeColor = Color.White,
                 Text = "using System;\r\n\r\nclass Program\r\n{\r\n    static void Main(string[] args)\r\n    {\r\n        \r\n    }\r\n}",
+                Tag = "NoTheme",
             };
 
-            buttonRun = new Button
-            {
-                Text = "Run",
-                Font = DesignTokens.Typography.ButtonLabel,
-                Size = new Size(DesignTokens.Sizing.ButtonWidthSm, DesignTokens.Sizing.ButtonHeight),
-                Location = new Point(cx + 55, 540),
-                FlatStyle = FlatStyle.Flat,
-                Tag = "Primary",
-                Cursor = Cursors.Hand,
-            };
-            buttonRun.Click += ButtonRun_Click;
-
-            loadingOverlay = new LoadingOverlay();
-
-            this.Controls.Add(btnBack);
-            this.Controls.Add(btnHome);
-            btnBack.BringToFront();
-            btnHome.BringToFront();
-            this.Controls.Add(labelProblemName);
-            this.Controls.Add(labelCodePrompt);
-            this.Controls.Add(languageCombo);
-            this.Controls.Add(codeEditor);
-            this.Controls.Add(buttonRun);
-            this.Controls.Add(loadingOverlay);
-
-            FormAccessibility.SetShortcutHint(buttonRun, "Ctrl+Enter", "Run test cases");
-            FormAccessibility.SetShortcutHint(btnBack, "Esc", "Go back");
-            FormAccessibility.SetShortcutHint(codeEditor, "Tab", "Indent code");
-
-            Theme.StylePage(this);
-
-            ResumeLayout(false);
-            PerformLayout();
+            editorHost.Controls.Add(codeEditor);
+            editorCard.Controls.Add(prompt);
+            editorCard.Controls.Add(editorHost);
+            editorHost.Name = "editorHost";
         }
 
         public void RunTests()
         {
             if (!isRunning)
-                ButtonRun_Click(buttonRun, EventArgs.Empty);
+                ButtonRun_Click(null, EventArgs.Empty);
         }
 
         public void RestoreCode(string code)
@@ -141,7 +214,6 @@ namespace AdvancedProgramming.Forms
             if (isRunning) return;
 
             string code = codeEditor.Text;
-            string problemName = labelProblemName.Text;
 
             if (string.IsNullOrWhiteSpace(code))
             {
@@ -194,11 +266,10 @@ namespace AdvancedProgramming.Forms
         private void SetRunningState(bool running)
         {
             isRunning = running;
-            buttonRun.Enabled = !running;
+            runPill.Enabled = !running;
+            codeEditor.Enabled = !running;
             btnBack.Enabled = !running;
             btnHome.Enabled = !running;
-            codeEditor.Enabled = !running;
-            languageCombo.Enabled = !running;
 
             if (running)
                 loadingOverlay.Show();
@@ -209,7 +280,33 @@ namespace AdvancedProgramming.Forms
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
+            ApplyLayout();
             loadingOverlay?.BringToFront();
+        }
+
+        private void ApplyLayout()
+        {
+            if (headerCard == null)
+                return;
+
+            int contentW = Math.Max(600, Width - SideMargin * 2);
+            int cx = Width / 2;
+            int left = cx - contentW / 2;
+
+            headerCard.SetBounds(left, HeaderTop, contentW, 118);
+
+            int editorTop = headerCard.Bottom + 16;
+            int runH = 44;
+            int editorH = Math.Max(320, Height - editorTop - runH - 28);
+            editorCard.SetBounds(left, editorTop, contentW, editorH);
+
+            var prompt = editorCard.Controls[0];
+            var editorHost = editorCard.Controls[1];
+            prompt.Location = new Point(20, 16);
+            editorHost.SetBounds(20, 40, contentW - 40, editorH - 52);
+            codeEditor.SetBounds(12, 10, editorHost.Width - 24, editorHost.Height - 20);
+
+            runPill.Location = new Point(cx - runPill.Width / 2, editorCard.Bottom + 12);
         }
     }
 }
