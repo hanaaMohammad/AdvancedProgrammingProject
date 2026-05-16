@@ -8,10 +8,8 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Forms
 {
-    public class UserForm : UserControl
+    public class UserForm : AppForm
     {
-        public event EventHandler HomeRequested;
-
         private const int SideMargin = 40;
         private const int HeaderTop = CatalogUi.ContentTop;
 
@@ -22,9 +20,6 @@ namespace AdvancedProgramming.Forms
         private Label labelUsername;
         public UserForm()
         {
-            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            CatalogUi.EnableDoubleBuffer(this);
-            DoubleBuffered = true;
             InitializeComponent();
         }
 
@@ -38,7 +33,7 @@ namespace AdvancedProgramming.Forms
             toolbar.CloseRequested += (s, e) => Application.Exit();
             Controls.Add(toolbar);
 
-            PageBackButton.AddHome(this, (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+            PageBackButton.AddHome(this, (s, e) => GoAppHome());
 
             headerCard = CatalogUi.CreateCard(Color.FromArgb(50, accent), 20);
             headerCard.Controls.Add(new Label

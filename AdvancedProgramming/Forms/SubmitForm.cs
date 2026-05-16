@@ -10,13 +10,9 @@ using AdvancedProgramming.Session;
 
 namespace AdvancedProgramming.Forms
 {
-    public class SubmitForm : UserControl
+    public class SubmitForm : AppForm
     {
         public static string LastSubmittedCode { get; set; }
-
-        public event EventHandler<CodeRunnerTestResultList> TestResultsReady;
-        public event EventHandler BackRequested;
-        public event EventHandler HomeRequested;
 
         private const int SideMargin = 40;
         private const int HeaderTop = CatalogUi.ContentTop;
@@ -36,11 +32,43 @@ namespace AdvancedProgramming.Forms
         public SubmitForm(string problemName)
         {
             this.problemName = problemName;
-            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            CatalogUi.EnableDoubleBuffer(this);
-            DoubleBuffered = true;
             InitializeComponent();
             toolbar.CloseRequested += (s, e) => Application.Exit();
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            if (LastSubmittedCode != null)
+            {
+                RestoreCode(LastSubmittedCode);
+                LastSubmittedCode = null;
+            }
+
+            codeEditor?.Focus();
+            codeEditor?.Select(codeEditor.TextLength, 0);
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (codeEditor != null && codeEditor.Focused)
+            {
+                if (!isRunning && keyData == (Keys.Control | Keys.Enter))
+                {
+                    RunTests();
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (!isRunning && keyData == (Keys.Control | Keys.Enter))
+            {
+                RunTests();
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void InitializeComponent()
@@ -60,8 +88,8 @@ namespace AdvancedProgramming.Forms
             Controls.Add(toolbar);
 
             (btnBack, btnHome) = PageBackButton.Create(
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
-                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+                (s, e) => GoBack(),
+                (s, e) => GoAppHome());
             Controls.Add(btnBack);
             Controls.Add(btnHome);
             btnBack.BringToFront();
@@ -84,7 +112,7 @@ namespace AdvancedProgramming.Forms
             Controls.Add(runPill);
 
             loadingOverlay = new LoadingOverlay();
-            editorCard.Controls.Add(loadingOverlay);
+            Controls.Add(loadingOverlay);
 
             FormAccessibility.SetShortcutHint(runPill, "Ctrl+Enter", "Run test cases");
             FormAccessibility.SetShortcutHint(btnBack, "Esc", "Go back");
@@ -187,6 +215,8 @@ namespace AdvancedProgramming.Forms
                 BorderStyle = BorderStyle.None,
                 BackColor = CatalogUi.InsetBack,
                 ForeColor = Color.White,
+                ReadOnly = false,
+                Enabled = true,
                 Text = "using System;\r\n\r\nclass Program\r\n{\r\n    static void Main(string[] args)\r\n    {\r\n        \r\n    }\r\n}",
                 Tag = "NoTheme",
             };
@@ -248,10 +278,7 @@ namespace AdvancedProgramming.Forms
 
                 LastSubmittedCode = code;
 
-                TestResultsReady?.Invoke(this, new CodeRunnerTestResultList
-                {
-                    Results = results,
-                });
+                ShowScreen(new FailedForm(problemName, results));
             }
             catch (Exception ex)
             {
@@ -281,7 +308,8 @@ namespace AdvancedProgramming.Forms
         {
             base.OnResize(e);
             ApplyLayout();
-            loadingOverlay?.BringToFront();
+            if (loadingOverlay != null && loadingOverlay.Visible)
+                loadingOverlay.BringToFront();
         }
 
         private void ApplyLayout()

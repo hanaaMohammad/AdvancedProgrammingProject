@@ -3,14 +3,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using AdvancedProgramming.Components;
+using AdvancedProgramming.Forms;
 
 namespace AdvancedProgramming
 {
-    public class StartupForm : UserControl
+    public class StartupForm : AppForm
     {
-        public event EventHandler LoginRequested;
-        public event EventHandler SignUpRequested;
-
         private const int SideMargin = 40;
 
         private Toolbar toolbar;
@@ -22,10 +20,21 @@ namespace AdvancedProgramming
 
         public StartupForm()
         {
-            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            CatalogUi.EnableDoubleBuffer(this);
-            DoubleBuffered = true;
             InitializeComponent();
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            FocusLogin();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+                return true;
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void InitializeComponent()
@@ -98,10 +107,10 @@ namespace AdvancedProgramming
                 "Log In \u2192",
                 true,
                 accent,
-                (s, e) => LoginRequested?.Invoke(this, EventArgs.Empty));
+                (s, e) => ShowScreen(new LogInForm()));
             loginPill.TabStop = true;
 
-            signUpPill = CreateSecondaryPill("Sign Up", accent, (s, e) => SignUpRequested?.Invoke(this, EventArgs.Empty));
+            signUpPill = CreateSecondaryPill("Sign Up", accent, (s, e) => ShowScreen(new SignUpForm()));
             Controls.Add(loginPill);
             Controls.Add(signUpPill);
 

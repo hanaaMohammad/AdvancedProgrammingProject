@@ -215,7 +215,7 @@ namespace AdvancedProgramming
             dgv.EnableHeadersVisualStyles = false;
         }
 
-        public static void StylePage(UserControl page)
+        public static void StylePage(Control page)
         {
             page.BackColor = Current.FormBackColor;
             page.ForeColor = Current.TextColor;

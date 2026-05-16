@@ -6,12 +6,8 @@ using AdvancedProgramming.Session;
 
 namespace AdvancedProgramming.Forms
 {
-    public class LogInForm : UserControl
+    public class LogInForm : AppForm
     {
-        public event EventHandler LoginSuccess;
-        public event EventHandler BackRequested;
-        public event EventHandler HomeRequested;
-
         private const int CardWidth = 400;
 
         private Toolbar toolbar;
@@ -27,10 +23,24 @@ namespace AdvancedProgramming.Forms
 
         public LogInForm()
         {
-            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            CatalogUi.EnableDoubleBuffer(this);
-            DoubleBuffered = true;
             InitializeComponent();
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            FormAccessibility.FocusFirstInput(this);
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Enter)
+            {
+                SubmitLogin();
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         public void SubmitLogin()
@@ -49,8 +59,8 @@ namespace AdvancedProgramming.Forms
             Controls.Add(toolbar);
 
             (btnBack, btnHome) = PageBackButton.Create(
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
-                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+                (s, e) => GoBack(),
+                (s, e) => GoStartup());
             Controls.Add(btnBack);
             Controls.Add(btnHome);
             btnBack.BringToFront();
@@ -158,7 +168,7 @@ namespace AdvancedProgramming.Forms
                 CurrentUser.Country = details.Country;
                 CurrentUser.Gender = details.Gender;
                 CurrentUser.Score = user.GetScore(username);
-                LoginSuccess?.Invoke(this, EventArgs.Empty);
+                AfterLogin();
             }
             else
             {

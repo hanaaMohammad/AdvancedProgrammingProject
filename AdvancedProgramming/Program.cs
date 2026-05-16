@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using AdvancedProgramming.Forms;
 
 namespace AdvancedProgramming
 {
@@ -11,7 +12,11 @@ namespace AdvancedProgramming
             DatabaseManager.InitializeDatabase();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            var context = new ApplicationContext();
+            AppForm.AppContext = context;
+            context.MainForm = new StartupForm { AnimateOnShow = false };
+            Application.Run(context);
         }
     }
 }

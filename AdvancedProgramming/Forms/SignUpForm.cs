@@ -1,4 +1,5 @@
 using AdvancedProgramming.Components;
+using AdvancedProgramming.Forms;
 using AdvancedProgramming.Session;
 using System;
 using System.Drawing;
@@ -6,12 +7,8 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming
 {
-    public class SignUpForm : UserControl
+    public class SignUpForm : AppForm
     {
-        public event EventHandler SignUpSuccess;
-        public event EventHandler BackRequested;
-        public event EventHandler HomeRequested;
-
         private const int CardWidth = 420;
 
         private Toolbar toolbar;
@@ -35,9 +32,6 @@ namespace AdvancedProgramming
 
         public SignUpForm()
         {
-            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            CatalogUi.EnableDoubleBuffer(this);
-            DoubleBuffered = true;
             InitializeComponent();
         }
 
@@ -52,8 +46,8 @@ namespace AdvancedProgramming
             Controls.Add(toolbar);
 
             (btnBack, btnHome) = PageBackButton.Create(
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
-                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+                (s, e) => GoBack(),
+                (s, e) => GoStartup());
             Controls.Add(btnBack);
             Controls.Add(btnHome);
             btnBack.BringToFront();
@@ -292,7 +286,7 @@ namespace AdvancedProgramming
                 CurrentUser.Country = country;
                 CurrentUser.Gender = gender;
                 CurrentUser.Score = 0;
-                SignUpSuccess?.Invoke(this, EventArgs.Empty);
+                AfterLogin();
             }
         }
 

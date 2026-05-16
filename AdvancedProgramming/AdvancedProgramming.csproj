@@ -116,35 +116,35 @@
     </Compile>
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\UserManagement.cs" />
-    <Compile Include="Forms\MainForm.cs">
+    <Compile Include="Forms\AppForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\AcceptedForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\FailedForm.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\HomeForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\LogInForm.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\LevelProblemForm.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ProblemDisplayForm.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\StartupForm.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\SubmitForm.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\UserForm.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ProblemClasses\Example.cs" />
     <Compile Include="ProblemClasses\ProblemLoadReadJs.cs" />
@@ -171,7 +171,7 @@
     <Compile Include="Components\PageTransition.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Forms\SignUpForm.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\AcceptedForm.resx">

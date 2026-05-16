@@ -9,11 +9,8 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Forms
 {
-    public class FailedForm : UserControl
+    public class FailedForm : AppForm
     {
-        public event EventHandler BackRequested;
-        public event EventHandler HomeRequested;
-
         private const int SideMargin = 40;
         private const int HeaderTop = CatalogUi.ContentTop;
 
@@ -30,10 +27,7 @@ namespace AdvancedProgramming.Forms
 
         public FailedForm(string name, List<CodeRunnerTestResult> results)
         {
-            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
             testResults = results ?? new List<CodeRunnerTestResult>();
-            CatalogUi.EnableDoubleBuffer(this);
-            DoubleBuffered = true;
             InitializeComponent();
             BuildTestCards(name);
         }
@@ -52,8 +46,8 @@ namespace AdvancedProgramming.Forms
             Controls.Add(toolbar);
 
             var (backButton, homeButton) = PageBackButton.Create(
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
-                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+                (s, e) => GoBack(),
+                (s, e) => GoAppHome());
             Controls.Add(backButton);
             Controls.Add(homeButton);
             backButton.BringToFront();

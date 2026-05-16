@@ -6,20 +6,18 @@ namespace AdvancedProgramming
 {
     public static class PageTransition
     {
-        public static void AnimateIn(UserControl page, Panel container, Action centerPage, Action onComplete = null)
+        public static void AnimateIn(Form form, Action onComplete = null)
         {
-            if (page == null || container == null)
+            if (form == null)
             {
                 onComplete?.Invoke();
                 return;
             }
 
-            centerPage?.Invoke();
-
-            int targetX = page.Location.X;
-            int targetY = page.Location.Y;
+            int targetX = form.Location.X;
+            int targetY = form.Location.Y;
             int startX = targetX + 48;
-            page.Location = new Point(startX, targetY);
+            form.Location = new Point(startX, targetY);
 
             int step = 0;
             int totalSteps = DesignTokens.Animation.NormalMs / DesignTokens.Animation.TimerInterval;
@@ -31,13 +29,13 @@ namespace AdvancedProgramming
                 float t = Math.Min(1f, step / (float)totalSteps);
                 float eased = 1f - (1f - t) * (1f - t);
                 int x = startX + (int)((targetX - startX) * eased);
-                page.Location = new Point(x, targetY);
+                form.Location = new Point(x, targetY);
 
                 if (step >= totalSteps)
                 {
                     timer.Stop();
                     timer.Dispose();
-                    page.Location = new Point(targetX, targetY);
+                    form.Location = new Point(targetX, targetY);
                     onComplete?.Invoke();
                 }
             };

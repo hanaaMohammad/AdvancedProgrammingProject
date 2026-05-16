@@ -18,6 +18,7 @@ namespace AdvancedProgramming
         {
             Dock = DockStyle.Fill;
             Visible = false;
+            Enabled = false;
             Tag = "NoTheme";
             UpdateOverlayColor();
 
@@ -82,15 +83,17 @@ namespace AdvancedProgramming
             spinnerFrame = 0;
             spinnerLabel.Text = SpinnerFrames[0];
             spinnerTimer.Start();
-            BringToFront();
-            Visible = true;
             Enabled = true;
+            Visible = true;
+            BringToFront();
         }
 
         public void HideOverlay()
         {
             spinnerTimer.Stop();
             Visible = false;
+            Enabled = false;
+            SendToBack();
         }
 
         protected override void Dispose(bool disposing)

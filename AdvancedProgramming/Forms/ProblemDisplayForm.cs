@@ -6,12 +6,8 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Forms
 {
-    public class ProblemDisplayForm : UserControl
+    public class ProblemDisplayForm : AppForm
     {
-        public event EventHandler SolveRequested;
-        public event EventHandler BackRequested;
-        public event EventHandler HomeRequested;
-
         private const int SideMargin = 40;
         private const int HeaderTop = CatalogUi.ContentTop;
 
@@ -35,11 +31,11 @@ namespace AdvancedProgramming.Forms
         private bool solutionVisible;
         private int selectedTab;
 
+        private readonly string problemName;
+
         public ProblemDisplayForm(string problemName)
         {
-            Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            CatalogUi.EnableDoubleBuffer(this);
-            DoubleBuffered = true;
+            this.problemName = problemName;
             InitializeComponent(problemName);
         }
 
@@ -67,8 +63,8 @@ namespace AdvancedProgramming.Forms
             Controls.Add(toolbar);
 
             var (btnBack, btnHome) = PageBackButton.Create(
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
-                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+                (s, e) => GoBack(),
+                (s, e) => GoAppHome());
             Controls.Add(btnBack);
             Controls.Add(btnHome);
             btnBack.BringToFront();
@@ -265,7 +261,7 @@ namespace AdvancedProgramming.Forms
 
             string solveText = isAvailable ? "Solve \u2192" : "Coming Soon";
             EventHandler onSolve = isAvailable
-                ? (EventHandler)((s, e) => SolveRequested?.Invoke(this, EventArgs.Empty))
+                ? (EventHandler)((s, e) => ShowScreen(new SubmitForm(problemName)))
                 : null;
             var solvePill = CatalogUi.CreateActionPill(solveText, isAvailable, levelAccent, onSolve);
             solvePill.Name = "solvePill";

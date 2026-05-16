@@ -9,11 +9,8 @@ using AdvancedProgramming.ProblemClasses;
 
 namespace AdvancedProgramming.Forms
 {
-    public class LevelProblemForm : UserControl
+    public class LevelProblemForm : AppForm
     {
-        public event EventHandler<string> ProblemSelected;
-        public event EventHandler ProfileRequested;
-
         private Toolbar toolbar;
         private FlowLayoutPanel cardPanel;
         private TextBox searchBox;
@@ -22,10 +19,15 @@ namespace AdvancedProgramming.Forms
 
         public LevelProblemForm()
         {
-            this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
-            this.DoubleBuffered = true;
-
             InitializeComponent();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+                return true;
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void InitializeComponent()
@@ -40,7 +42,7 @@ namespace AdvancedProgramming.Forms
             toolbar.CloseRequested += (s, e) => Application.Exit();
 
             PageBackButton.AddProfile(this,
-                (s, e) => ProfileRequested?.Invoke(this, EventArgs.Empty));
+                (s, e) => ShowScreen(new UserForm()));
 
             int cx = this.Width / 2;
 
@@ -260,7 +262,8 @@ namespace AdvancedProgramming.Forms
             {
                 EventHandler clickHandler = (s, e) =>
                 {
-                    ProblemSelected?.Invoke(this, selectedTitle);
+                    if (ProblemCatalog.IsAvailable(selectedTitle))
+                        ShowScreen(new ProblemDisplayForm(selectedTitle));
                 };
 
                 card.Click += clickHandler;
