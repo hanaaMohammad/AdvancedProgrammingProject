@@ -16,14 +16,14 @@ namespace AdvancedProgramming.Components
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            e.Graphics.Clear(CatalogUi.InsetBack);
+            e.Graphics.Clear(AppColors.InsetBack);
 
             int startX = Width / 2;
             int startY = 10;
             const int starSize = 20;
 
-            using (var fill = new SolidBrush(Theme.Current.AccentColor))
-            using (var outline = new Pen(Theme.Current.AccentColor))
+            using (var fill = new SolidBrush(AppColors.Accent))
+            using (var outline = new Pen(AppColors.Accent))
             {
                 for (int row = 0; row < 5; row++)
                 {
@@ -39,12 +39,6 @@ namespace AdvancedProgramming.Components
                     }
                 }
             }
-        }
-
-        protected override void OnBackColorChanged(EventArgs e)
-        {
-            base.OnBackColorChanged(e);
-            Invalidate();
         }
     }
 }

@@ -1,19 +1,16 @@
 using AdvancedProgramming.Components;
-using AdvancedProgramming.Forms;
 using AdvancedProgramming.Session;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace AdvancedProgramming
+namespace AdvancedProgramming.Forms
 {
     public class SignUpForm : AppForm
     {
         private const int CardWidth = 420;
 
         private Toolbar toolbar;
-        private Button btnBack;
-        private Button btnHome;
         private Panel formCard;
         private Panel fieldsScroll;
         private TextBox userNameTextBox;
@@ -28,7 +25,7 @@ namespace AdvancedProgramming
         private Panel signUpPill;
         private bool passwordVisible;
         private bool confirmPasswordVisible;
-        private readonly UserManagement userManager = new UserManagement();
+        private UserManagement userManager = new UserManagement();
 
         public SignUpForm()
         {
@@ -37,37 +34,43 @@ namespace AdvancedProgramming
 
         private void InitializeComponent()
         {
-            var accent = Theme.Current.AccentColor;
-            BackColor = CatalogUi.PageBack;
-            SuspendLayout();
+            Color accent = AppColors.Accent;
+            int centerX = AppSizes.FormWidth / 2;
 
             toolbar = new Toolbar(this, "Sign Up");
             toolbar.CloseRequested += (s, e) => Application.Exit();
             Controls.Add(toolbar);
 
-            (btnBack, btnHome) = PageBackButton.Create(
-                (s, e) => GoBack(),
-                (s, e) => GoStartup());
+            Button btnBack = MakeNavButton("\u2190 Back", 16, BackButton_Click);
+            Button btnHome = MakeNavButton("Home", 104, HomeButton_Click);
             Controls.Add(btnBack);
             Controls.Add(btnHome);
             btnBack.BringToFront();
             btnHome.BringToFront();
 
-            formCard = CatalogUi.CreateCard(Color.FromArgb(50, accent), 20);
-            BuildFormCard();
+            formCard = UiHelper.CreateCard(Color.FromArgb(50, accent), 20);
             Controls.Add(formCard);
 
-            signUpPill = CatalogUi.CreateActionPill(
-                "Sign Up \u2192",
-                true,
-                accent,
-                (s, e) => SignUpButton_Click(s, e));
+            signUpPill = UiHelper.CreateActionPill("Sign Up \u2192", true, accent, SignUpButton_Click);
             Controls.Add(signUpPill);
 
-            FormAccessibility.SetShortcutHint(btnBack, "Esc", "Go back");
+            BuildFormCard();
 
-            ResumeLayout(false);
-            ApplyLayout();
+            int cardY = AppSizes.ContentTop;
+            int cardH = 620;
+            formCard.SetBounds(centerX - CardWidth / 2, cardY, CardWidth, cardH);
+            fieldsScroll.SetBounds(28, 82, CardWidth - 56, cardH - 100);
+            signUpPill.Location = new Point(centerX - signUpPill.Width / 2, cardY + cardH + 16);
+        }
+
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void HomeButton_Click(object sender, EventArgs e)
+        {
+            ShowAsMainForm(new StartupForm());
         }
 
         private void BuildFormCard()
@@ -80,18 +83,16 @@ namespace AdvancedProgramming
                 Location = new Point(28, 20),
                 Size = new Size(CardWidth - 56, 30),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             });
 
             formCard.Controls.Add(new Label
             {
                 Text = "Join MiniCamp and start solving puzzles",
                 Font = new Font("Segoe UI", 10),
-                ForeColor = CatalogUi.MutedText,
+                ForeColor = AppColors.MutedText,
                 Location = new Point(28, 52),
                 Size = new Size(CardWidth - 56, 20),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             });
 
             fieldsScroll = new Panel
@@ -99,19 +100,16 @@ namespace AdvancedProgramming
                 Location = new Point(28, 82),
                 AutoScroll = true,
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             };
 
             int y = 0;
             int w = CardWidth - 56;
 
-            CatalogUi.AddFormField(fieldsScroll, ref y, "Username", w, out userNameTextBox);
-            CatalogUi.AddPasswordField(fieldsScroll, ref y, "Password", w, out passwordTextBox, out passwordToggle);
-            passwordToggle.Click += (s, e) =>
-                CatalogUi.TogglePasswordVisibility(passwordTextBox, passwordToggle, ref passwordVisible);
-            CatalogUi.AddPasswordField(fieldsScroll, ref y, "Confirm Password", w, out confirmPasswordTextBox, out confirmPasswordToggle);
-            confirmPasswordToggle.Click += (s, e) =>
-                CatalogUi.TogglePasswordVisibility(confirmPasswordTextBox, confirmPasswordToggle, ref confirmPasswordVisible);
+            UiHelper.AddFormField(fieldsScroll, ref y, "Username", w, out userNameTextBox, 36);
+            UiHelper.AddPasswordField(fieldsScroll, ref y, "Password", w, out passwordTextBox, out passwordToggle, 36);
+            passwordToggle.Click += PasswordToggle_Click;
+            UiHelper.AddPasswordField(fieldsScroll, ref y, "Confirm Password", w, out confirmPasswordTextBox, out confirmPasswordToggle, 36);
+            confirmPasswordToggle.Click += ConfirmPasswordToggle_Click;
 
             y = AddComboField(fieldsScroll, y, "Country", w, out countryCombo);
             countryCombo.Items.AddRange(new object[] { "Palestine", "Jordan", "Lebanon", "Egypt", "US", "UK" });
@@ -125,16 +123,25 @@ namespace AdvancedProgramming
                 Size = new Size(w, 28),
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Segoe UI", 9),
-                ForeColor = Theme.Current.ErrorColor,
+                ForeColor = AppColors.Error,
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             };
             fieldsScroll.Controls.Add(messageLabel);
 
             formCard.Controls.Add(fieldsScroll);
         }
 
-        private static int AddComboField(Panel parent, int y, string label, int width, out ComboBox combo)
+        private void PasswordToggle_Click(object sender, EventArgs e)
+        {
+            UiHelper.TogglePasswordVisibility(passwordTextBox, passwordToggle, ref passwordVisible);
+        }
+
+        private void ConfirmPasswordToggle_Click(object sender, EventArgs e)
+        {
+            UiHelper.TogglePasswordVisibility(confirmPasswordTextBox, confirmPasswordToggle, ref confirmPasswordVisible);
+        }
+
+        private int AddComboField(Panel parent, int y, string label, int width, out ComboBox combo)
         {
             int blockH = 22 + 8 + 36;
             var block = new Panel
@@ -142,23 +149,20 @@ namespace AdvancedProgramming
                 Location = new Point(0, y),
                 Size = new Size(width, blockH),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             };
-            CatalogUi.EnableDoubleBuffer(block);
             block.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
-                CatalogUi.PaintInset(e.Graphics, inset, 10);
+                UiHelper.PaintInset(e.Graphics, inset, 10);
             };
             block.Controls.Add(new Label
             {
                 Text = label,
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                ForeColor = CatalogUi.MutedText,
+                ForeColor = AppColors.MutedText,
                 Location = new Point(0, 0),
                 Size = new Size(width, 18),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             });
             combo = new ComboBox
             {
@@ -166,17 +170,16 @@ namespace AdvancedProgramming
                 FlatStyle = FlatStyle.Flat,
                 Size = new Size(width - 20, 28),
                 Location = new Point(10, 30),
-                BackColor = CatalogUi.InsetBack,
+                BackColor = AppColors.InsetBack,
                 ForeColor = Color.White,
                 Font = new Font("Segoe UI", 11),
-                Tag = "NoTheme",
             };
             block.Controls.Add(combo);
             parent.Controls.Add(block);
             return y + blockH + 14;
         }
 
-        private static int AddGenderField(Panel parent, int y, int width, out RadioButton male, out RadioButton female)
+        private int AddGenderField(Panel parent, int y, int width, out RadioButton male, out RadioButton female)
         {
             int blockH = 22 + 8 + 40;
             var block = new Panel
@@ -184,23 +187,20 @@ namespace AdvancedProgramming
                 Location = new Point(0, y),
                 Size = new Size(width, blockH),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             };
-            CatalogUi.EnableDoubleBuffer(block);
             block.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
-                CatalogUi.PaintInset(e.Graphics, inset, 10);
+                UiHelper.PaintInset(e.Graphics, inset, 10);
             };
             block.Controls.Add(new Label
             {
                 Text = "Gender",
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                ForeColor = CatalogUi.MutedText,
+                ForeColor = AppColors.MutedText,
                 Location = new Point(0, 0),
                 Size = new Size(width, 18),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             });
 
             var host = new Panel
@@ -208,7 +208,6 @@ namespace AdvancedProgramming
                 Location = new Point(10, 30),
                 Size = new Size(width - 20, 32),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             };
 
             male = new RadioButton
@@ -219,7 +218,6 @@ namespace AdvancedProgramming
                 ForeColor = Color.White,
                 BackColor = Color.Transparent,
                 Checked = true,
-                Tag = "NoTheme",
             };
             female = new RadioButton
             {
@@ -228,7 +226,6 @@ namespace AdvancedProgramming
                 AutoSize = true,
                 ForeColor = Color.White,
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             };
             host.Controls.Add(male);
             host.Controls.Add(female);
@@ -241,7 +238,7 @@ namespace AdvancedProgramming
         private void SignUpButton_Click(object sender, EventArgs e)
         {
             messageLabel.Text = "";
-            messageLabel.ForeColor = Theme.Current.ErrorColor;
+            messageLabel.ForeColor = AppColors.Error;
 
             string username = userNameTextBox.Text.Trim();
             string password = passwordTextBox.Text;
@@ -277,7 +274,7 @@ namespace AdvancedProgramming
 
             if (userManager.SignUp(username, password, country, gender))
             {
-                messageLabel.ForeColor = Theme.Current.SuccessColor;
+                messageLabel.ForeColor = AppColors.Success;
                 messageLabel.Text = "Account created successfully!";
                 userNameTextBox.Text = "";
                 passwordTextBox.Text = "";
@@ -286,28 +283,8 @@ namespace AdvancedProgramming
                 CurrentUser.Country = country;
                 CurrentUser.Gender = gender;
                 CurrentUser.Score = 0;
-                AfterLogin();
+                ShowAsMainForm(new LevelProblemForm());
             }
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            ApplyLayout();
-        }
-
-        private void ApplyLayout()
-        {
-            if (formCard == null)
-                return;
-
-            int cx = Width / 2;
-            int cardY = CatalogUi.ContentTop;
-            int cardH = Math.Max(420, Height - cardY - 80);
-            formCard.SetBounds(cx - CardWidth / 2, cardY, CardWidth, cardH);
-
-            fieldsScroll.SetBounds(28, 82, CardWidth - 56, cardH - 100);
-            signUpPill.Location = new Point(cx - signUpPill.Width / 2, formCard.Bottom + 16);
         }
     }
 }

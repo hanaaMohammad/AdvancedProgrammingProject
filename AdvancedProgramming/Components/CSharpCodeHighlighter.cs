@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Components
 {
+    // Colors keywords in the solution text box.
     public static class CSharpCodeHighlighter
     {
         private static readonly HashSet<string> Keywords = new HashSet<string>(StringComparer.Ordinal)
@@ -17,11 +18,6 @@ namespace AdvancedProgramming.Components
             "readonly", "const", "new", "true", "false", "null", "this", "base", "in", "out",
         };
 
-        private static readonly HashSet<string> Types = new HashSet<string>(StringComparer.Ordinal)
-        {
-            "Console", "Program", "String", "Int32", "Boolean", "Math",
-        };
-
         public static void Apply(RichTextBox box, string code)
         {
             if (box == null)
@@ -31,14 +27,12 @@ namespace AdvancedProgramming.Components
 
             box.ReadOnly = false;
             box.Clear();
-            box.Font = DesignTokens.Typography.Code;
-            box.BackColor = Theme.Current.InputBackColor;
-            box.ForeColor = Theme.Current.TextColor;
+            box.Font = new Font("Consolas", 10);
+            box.BackColor = AppColors.InsetBack;
+            box.ForeColor = AppColors.Text;
             box.BorderStyle = BorderStyle.FixedSingle;
             box.WordWrap = true;
             box.ScrollBars = RichTextBoxScrollBars.None;
-            box.DetectUrls = false;
-            box.ShortcutsEnabled = true;
 
             if (string.IsNullOrEmpty(normalized))
             {
@@ -46,7 +40,6 @@ namespace AdvancedProgramming.Components
                 return;
             }
 
-            Color defaultColor = Theme.Current.TextColor;
             Color keywordColor = Color.FromArgb(86, 156, 214);
             Color typeColor = Color.FromArgb(78, 201, 176);
             Color stringColor = Color.FromArgb(206, 145, 120);
@@ -60,17 +53,17 @@ namespace AdvancedProgramming.Components
             foreach (Match match in tokenPattern.Matches(normalized))
             {
                 string token = match.Value;
-                Color color = defaultColor;
+                Color color = AppColors.Text;
 
                 if (token.StartsWith("//", StringComparison.Ordinal))
                     color = commentColor;
                 else if (token.StartsWith("\"", StringComparison.Ordinal) || token.StartsWith("'", StringComparison.Ordinal))
                     color = stringColor;
-                else if (Regex.IsMatch(token, @"^\d"))
+                else if (char.IsDigit(token[0]))
                     color = numberColor;
                 else if (Keywords.Contains(token))
                     color = keywordColor;
-                else if (Types.Contains(token) || (token.Length > 0 && char.IsUpper(token[0])))
+                else if (token.Length > 0 && char.IsUpper(token[0]))
                     color = typeColor;
 
                 box.SelectionColor = color;

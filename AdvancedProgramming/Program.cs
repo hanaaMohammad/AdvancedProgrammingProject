@@ -13,10 +13,10 @@ namespace AdvancedProgramming
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var context = new ApplicationContext();
-            AppForm.AppContext = context;
-            context.MainForm = new StartupForm { AnimateOnShow = false };
-            Application.Run(context);
+            var appContext = new ApplicationContext();
+            AppForm.AppContext = appContext;
+            appContext.MainForm = new StartupForm();
+            Application.Run(appContext);
         }
     }
 }

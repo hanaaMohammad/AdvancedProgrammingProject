@@ -107,10 +107,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeRun\CSharpExecutor.cs" />
+    <Compile Include="AppColors.cs" />
+    <Compile Include="AppSizes.cs" />
     <Compile Include="Components\CSharpCodeHighlighter.cs" />
-    <Compile Include="Components\CatalogUi.cs" />
-    <Compile Include="Components\GraphicsHelper.cs" />
-    <Compile Include="Components\PageBackButton.cs" />
+    <Compile Include="Components\UiHelper.cs" />
     <Compile Include="Components\PanelStars.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -158,17 +158,10 @@
     </Compile>
     <Compile Include="Service\CodeRunner.cs" />
     <Compile Include="Session\CurrentUser.cs" />
-    <Compile Include="Theme\DarkTheme.cs" />
     <Compile Include="Theme\Theme.cs" />
-    <Compile Include="Theme\DesignTokens.cs" />
     <Compile Include="Components\Toolbar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Components\LoadingOverlay.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Components\FormAccessibility.cs" />
-    <Compile Include="Components\PageTransition.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Forms\SignUpForm.cs">
       <SubType>Form</SubType>

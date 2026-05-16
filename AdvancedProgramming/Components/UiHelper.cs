@@ -5,26 +5,15 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Components
 {
-    public static class CatalogUi
+    // Small helpers to draw rounded cards and buttons (same look as before).
+    public static class UiHelper
     {
-        public const int ToolbarHeight = 52;
-        public const int NavBarTop = 56;
-        public const int NavBarHeight = 32;
-        public const int ContentTop = NavBarTop + NavBarHeight + 12;
-
-        public static readonly Color PageBack = Color.FromArgb(7, 11, 20);
-        public static readonly Color CardTop = Color.FromArgb(20, 28, 45);
-        public static readonly Color CardBottom = Color.FromArgb(17, 24, 39);
-        public static readonly Color InsetBack = Color.FromArgb(12, 18, 32);
-        public static readonly Color MutedText = Color.FromArgb(180, 180, 180);
-        public static readonly Color DefaultBorder = Color.FromArgb(40, 55, 75);
-
-        public static void PaintCard(Graphics g, Rectangle bounds, Color borderAccent, int radius = 20)
+        public static void PaintCard(Graphics g, Rectangle bounds, Color borderAccent, int radius)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
             var rect = new Rectangle(bounds.X, bounds.Y, bounds.Width - 1, bounds.Height - 1);
-            using (var path = GraphicsHelper.RoundedRect(rect, radius))
-            using (var brush = new LinearGradientBrush(rect, CardTop, CardBottom, 90f))
+            using (var path = RoundedRect(rect, radius))
+            using (var brush = new LinearGradientBrush(rect, AppColors.CardTop, AppColors.CardBottom, 90f))
             using (var pen = new Pen(borderAccent, 2))
             {
                 g.FillPath(brush, path);
@@ -32,12 +21,17 @@ namespace AdvancedProgramming.Components
             }
         }
 
-        public static void PaintInset(Graphics g, Rectangle bounds, int radius = 12)
+        public static void PaintInset(Graphics g, Rectangle bounds)
+        {
+            PaintInset(g, bounds, 12);
+        }
+
+        public static void PaintInset(Graphics g, Rectangle bounds, int radius)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
             var rect = new Rectangle(bounds.X, bounds.Y, bounds.Width - 1, bounds.Height - 1);
-            using (var path = GraphicsHelper.RoundedRect(rect, radius))
-            using (var brush = new SolidBrush(InsetBack))
+            using (var path = RoundedRect(rect, radius))
+            using (var brush = new SolidBrush(AppColors.InsetBack))
             using (var pen = new Pen(Color.FromArgb(35, 48, 70), 1f))
             {
                 g.FillPath(brush, path);
@@ -45,34 +39,36 @@ namespace AdvancedProgramming.Components
             }
         }
 
-        public static Panel CreateCard(Color borderAccent, int radius = 20)
+        public static Panel CreateCard(Color borderAccent, int radius)
         {
-            var card = new Panel
-            {
-                BackColor = Color.Transparent,
-                Tag = "NoTheme",
-            };
-            EnableDoubleBuffer(card);
+            var card = new Panel { BackColor = Color.Transparent };
             var accent = borderAccent;
             card.Paint += (s, e) => PaintCard(e.Graphics, card.ClientRectangle, accent, radius);
             card.Resize += (s, e) => card.Invalidate();
             return card;
         }
 
+        public static Label CreateTypeChip(string type)
+        {
+            return new Label
+            {
+                Text = type ?? "",
+                AutoSize = true,
+                Font = new Font("Segoe UI", 9),
+                ForeColor = AppColors.MutedText,
+                BackColor = Color.Transparent,
+            };
+        }
+
         public static Panel CreateBadge(string level)
         {
             Color color = Theme.GetLevelColor(level);
-            var badge = new Panel
-            {
-                Size = new Size(80, 28),
-                BackColor = Color.Transparent,
-                Tag = "NoTheme",
-            };
+            var badge = new Panel { Size = new Size(80, 28), BackColor = Color.Transparent };
             badge.Paint += (s, e) =>
             {
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
                 var rect = new Rectangle(0, 0, badge.Width - 1, badge.Height - 1);
-                using (var path = GraphicsHelper.RoundedRect(rect, 14))
+                using (var path = RoundedRect(rect, 14))
                 using (var brush = new SolidBrush(color))
                     e.Graphics.FillPath(brush, path);
             };
@@ -84,22 +80,8 @@ namespace AdvancedProgramming.Components
                 Font = new Font("Segoe UI", 8, FontStyle.Bold),
                 ForeColor = Color.White,
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             });
             return badge;
-        }
-
-        public static Label CreateTypeChip(string type)
-        {
-            return new Label
-            {
-                Text = type ?? "",
-                AutoSize = true,
-                Font = new Font("Segoe UI", 9),
-                ForeColor = MutedText,
-                BackColor = Color.Transparent,
-                Tag = "NoTheme",
-            };
         }
 
         public static Panel CreateTabPill(string text, bool selected, Color accent)
@@ -111,17 +93,15 @@ namespace AdvancedProgramming.Components
                 Cursor = Cursors.Hand,
                 Tag = selected,
             };
-            EnableDoubleBuffer(pill);
-            var accentColor = accent;
             pill.Paint += (s, e) =>
             {
                 bool on = (bool)pill.Tag;
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
                 var rect = new Rectangle(0, 0, pill.Width - 1, pill.Height - 1);
-                using (var path = GraphicsHelper.RoundedRect(rect, 14))
+                using (var path = RoundedRect(rect, 14))
                 {
                     Color fill = on ? Color.FromArgb(28, 42, 62) : Color.FromArgb(16, 22, 38);
-                    Color border = on ? Color.FromArgb(100, accentColor) : Color.FromArgb(45, 58, 80);
+                    Color border = on ? Color.FromArgb(100, accent) : Color.FromArgb(45, 58, 80);
                     using (var brush = new SolidBrush(fill))
                     using (var pen = new Pen(border, on ? 2f : 1f))
                     {
@@ -136,9 +116,8 @@ namespace AdvancedProgramming.Components
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Segoe UI", 10, selected ? FontStyle.Bold : FontStyle.Regular),
-                ForeColor = selected ? Color.White : MutedText,
+                ForeColor = selected ? Color.White : AppColors.MutedText,
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             });
             return pill;
         }
@@ -150,7 +129,7 @@ namespace AdvancedProgramming.Components
             if (pill.Controls.Count > 0 && pill.Controls[0] is Label lbl)
             {
                 lbl.Font = new Font("Segoe UI", 10, selected ? FontStyle.Bold : FontStyle.Regular);
-                lbl.ForeColor = selected ? Color.White : MutedText;
+                lbl.ForeColor = selected ? Color.White : AppColors.MutedText;
             }
         }
 
@@ -158,17 +137,12 @@ namespace AdvancedProgramming.Components
         {
             var font = new Font("Segoe UI", 8, FontStyle.Bold);
             int w = Math.Max(72, TextRenderer.MeasureText(text, font).Width + 24);
-            var pill = new Panel
-            {
-                Size = new Size(w, 26),
-                BackColor = Color.Transparent,
-                Tag = "NoTheme",
-            };
+            var pill = new Panel { Size = new Size(w, 26), BackColor = Color.Transparent };
             pill.Paint += (s, e) =>
             {
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
                 var rect = new Rectangle(0, 0, pill.Width - 1, pill.Height - 1);
-                using (var path = GraphicsHelper.RoundedRect(rect, 12))
+                using (var path = RoundedRect(rect, 12))
                 using (var brush = new SolidBrush(Color.FromArgb(40, accent)))
                 using (var pen = new Pen(Color.FromArgb(120, accent), 1.5f))
                 {
@@ -184,12 +158,11 @@ namespace AdvancedProgramming.Components
                 Font = font,
                 ForeColor = accent,
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             });
             return pill;
         }
 
-        public static Panel CreateActionPill(string text, bool enabled, Color accent, EventHandler onClick = null)
+        public static Panel CreateActionPill(string text, bool enabled, Color accent, EventHandler onClick)
         {
             var font = new Font("Segoe UI", 10, FontStyle.Bold);
             int w = Math.Max(120, TextRenderer.MeasureText(text, font).Width + 36);
@@ -206,14 +179,13 @@ namespace AdvancedProgramming.Components
                 Cursor = enabled ? Cursors.Hand : Cursors.Default,
                 Tag = false,
             };
-            EnableDoubleBuffer(pill);
 
             pill.Paint += (s, e) =>
             {
                 bool hover = enabled && (bool)pill.Tag;
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
                 var rect = new Rectangle(0, 0, pill.Width - 1, pill.Height - 1);
-                using (var path = GraphicsHelper.RoundedRect(rect, 16))
+                using (var path = RoundedRect(rect, 16))
                 using (var brush = new SolidBrush(hover ? hoverFill : normalFill))
                 using (var pen = new Pen(hover ? hoverBorder : normalBorder, 1.5f))
                 {
@@ -230,19 +202,17 @@ namespace AdvancedProgramming.Components
                 Font = font,
                 ForeColor = enabled ? Color.FromArgb(220, 255, 240) : Color.FromArgb(120, 135, 155),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
                 Cursor = pill.Cursor,
             };
             pill.Controls.Add(label);
 
-            void WireHover(Control c)
+            if (enabled)
             {
-                if (!enabled) return;
-                c.MouseEnter += (s, e) => { pill.Tag = true; pill.Invalidate(); };
-                c.MouseLeave += (s, e) => { pill.Tag = false; pill.Invalidate(); };
+                pill.MouseEnter += (s, e) => { pill.Tag = true; pill.Invalidate(); };
+                pill.MouseLeave += (s, e) => { pill.Tag = false; pill.Invalidate(); };
+                label.MouseEnter += (s, e) => { pill.Tag = true; pill.Invalidate(); };
+                label.MouseLeave += (s, e) => { pill.Tag = false; pill.Invalidate(); };
             }
-            WireHover(pill);
-            WireHover(label);
 
             if (enabled && onClick != null)
             {
@@ -253,21 +223,20 @@ namespace AdvancedProgramming.Components
             return pill;
         }
 
-        public static TextBox CreateInput(int width, int height = 36, bool password = false)
+        public static TextBox CreateInput(int width, int height, bool password)
         {
             return new TextBox
             {
                 Size = new Size(width, height),
                 BorderStyle = BorderStyle.None,
-                BackColor = InsetBack,
+                BackColor = AppColors.InsetBack,
                 ForeColor = Color.White,
                 Font = new Font("Segoe UI", 11),
                 PasswordChar = password ? '*' : '\0',
-                Tag = "NoTheme",
             };
         }
 
-        public static int AddFormField(Panel parent, ref int y, string label, int width, out TextBox input, int height = 36)
+        public static int AddFormField(Panel parent, ref int y, string label, int width, out TextBox input, int height)
         {
             int blockH = 22 + 8 + height;
             var block = new Panel
@@ -275,9 +244,7 @@ namespace AdvancedProgramming.Components
                 Location = new Point(0, y),
                 Size = new Size(width, blockH),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             };
-            EnableDoubleBuffer(block);
             block.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
@@ -287,13 +254,12 @@ namespace AdvancedProgramming.Components
             {
                 Text = label,
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                ForeColor = MutedText,
+                ForeColor = AppColors.MutedText,
                 Location = new Point(0, 0),
                 Size = new Size(width, 18),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             });
-            input = CreateInput(width - 20, height);
+            input = CreateInput(width - 20, height, false);
             input.Location = new Point(10, 30);
             block.Controls.Add(input);
             parent.Controls.Add(block);
@@ -301,7 +267,7 @@ namespace AdvancedProgramming.Components
             return y;
         }
 
-        public static int AddPasswordField(Panel parent, ref int y, string label, int width, out TextBox input, out Label toggle, int height = 36)
+        public static int AddPasswordField(Panel parent, ref int y, string label, int width, out TextBox input, out Label toggle, int height)
         {
             int blockH = 22 + 8 + height;
             var block = new Panel
@@ -309,9 +275,7 @@ namespace AdvancedProgramming.Components
                 Location = new Point(0, y),
                 Size = new Size(width, blockH),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             };
-            EnableDoubleBuffer(block);
             block.Paint += (s, e) =>
             {
                 var inset = new Rectangle(0, 22, block.Width, block.Height - 22);
@@ -321,13 +285,12 @@ namespace AdvancedProgramming.Components
             {
                 Text = label,
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                ForeColor = MutedText,
+                ForeColor = AppColors.MutedText,
                 Location = new Point(0, 0),
                 Size = new Size(width, 18),
                 BackColor = Color.Transparent,
-                Tag = "NoTheme",
             });
-            input = CreateInput(width - 56, height, password: true);
+            input = CreateInput(width - 56, height, true);
             input.Location = new Point(10, 30);
             toggle = new Label
             {
@@ -336,10 +299,9 @@ namespace AdvancedProgramming.Components
                 Location = new Point(width - 40, 30),
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Segoe UI", 11),
-                ForeColor = MutedText,
+                ForeColor = AppColors.MutedText,
                 BackColor = Color.Transparent,
                 Cursor = Cursors.Hand,
-                Tag = "NoTheme",
             };
             block.Controls.Add(input);
             block.Controls.Add(toggle);
@@ -355,16 +317,16 @@ namespace AdvancedProgramming.Components
             toggle.Text = visible ? "\U0001f648" : "\U0001f441";
         }
 
-        public static void EnableDoubleBuffer(Control control)
+        public static GraphicsPath RoundedRect(Rectangle bounds, int radius)
         {
-            typeof(Control).InvokeMember(
-                "DoubleBuffered",
-                System.Reflection.BindingFlags.SetProperty |
-                System.Reflection.BindingFlags.Instance |
-                System.Reflection.BindingFlags.NonPublic,
-                null,
-                control,
-                new object[] { true });
+            int d = radius * 2;
+            var path = new GraphicsPath();
+            path.AddArc(bounds.X, bounds.Y, d, d, 180, 90);
+            path.AddArc(bounds.Right - d, bounds.Y, d, d, 270, 90);
+            path.AddArc(bounds.Right - d, bounds.Bottom - d, d, d, 0, 90);
+            path.AddArc(bounds.X, bounds.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+            return path;
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using AdvancedProgramming.Components;
-
+using AdvancedProgramming;
 
 namespace AdvancedProgramming.Forms
 {
@@ -11,67 +10,79 @@ namespace AdvancedProgramming.Forms
         public event EventHandler BackRequested;
         public event EventHandler HomeRequested;
 
-        private Toolbar toolbar;
-
         public AcceptedForm()
         {
-            this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
+            Size = new Size(AppSizes.FormWidth, AppSizes.FormHeight);
+            BackColor = AppColors.PageBack;
             InitializeComponent();
-            toolbar.CloseRequested += (s, e) => Application.Exit();
         }
 
         private void InitializeComponent()
         {
-            int cx = this.Width / 2;
+            int centerX = Width / 2;
 
-            toolbar = new Toolbar(this, "MiniCamp Puzzle");
-            this.Controls.Add(toolbar);
+            Toolbar toolbar = new Toolbar(this, "MiniCamp Puzzle");
+            Controls.Add(toolbar);
+            toolbar.CloseRequested += (s, e) => Application.Exit();
 
-            var (btnBack, btnHome) = PageBackButton.Create(
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
-                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+            Button btnBack = new Button
+            {
+                Text = "\u2190 Back",
+                Location = new Point(16, AppSizes.NavTop),
+                Size = new Size(80, AppSizes.NavHeight),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent,
+                ForeColor = AppColors.Text,
+            };
+            btnBack.FlatAppearance.BorderSize = 0;
+            btnBack.Click += (s, e) => BackRequested?.Invoke(this, EventArgs.Empty);
 
-            var iconLabel = new Label
+            Button btnHome = new Button
+            {
+                Text = "Home",
+                Location = new Point(104, AppSizes.NavTop),
+                Size = new Size(80, AppSizes.NavHeight),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent,
+                ForeColor = AppColors.Text,
+            };
+            btnHome.FlatAppearance.BorderSize = 0;
+            btnHome.Click += (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty);
+
+            Controls.Add(new Label
             {
                 Text = "\u2705",
-                Font = new Font("Segoe UI", 72F, FontStyle.Regular),
-                AutoSize = false,
+                Font = new Font("Segoe UI", 72),
                 Size = new Size(120, 120),
-                Location = new Point(cx - 60, 140),
+                Location = new Point(centerX - 60, 140),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.Transparent,
-            };
+            });
 
-            var titleLabel = new Label
+            Controls.Add(new Label
             {
                 Text = "All Tests Passed",
-                Font = DesignTokens.Typography.DisplaySmall,
-                AutoSize = false,
+                Font = new Font("Segoe UI", 22, FontStyle.Bold),
+                ForeColor = AppColors.Text,
                 Size = new Size(500, 50),
-                Location = new Point(cx - 250, 280),
+                Location = new Point(centerX - 250, 280),
                 TextAlign = ContentAlignment.MiddleCenter,
-            };
+            });
 
-            var descLabel = new Label
+            Controls.Add(new Label
             {
                 Text = "Your solution passed all test cases. Great work!",
-                Font = DesignTokens.Typography.BodyLarge,
-                AutoSize = false,
+                Font = new Font("Segoe UI", 13),
+                ForeColor = AppColors.MutedText,
                 Size = new Size(500, 30),
-                Location = new Point(cx - 250, 330),
+                Location = new Point(centerX - 250, 330),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Tag = "Secondary",
-            };
+            });
 
-            this.Controls.Add(iconLabel);
-            this.Controls.Add(titleLabel);
-            this.Controls.Add(descLabel);
-            this.Controls.Add(btnBack);
-            this.Controls.Add(btnHome);
+            Controls.Add(btnBack);
+            Controls.Add(btnHome);
             btnBack.BringToFront();
             btnHome.BringToFront();
-
-            Theme.StylePage(this);
         }
     }
 }
