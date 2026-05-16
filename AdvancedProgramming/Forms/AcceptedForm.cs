@@ -20,6 +20,7 @@ namespace AdvancedProgramming.Forms
         private void InitializeComponent()
         {
             int centerX = Width / 2;
+            // نص شاشة 
 
             Toolbar toolbar = new Toolbar(this, "MiniCamp Puzzle");
             Controls.Add(toolbar);
@@ -55,6 +56,7 @@ namespace AdvancedProgramming.Forms
                 Font = new Font("Segoe UI", 72),
                 Size = new Size(120, 120),
                 Location = new Point(centerX - 60, 140),
+                //نص  هو الى بنص
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.Transparent,
             });
@@ -81,8 +83,7 @@ namespace AdvancedProgramming.Forms
 
             Controls.Add(buttonBack);
             Controls.Add(buttonHome);
-            //buttonBack.BringToFront();
-            //buttonHome.BringToFront();
+     
         }
     }
 }

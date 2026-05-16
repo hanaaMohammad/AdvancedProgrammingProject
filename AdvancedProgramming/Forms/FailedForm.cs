@@ -46,8 +46,7 @@ namespace AdvancedProgramming.Forms
             Button homeButton = MakeNavButton("Home", 104, HomeButton_Click);
             Controls.Add(backButton);
             Controls.Add(homeButton);
-            backButton.BringToFront();
-            homeButton.BringToFront();
+           
 
             HeadContent = CreateCard(Color.FromArgb(50, resultColor), 20);
             BuildHeader(passedCount);
