@@ -5,6 +5,7 @@ using AdvancedProgramming.Service;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace AdvancedProgramming.Forms
@@ -39,12 +40,7 @@ namespace AdvancedProgramming.Forms
 
             int cx = this.Width / 2;
 
-            int passedCount = 0;
-            foreach (var r in testResults)
-            {
-                if (r.Passed)
-                    passedCount++;
-            }
+            int passedCount = testResults.Count(r => r.Passed);
 
             string icon = passedCount == testResults.Count ? "\u2705" : "\u274c";
             Color headerColor = passedCount == testResults.Count ? Theme.Current.SuccessColor : Theme.Current.ErrorColor;
@@ -98,8 +94,7 @@ namespace AdvancedProgramming.Forms
 
         private void LoadProblem(string name)
         {
-            var loader = new ProblemLoadReadJs();
-            var problem = loader.getProblemByName(name);
+            var problem = ProblemLoadReadJs.GetByName(name);
             var testCases = problem?.TestCase ?? new List<TestCase>();
 
             if (testCases.Count == 0)

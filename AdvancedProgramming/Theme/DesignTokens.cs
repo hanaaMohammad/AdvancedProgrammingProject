@@ -49,16 +49,6 @@ namespace AdvancedProgramming
             public static readonly Font CodeSmall = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
         }
 
-        public static class BorderRadius
-        {
-            public const int Sm = 4;
-            public const int Md = 8;
-            public const int Lg = 12;
-            public const int Xl = 16;
-            public const int Round = 24;
-            public const int Circle = 999;
-        }
-
         public static class Animation
         {
             public const int FastMs = 150;
@@ -67,9 +57,5 @@ namespace AdvancedProgramming
             public const int TimerInterval = 16;
         }
 
-        public const int DefaultPadding = 16;
-        public const int FormPadding = 32;
-        public const int SectionGap = 24;
-        public const int ControlGap = 12;
     }
 }

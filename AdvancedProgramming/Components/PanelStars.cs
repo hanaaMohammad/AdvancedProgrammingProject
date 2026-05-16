@@ -6,64 +6,36 @@ namespace AdvancedProgramming.Components
 {
     public class PanelStars : Panel
     {
-        private Point[] star;
-
-        public PanelStars()
+        private static readonly Point[] StarShape =
         {
-            InitializeStar();
-        }
-
-        private void InitializeStar()
-        {
-            star = new Point[]
-            {
-                new Point(0, -15),
-                new Point(4, -5),
-                new Point(15, -5),
-                new Point(6, 2),
-                new Point(10, 13),
-                new Point(0, 7),
-                new Point(-10, 13),
-                new Point(-6, 2),
-                new Point(-15, -5),
-                new Point(-4, -5)
-            };
-        }
+            new Point(0, -15), new Point(4, -5), new Point(15, -5), new Point(6, 2),
+            new Point(10, 13), new Point(0, 7), new Point(-10, 13), new Point(-6, 2),
+            new Point(-15, -5), new Point(-4, -5)
+        };
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             e.Graphics.Clear(Theme.Current.SurfaceColor);
-            DrawTriangleStars(e.Graphics);
-        }
 
-        private void DrawTriangleStars(Graphics g)
-        {
-            int rows = 5;
-            int starSize = 20;
-            int startX = this.Width / 2;
+            int startX = Width / 2;
             int startY = 10;
+            const int starSize = 20;
 
-            using (var fillBrush = new SolidBrush(Theme.Current.AccentColor))
-            using (var outlinePen = new Pen(Theme.Current.AccentColor))
+            using (var fill = new SolidBrush(Theme.Current.AccentColor))
+            using (var outline = new Pen(Theme.Current.AccentColor))
             {
-                for (int i = 0; i < rows; i++)
+                for (int row = 0; row < 5; row++)
                 {
-                    for (int j = 0; j <= i; j++)
+                    for (int col = 0; col <= row; col++)
                     {
-                        int x = startX + (int)((j - i / 2.0) * starSize);
-                        int y = startY + i * starSize;
-
-                        Point[] copy = new Point[star.Length];
-                        for (int l = 0; l < star.Length; l++)
-                        {
-                            copy[l] = new Point(
-                                (int)(x + star[l].X),
-                                (int)(y + star[l].Y)
-                            );
-                        }
-                        g.FillPolygon(fillBrush, copy);
-                        g.DrawPolygon(outlinePen, copy);
+                        int x = startX + (int)((col - row / 2.0) * starSize);
+                        int y = startY + row * starSize;
+                        var points = new Point[StarShape.Length];
+                        for (int i = 0; i < StarShape.Length; i++)
+                            points[i] = new Point(x + StarShape[i].X, y + StarShape[i].Y);
+                        e.Graphics.FillPolygon(fill, points);
+                        e.Graphics.DrawPolygon(outline, points);
                     }
                 }
             }

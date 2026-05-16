@@ -75,12 +75,19 @@ namespace AdvancedProgramming
 
             currentPage.Select();
 
-            if (currentPage is LogInForm || currentPage is SignUpForm)
-                FormAccessibility.FocusFirstInput(currentPage);
-            else if (currentPage is SubmitForm)
-                currentPage.Controls.OfType<TextBox>().FirstOrDefault(tb => tb.Multiline)?.Focus();
-            else if (currentPage is StartupForm)
-                FormAccessibility.FocusPrimaryAction(currentPage);
+            switch (currentPage)
+            {
+                case LogInForm _:
+                case SignUpForm _:
+                    FormAccessibility.FocusFirstInput(currentPage);
+                    break;
+                case SubmitForm _:
+                    currentPage.Controls.OfType<TextBox>().FirstOrDefault(tb => tb.Multiline)?.Focus();
+                    break;
+                case StartupForm _:
+                    FormAccessibility.FocusPrimaryAction(currentPage);
+                    break;
+            }
         }
 
         private void CenterCurrentPage()

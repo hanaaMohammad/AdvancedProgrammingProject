@@ -117,7 +117,7 @@ namespace AdvancedProgramming
                 Tag = "Ghost",
             };
             passwordToggle.FlatAppearance.BorderSize = 0;
-            passwordToggle.Click += TogglePasswordVisibility;
+            passwordToggle.Click += (s, e) => TogglePassword(passwordTextBox, passwordToggle, ref passwordVisible);
 
             rowY += rowGap;
             var confirmLabel = new Label
@@ -144,7 +144,7 @@ namespace AdvancedProgramming
                 Tag = "Ghost",
             };
             confirmPasswordToggle.FlatAppearance.BorderSize = 0;
-            confirmPasswordToggle.Click += ToggleConfirmPasswordVisibility;
+            confirmPasswordToggle.Click += (s, e) => TogglePassword(confirmPasswordTextBox, confirmPasswordToggle, ref confirmPasswordVisible);
 
             rowY += rowGap;
             var countryLabel = new Label
@@ -220,18 +220,11 @@ namespace AdvancedProgramming
             });
         }
 
-        private void TogglePasswordVisibility(object sender, EventArgs e)
+        private static void TogglePassword(TextBox box, Button toggle, ref bool visible)
         {
-            passwordVisible = !passwordVisible;
-            passwordTextBox.PasswordChar = passwordVisible ? '\0' : '*';
-            passwordToggle.Text = passwordVisible ? "\U0001f648" : "\U0001f441";
-        }
-
-        private void ToggleConfirmPasswordVisibility(object sender, EventArgs e)
-        {
-            confirmPasswordVisible = !confirmPasswordVisible;
-            confirmPasswordTextBox.PasswordChar = confirmPasswordVisible ? '\0' : '*';
-            confirmPasswordToggle.Text = confirmPasswordVisible ? "\U0001f648" : "\U0001f441";
+            visible = !visible;
+            box.PasswordChar = visible ? '\0' : '*';
+            toggle.Text = visible ? "\U0001f648" : "\U0001f441";
         }
 
         private void SignUpButton_Click(object sender, EventArgs e)

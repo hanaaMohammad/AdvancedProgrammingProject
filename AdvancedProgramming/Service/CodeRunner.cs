@@ -1,6 +1,6 @@
 ﻿using AdvancedProgramming.ProblemClasses;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AdvancedProgramming.Service
@@ -16,7 +16,6 @@ namespace AdvancedProgramming.Service
     public class CodeRunnerTestResultList
     {
         public List<CodeRunnerTestResult> Results { get; set; }
-        public bool AllPassed => Results != null && Results.Count > 0 && Results.All(r => r.Passed);
     }
 
     public class CodeRunner
@@ -28,35 +27,32 @@ namespace AdvancedProgramming.Service
 
             foreach (var testCase in testCases)
             {
-                string actualOutput;
+                string actual;
                 try
                 {
-                    actualOutput = executor.ExecuteCode(code, testCase.input);
+                    actual = executor.ExecuteCode(code, testCase.input);
                 }
                 catch (Exception ex)
                 {
-                    actualOutput = "ERROR: " + ex.Message;
+                    actual = "ERROR: " + ex.Message;
                 }
 
-                string expectedOutput = testCase.output?.ToString() ?? "";
-                string actualTrim = actualOutput.Trim()
-                    .Replace("\r\n", "\n")
-                    .Replace("\r", "\n");
-                string expectedTrim = expectedOutput.Trim()
-                    .Replace("\r\n", "\n")
-                    .Replace("\r", "\n");
-
-                bool passed = actualTrim.Equals(expectedTrim, StringComparison.OrdinalIgnoreCase);
+                string expected = testCase.output?.ToString() ?? "";
+                bool passed = Normalize(actual).Equals(Normalize(expected), StringComparison.OrdinalIgnoreCase);
 
                 results.Add(new CodeRunnerTestResult
                 {
                     Passed = passed,
                     TestCase = testCase,
-                    ActualOutput = actualOutput.Trim(),
-                    ExpectedOutput = expectedOutput.Trim()
+                    ActualOutput = actual.Trim(),
+                    ExpectedOutput = expected.Trim()
                 });
             }
+
             return results;
         }
+
+        private static string Normalize(string value) =>
+            (value ?? "").Trim().Replace("\r\n", "\n").Replace("\r", "\n");
     }
 }

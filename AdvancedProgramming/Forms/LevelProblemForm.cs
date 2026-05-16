@@ -116,8 +116,7 @@ namespace AdvancedProgramming.Forms
         {
             try
             {
-                var loader = new ProblemLoadReadJs();
-                allProblems = loader.GetAllProblems();
+                allProblems = ProblemLoadReadJs.GetAll();
             }
             catch
             {
@@ -175,7 +174,7 @@ namespace AdvancedProgramming.Forms
         private Panel CreateModernCard(Problem problem)
         {
             bool isAvailable = ProblemCatalog.IsAvailable(problem);
-            Color difficultyColor = GetDifficultyColor(problem.level);
+            Color difficultyColor = Theme.GetLevelColor(problem.level);
 
             Panel card = new Panel
             {
@@ -194,7 +193,7 @@ namespace AdvancedProgramming.Forms
 
                 Rectangle rect = new Rectangle(0, 0, card.Width - 1, card.Height - 1);
 
-                using (GraphicsPath path = RoundedRect(rect, 20))
+                using (GraphicsPath path = GraphicsHelper.RoundedRect(rect, 20))
                 {
                     using (LinearGradientBrush brush = new LinearGradientBrush(
                         rect,
@@ -281,40 +280,40 @@ namespace AdvancedProgramming.Forms
             return card;
         }
 
-        private sealed class PillVisual
-        {
-            public Color Fill;
-            public Color Border;
-        }
-
         private Panel CreateCardActionPill(string text, bool isAvailable, Color accentColor)
         {
             const int pillHeight = 28;
             const int pillRadius = 14;
             var font = new Font("Segoe UI", 8, FontStyle.Bold);
-
             int pillWidth = Math.Max(88, TextRenderer.MeasureText(text, font).Width + 28);
 
-            var normal = new PillVisual
-            {
-                Fill = isAvailable ? Color.FromArgb(18, 42, 34) : Color.FromArgb(22, 30, 48),
-                Border = isAvailable ? Color.FromArgb(80, accentColor) : Color.FromArgb(45, 58, 80),
-            };
-            var hover = new PillVisual
-            {
-                Fill = Color.FromArgb(24, 58, 46),
-                Border = Color.FromArgb(120, accentColor),
-            };
+            Color normalFill = isAvailable ? Color.FromArgb(18, 42, 34) : Color.FromArgb(22, 30, 48);
+            Color normalBorder = isAvailable ? Color.FromArgb(80, accentColor) : Color.FromArgb(45, 58, 80);
+            Color hoverFill = Color.FromArgb(24, 58, 46);
+            Color hoverBorder = Color.FromArgb(120, accentColor);
 
             var pill = new Panel
             {
                 Size = new Size(pillWidth, pillHeight),
                 BackColor = Color.Transparent,
                 Cursor = isAvailable ? Cursors.Hand : Cursors.Default,
-                Tag = normal,
+                Tag = false,
             };
 
-            pill.Paint += (s, e) => PaintCardActionPill(e.Graphics, pill, (PillVisual)pill.Tag, pillRadius);
+            pill.Paint += (s, e) =>
+            {
+                bool hover = (bool)pill.Tag;
+                var g = e.Graphics;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                var rect = new Rectangle(0, 0, pill.Width - 1, pill.Height - 1);
+                using (var path = GraphicsHelper.RoundedRect(rect, pillRadius))
+                using (var brush = new SolidBrush(hover ? hoverFill : normalFill))
+                using (var pen = new Pen(hover ? hoverBorder : normalBorder, 1.5f))
+                {
+                    g.FillPath(brush, path);
+                    g.DrawPath(pen, path);
+                }
+            };
 
             var label = new Label
             {
@@ -326,84 +325,44 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent,
                 Cursor = pill.Cursor,
             };
-
             pill.Controls.Add(label);
 
             if (isAvailable)
             {
-                EventHandler onEnter = (s, e) =>
-                {
-                    pill.Tag = hover;
-                    pill.Invalidate();
-                };
-                EventHandler onLeave = (s, e) =>
-                {
-                    pill.Tag = normal;
-                    pill.Invalidate();
-                };
-
-                pill.MouseEnter += onEnter;
-                pill.MouseLeave += onLeave;
-                label.MouseEnter += onEnter;
-                label.MouseLeave += onLeave;
+                EventHandler enter = (s, e) => { pill.Tag = true; pill.Invalidate(); };
+                EventHandler leave = (s, e) => { pill.Tag = false; pill.Invalidate(); };
+                pill.MouseEnter += enter;
+                pill.MouseLeave += leave;
+                label.MouseEnter += enter;
+                label.MouseLeave += leave;
             }
 
             return pill;
         }
 
-        private void PaintCardActionPill(Graphics g, Panel pill, PillVisual style, int radius)
-        {
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-
-            Rectangle rect = new Rectangle(0, 0, pill.Width - 1, pill.Height - 1);
-            using (GraphicsPath path = RoundedRect(rect, radius))
-            {
-                using (SolidBrush brush = new SolidBrush(style.Fill))
-                    g.FillPath(brush, path);
-
-                using (Pen pen = new Pen(style.Border, 1.5f))
-                    g.DrawPath(pen, path);
-            }
-        }
-
         private Panel CreateDifficultyBadge(string level)
         {
-            Color color = GetDifficultyColor(level);
-
-            Panel badge = new Panel
-            {
-                Size = new Size(80, 28),
-                BackColor = color
-            };
+            Color color = Theme.GetLevelColor(level);
+            var badge = new Panel { Size = new Size(80, 28), BackColor = color };
 
             badge.Paint += (s, e) =>
             {
-                Graphics g = e.Graphics;
-
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-
-                Rectangle rect = new Rectangle(0, 0, badge.Width - 1, badge.Height - 1);
-
-                using (GraphicsPath path = RoundedRect(rect, 14))
-                {
-                    using (SolidBrush brush = new SolidBrush(color))
-                    {
-                        g.FillPath(brush, path);
-                    }
-                }
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                var rect = new Rectangle(0, 0, badge.Width - 1, badge.Height - 1);
+                using (var path = GraphicsHelper.RoundedRect(rect, 14))
+                using (var brush = new SolidBrush(color))
+                    e.Graphics.FillPath(brush, path);
             };
 
-            Label text = new Label
+            badge.Controls.Add(new Label
             {
-                Text = GetLevelLabel(level),
+                Text = Theme.FormatLevel(level),
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Segoe UI", 8, FontStyle.Bold),
                 ForeColor = Color.White,
                 BackColor = Color.Transparent
-            };
-
-            badge.Controls.Add(text);
+            });
 
             return badge;
         }
@@ -425,48 +384,6 @@ namespace AdvancedProgramming.Forms
                 card.Padding = new Padding(0);
                 card.Invalidate();
             };
-        }
-
-        private GraphicsPath RoundedRect(Rectangle bounds, int radius)
-        {
-            int diameter = radius * 2;
-
-            GraphicsPath path = new GraphicsPath();
-
-            path.AddArc(bounds.X, bounds.Y, diameter, diameter, 180, 90);
-            path.AddArc(bounds.Right - diameter, bounds.Y, diameter, diameter, 270, 90);
-            path.AddArc(bounds.Right - diameter, bounds.Bottom - diameter, diameter, diameter, 0, 90);
-            path.AddArc(bounds.X, bounds.Bottom - diameter, diameter, diameter, 90, 90);
-
-            path.CloseFigure();
-
-            return path;
-        }
-
-        private Color GetDifficultyColor(string level)
-        {
-            switch (level?.Trim().ToLower())
-            {
-                case "easy":
-                    return Color.FromArgb(0, 200, 117);
-
-                case "medium":
-                    return Color.FromArgb(255, 183, 64);
-
-                case "hard":
-                    return Color.FromArgb(255, 82, 82);
-
-                default:
-                    return Color.Gray;
-            }
-        }
-
-        private static string GetLevelLabel(string level)
-        {
-            if (string.IsNullOrWhiteSpace(level))
-                return "Practice";
-
-            return char.ToUpper(level[0]) + level.Substring(1).ToLower();
         }
 
         private static string TruncateText(string text, int maxLen)

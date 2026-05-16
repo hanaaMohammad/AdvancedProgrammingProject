@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace AdvancedProgramming.ProblemClasses
 {
-    public class ProblemLoadReadJs
+    public static class ProblemLoadReadJs
     {
-        private List<Problem> problemsList;
+        private static List<Problem> problems;
 
-        public ProblemLoadReadJs()
+        private static List<Problem> Problems =>
+            problems ?? (problems = Load());
+
+        private static List<Problem> Load()
         {
-            string textJson = File.ReadAllText(@"ProblemClasses\ProblemJs.json");
-            problemsList = new JavaScriptSerializer().Deserialize<List<Problem>>(textJson) ?? new List<Problem>();
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProblemClasses", "ProblemJs.json");
+            if (!File.Exists(path))
+                path = @"ProblemClasses\ProblemJs.json";
+
+            string json = File.ReadAllText(path);
+            return new JavaScriptSerializer().Deserialize<List<Problem>>(json) ?? new List<Problem>();
         }
 
-        public Problem getProblemByName(string title)
-        {
-            return problemsList.FirstOrDefault(p => p.title == title);
-        }
+        public static Problem GetByName(string title) =>
+            Problems.FirstOrDefault(p => p.title == title);
 
-        public List<Problem> GetAllProblems()
-        {
-            return problemsList;
-        }
+        public static List<Problem> GetAll() => Problems;
     }
 }

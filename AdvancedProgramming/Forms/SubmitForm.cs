@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AdvancedProgramming.Components;
@@ -148,7 +149,7 @@ namespace AdvancedProgramming.Forms
                 return;
             }
 
-            var problem = new ProblemLoadReadJs().getProblemByName(problemName);
+            var problem = ProblemLoadReadJs.GetByName(problemName);
 
             if (problem == null || problem.TestCase == null || problem.TestCase.Count == 0)
             {
@@ -164,12 +165,7 @@ namespace AdvancedProgramming.Forms
                     new CodeRunner().RunTestCases(code, problem.TestCase)
                 ).ConfigureAwait(true);
 
-                int passedCount = 0;
-                foreach (var r in results)
-                {
-                    if (r.Passed)
-                        passedCount++;
-                }
+                int passedCount = results.Count(r => r.Passed);
 
                 if (results.Count > 0 && passedCount == results.Count)
                 {

@@ -220,5 +220,23 @@ namespace AdvancedProgramming
             page.BackColor = Current.FormBackColor;
             page.ForeColor = Current.TextColor;
         }
+
+        public static string FormatLevel(string level)
+        {
+            if (string.IsNullOrWhiteSpace(level))
+                return "Practice";
+            return char.ToUpper(level[0]) + level.Substring(1).ToLower();
+        }
+
+        public static Color GetLevelColor(string level)
+        {
+            switch (level?.Trim().ToLower())
+            {
+                case "easy": return Current.SuccessColor;
+                case "medium": return Current.WarningColor;
+                case "hard": return Current.ErrorColor;
+                default: return Current.SecondaryTextColor;
+            }
+        }
     }
 }

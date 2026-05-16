@@ -27,13 +27,6 @@ namespace AdvancedProgramming.Forms
         private TabControl tabControl;
         private TabPage tabStatement;
         private TabPage tabExample;
-        private TextBox descriptionBox;
-        private TextBox inputBox;
-        private TextBox outputBox;
-        private TextBox constraintsBox;
-        private TextBox inputExampleBox;
-        private TextBox outputExampleBox;
-        private TextBox explanationBox;
         private RichTextBox solutionBox;
         private Panel actionPanel;
         private Label labelSolution;
@@ -56,7 +49,7 @@ namespace AdvancedProgramming.Forms
         private void InitializeComponent(string problem)
         {
             problemName = problem;
-            GetProblemDetails();
+            problemChoice = ProblemLoadReadJs.GetByName(problemName);
 
             if (problemChoice == null)
             {
@@ -93,13 +86,13 @@ namespace AdvancedProgramming.Forms
 
             levelLabel = new Label
             {
-                Text = FormatLevel(problemChoice.level),
+                Text = Theme.FormatLevel(problemChoice.level),
                 Font = DesignTokens.Typography.HeadingSmall,
                 AutoSize = false,
                 Size = new Size(ContentWidth, 26),
                 Location = new Point(cx - ContentWidth / 2, 136),
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = GetLevelColor(problemChoice.level),
+                ForeColor = Theme.GetLevelColor(problemChoice.level),
                 BackColor = Color.Transparent,
             };
 
@@ -205,13 +198,13 @@ namespace AdvancedProgramming.Forms
             int fieldW = ContentWidth - DesignTokens.Spacing.Md * 4;
 
             y = AddField(tabStatement, "Description", problemChoice.description, y, fieldW,
-                DesignTokens.Typography.BodyMedium, out descriptionBox);
+                DesignTokens.Typography.BodyMedium, out _);
             y = AddField(tabStatement, "Input format", problemChoice.input, y, fieldW,
-                DesignTokens.Typography.BodySmall, out inputBox);
+                DesignTokens.Typography.BodySmall, out _);
             y = AddField(tabStatement, "Output format", problemChoice.output, y, fieldW,
-                DesignTokens.Typography.BodySmall, out outputBox);
+                DesignTokens.Typography.BodySmall, out _);
             AddField(tabStatement, "Constraints", problemChoice.Constraints, y, fieldW,
-                DesignTokens.Typography.BodySmall, out constraintsBox);
+                DesignTokens.Typography.BodySmall, out _);
         }
 
         private void BuildExampleTab()
@@ -221,7 +214,7 @@ namespace AdvancedProgramming.Forms
             bool isPattern = string.Equals(problemChoice.type, "pattren", StringComparison.OrdinalIgnoreCase);
 
             y = AddField(tabExample, "Sample input", problemChoice.Example?.input ?? "", y, fieldW,
-                DesignTokens.Typography.Code, out inputExampleBox);
+                DesignTokens.Typography.Code, out _);
 
             int outputBoxHeight = isPattern
                 ? 88
@@ -255,20 +248,20 @@ namespace AdvancedProgramming.Forms
             }
             else
             {
-                outputExampleBox = CreateReadOnlyBox(
+                var outputBox = CreateReadOnlyBox(
                     problemChoice.Example?.output ?? "",
                     DesignTokens.Typography.Code,
                     fieldW,
                     outputBoxHeight);
-                outputExampleBox.Location = new Point(0, DesignTokens.Sizing.LabelHeight + 4);
-                exampleOutputHost.Controls.Add(outputExampleBox);
+                outputBox.Location = new Point(0, DesignTokens.Sizing.LabelHeight + 4);
+                exampleOutputHost.Controls.Add(outputBox);
             }
 
             tabExample.Controls.Add(exampleOutputHost);
             y += exampleOutputHost.Height + DesignTokens.Spacing.Md;
 
             y = AddField(tabExample, "Explanation", problemChoice.Example?.explanation ?? "", y, fieldW,
-                DesignTokens.Typography.BodySmall, out explanationBox);
+                DesignTokens.Typography.BodySmall, out _);
 
             solutionPanel = new Panel
             {
@@ -409,12 +402,6 @@ namespace AdvancedProgramming.Forms
             }
         }
 
-        private void GetProblemDetails()
-        {
-            var problemLoader = new ProblemLoadReadJs();
-            problemChoice = problemLoader.getProblemByName(problemName);
-        }
-
         private void StyleTabControl()
         {
             if (tabControl == null)
@@ -478,28 +465,6 @@ namespace AdvancedProgramming.Forms
 
             actionPanel.Location = new Point(startX, actionY);
             actionPanel.Size = new Size(totalW, btnH);
-        }
-
-        private static string FormatLevel(string level)
-        {
-            if (string.IsNullOrWhiteSpace(level))
-                return "Practice";
-            return char.ToUpper(level[0]) + level.Substring(1).ToLower();
-        }
-
-        private static Color GetLevelColor(string level)
-        {
-            switch (level?.Trim().ToLower())
-            {
-                case "easy":
-                    return Color.FromArgb(0, 200, 117);
-                case "medium":
-                    return Color.FromArgb(255, 183, 64);
-                case "hard":
-                    return Color.FromArgb(255, 82, 82);
-                default:
-                    return Theme.Current.SecondaryTextColor;
-            }
         }
 
     }
