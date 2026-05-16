@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-
 namespace AdvancedProgramming.Forms
 {
     public class HomeForm : UserControl

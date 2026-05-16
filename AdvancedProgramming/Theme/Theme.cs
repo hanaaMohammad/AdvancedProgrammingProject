@@ -6,7 +6,7 @@ namespace AdvancedProgramming
 {
     public static class Theme
     {
-        public static ITheme Current { get; } = new DarkTheme();
+        public static DarkTheme Current { get; } = new DarkTheme();
 
         public static void Apply(Control control)
         {

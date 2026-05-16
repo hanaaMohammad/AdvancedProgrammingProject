@@ -12,16 +12,8 @@ namespace AdvancedProgramming.ProblemClasses
 
         public ProblemLoadReadJs()
         {
-            try
-            {
-                string textJson = File.ReadAllText(@"ProblemClasses\ProblemJs.json");
-                JavaScriptSerializer serializer = new JavaScriptSerializer();
-                problemsList = serializer.Deserialize<List<Problem>>(textJson) ?? new List<Problem>();
-            }
-            catch
-            {
-                problemsList = new List<Problem>();
-            }
+            string textJson = File.ReadAllText(@"ProblemClasses\ProblemJs.json");
+            problemsList = new JavaScriptSerializer().Deserialize<List<Problem>>(textJson) ?? new List<Problem>();
         }
 
         public Problem getProblemByName(string title)

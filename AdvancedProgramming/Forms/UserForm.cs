@@ -123,20 +123,8 @@ namespace AdvancedProgramming.Forms
         {
             string fileName = CurrentUser.Gender == "Female" ? "Female.jpg" : "Male.jpg";
             string imagePath = Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\..\Image\", fileName));
-            if (!File.Exists(imagePath))
-            {
-                string altPath = Path.Combine(Application.StartupPath, "Image", fileName);
-                if (File.Exists(altPath))
-                    imagePath = altPath;
-            }
             if (File.Exists(imagePath))
-            {
-                try
-                {
-                    pictureUser.Image = Image.FromFile(imagePath);
-                }
-                catch { }
-            }
+                pictureUser.Image = Image.FromFile(imagePath);
         }
     }
 }

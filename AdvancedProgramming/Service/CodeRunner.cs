@@ -1,7 +1,7 @@
 ﻿using AdvancedProgramming.ProblemClasses;
 using System.Collections.Generic;
 using System;
-using AdvancedProgramming.CodeRun;
+using System.Linq;
 
 namespace AdvancedProgramming.Service
 {
@@ -16,30 +16,33 @@ namespace AdvancedProgramming.Service
     public class CodeRunnerTestResultList
     {
         public List<CodeRunnerTestResult> Results { get; set; }
-        public bool AllPassed { get; set; }
+        public bool AllPassed => Results != null && Results.Count > 0 && Results.All(r => r.Passed);
     }
 
     public class CodeRunner
     {
         public List<CodeRunnerTestResult> RunTestCases(string code, List<TestCase> testCases)
         {
-            CodeExecutor executor = new CSharpExecutor();
-
+            var executor = new CodeRun.CSharpExecutor();
             var results = new List<CodeRunnerTestResult>();
 
-            foreach (var T in testCases)
+            foreach (var testCase in testCases)
             {
-                string actualOutput = executor.ExecuteCode(code, T.input);
+                string actualOutput;
+                try
+                {
+                    actualOutput = executor.ExecuteCode(code, testCase.input);
+                }
+                catch (Exception ex)
+                {
+                    actualOutput = "ERROR: " + ex.Message;
+                }
 
-                string expectedOutput = T.output?.ToString() ?? "";
-
-                string actualTrim =
-                        actualOutput.Trim()
-                        .Replace("\r\n", "\n")
-                        .Replace("\r", "\n");
-
-                string expectedTrim =
-                    expectedOutput.Trim()
+                string expectedOutput = testCase.output?.ToString() ?? "";
+                string actualTrim = actualOutput.Trim()
+                    .Replace("\r\n", "\n")
+                    .Replace("\r", "\n");
+                string expectedTrim = expectedOutput.Trim()
                     .Replace("\r\n", "\n")
                     .Replace("\r", "\n");
 
@@ -48,7 +51,7 @@ namespace AdvancedProgramming.Service
                 results.Add(new CodeRunnerTestResult
                 {
                     Passed = passed,
-                    TestCase = T,
+                    TestCase = testCase,
                     ActualOutput = actualOutput.Trim(),
                     ExpectedOutput = expectedOutput.Trim()
                 });

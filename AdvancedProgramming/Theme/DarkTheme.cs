@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace AdvancedProgramming
 {
-    public class DarkTheme : ITheme
+    public class DarkTheme
     {
         public Color FormBackColor => Color.FromArgb(12, 12, 24);
         public Color SurfaceColor => Color.FromArgb(18, 18, 34);

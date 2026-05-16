@@ -44,7 +44,6 @@ namespace AdvancedProgramming
             toolbar.CloseRequested += (s, e) => Application.Exit();
             Theme.StylePage(this);
             userManager = new UserManagement();
-            DatabaseManager.InitializeDatabase();
         }
 
         private void InitializeSignUpComponents()
@@ -247,40 +246,30 @@ namespace AdvancedProgramming
             if (string.IsNullOrEmpty(username))
             {
                 messageLabel.Text = "Username is required";
-                messageLabel.Tag = "Error";
-                Theme.Apply(this);
                 return;
             }
 
             if (string.IsNullOrEmpty(password))
             {
                 messageLabel.Text = "Password is required";
-                messageLabel.Tag = "Error";
-                Theme.Apply(this);
                 return;
             }
 
             if (password.Length < 4)
             {
                 messageLabel.Text = "Password must be at least 4 characters";
-                messageLabel.Tag = "Error";
-                Theme.Apply(this);
                 return;
             }
 
             if (password != confirm)
             {
                 messageLabel.Text = "Passwords do not match";
-                messageLabel.Tag = "Error";
-                Theme.Apply(this);
                 return;
             }
 
             if (userManager.UsernameExists(username))
             {
                 messageLabel.Text = "Username already exists";
-                messageLabel.Tag = "Error";
-                Theme.Apply(this);
                 return;
             }
 
@@ -288,7 +277,6 @@ namespace AdvancedProgramming
             {
                 messageLabel.Tag = "Success";
                 messageLabel.Text = "Account created successfully!";
-                Theme.Apply(this);
                 userNameTextBox.Text = "";
                 passwordTextBox.Text = "";
                 confirmPasswordTextBox.Text = "";

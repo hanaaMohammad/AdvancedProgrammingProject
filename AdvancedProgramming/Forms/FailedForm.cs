@@ -9,14 +9,12 @@ using System.Windows.Forms;
 
 namespace AdvancedProgramming.Forms
 {
-    public class Failed : UserControl
+    public class FailedForm : UserControl
     {
         public event EventHandler BackRequested;
         public event EventHandler HomeRequested;
 
         private Timer animTimer;
-        private Problem problem;
-        private List<TestCase> testCases;
         private List<Panel> resultPanels = new List<Panel>();
         private List<int> targetTops = new List<int>();
         private int currentAnimIndex = 0;
@@ -26,20 +24,13 @@ namespace AdvancedProgramming.Forms
         private List<CodeRunnerTestResult> testResults;
         private Label headerLabel;
 
-        public Failed(string name) : this(name, null) { }
-
-        public Failed(string name, List<CodeRunnerTestResult> results)
+        public FailedForm(string name, List<CodeRunnerTestResult> results)
         {
             this.Size = new Size(DesignTokens.FormWidth, DesignTokens.FormHeight);
             testResults = results;
-            try
-            {
-                InitializeComponent();
-                LoadProblem(name);
-                DisplayTestResults();
-                toolbar.CloseRequested += (s, e) => Application.Exit();
-            }
-            catch { }
+            InitializeComponent();
+            LoadProblem(name);
+            toolbar.CloseRequested += (s, e) => Application.Exit();
         }
 
         private void InitializeComponent()
@@ -100,13 +91,10 @@ namespace AdvancedProgramming.Forms
         private void LoadProblem(string name)
         {
             var loader = new ProblemLoadReadJs();
-            problem = loader.getProblemByName(name);
-            testCases = problem?.TestCase ?? new List<TestCase>();
-        }
+            var problem = loader.getProblemByName(name);
+            var testCases = problem?.TestCase ?? new List<TestCase>();
 
-        private void DisplayTestResults()
-        {
-            if (testCases == null || testCases.Count == 0)
+            if (testCases.Count == 0)
                 return;
 
             int cx = this.Width / 2;

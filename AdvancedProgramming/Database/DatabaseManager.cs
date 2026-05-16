@@ -17,18 +17,14 @@ namespace AdvancedProgramming
         public static void InitializeDatabase()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(DbPath));
-            
-            using (var connection = new SQLiteConnection(ConnectionString))
+
+            using (var connection = GetConnection())
             {
                 connection.Open();
                 using (var command = new SQLiteCommand(
-                    "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR NOT NULL UNIQUE, password VARCHAR NOT NULL, Country VARCHAR, Gender VARCHAR )",
+                    "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR NOT NULL UNIQUE, password VARCHAR NOT NULL, Country VARCHAR, Gender VARCHAR, score INTEGER DEFAULT 0)",
                     connection))
                     command.ExecuteNonQuery();
-
-                try { new SQLiteCommand("ALTER TABLE users ADD COLUMN Country VARCHAR", connection).ExecuteNonQuery(); } catch { }
-                try { new SQLiteCommand("ALTER TABLE users ADD COLUMN gender VARCHAR", connection).ExecuteNonQuery(); } catch { }
-                try { new SQLiteCommand("ALTER TABLE users ADD COLUMN score INTEGER DEFAULT 0", connection).ExecuteNonQuery(); } catch { }
 
                 using (var checkCmd = new SQLiteCommand("SELECT COUNT(*) FROM users WHERE username = 'admin'", connection))
                 {

@@ -140,8 +140,7 @@ namespace AdvancedProgramming.Forms
                 return;
             }
 
-            var problemLoader = new ProblemLoadReadJs();
-            var problem = problemLoader.getProblemByName(problemName);
+            var problem = new ProblemLoadReadJs().getProblemByName(problemName);
 
             if (problem == null || problem.TestCase == null || problem.TestCase.Count == 0)
             {
@@ -154,22 +153,17 @@ namespace AdvancedProgramming.Forms
             try
             {
                 var results = await Task.Run(() =>
-                {
-                    var runner = new CodeRunner();
-                    return runner.RunTestCases(code, problem.TestCase);
-                }).ConfigureAwait(true);
+                    new CodeRunner().RunTestCases(code, problem.TestCase)
+                ).ConfigureAwait(true);
 
-                bool allPassed = true;
                 int passedCount = 0;
                 foreach (var r in results)
                 {
                     if (r.Passed)
                         passedCount++;
-                    else
-                        allPassed = false;
                 }
 
-                if (allPassed && passedCount > 0)
+                if (results.Count > 0 && passedCount == results.Count)
                 {
                     var userMgmt = new UserManagement();
                     userMgmt.UpdateScore(CurrentUser.Username, passedCount * 10);
@@ -179,7 +173,6 @@ namespace AdvancedProgramming.Forms
                 TestResultsReady?.Invoke(this, new CodeRunnerTestResultList
                 {
                     Results = results,
-                    AllPassed = allPassed
                 });
             }
             catch (Exception ex)

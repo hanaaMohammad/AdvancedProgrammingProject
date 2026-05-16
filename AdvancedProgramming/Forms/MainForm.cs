@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using AdvancedProgramming.Forms;
 
-
 namespace AdvancedProgramming
 {
     public partial class MainForm : Form
@@ -174,7 +173,7 @@ namespace AdvancedProgramming
             }
             else
             {
-                var page = new Failed(problemName, results.Results);
+                var page = new FailedForm(problemName, results.Results);
                 page.BackRequested += (s, e) => GoBack();
                 page.HomeRequested += (s, e) => NavigateToHome();
                 ShowPage(page);

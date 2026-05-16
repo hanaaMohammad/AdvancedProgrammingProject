@@ -9,16 +9,6 @@ namespace AdvancedProgramming.ProblemClasses
 
         public const string ComingSoonSuffix = " (Coming Soon)";
 
-        public const string DefaultCSharpTemplate =
-            "using System;\r\n\r\n" +
-            "class Program\r\n" +
-            "{\r\n" +
-            "    static void Main(string[] args)\r\n" +
-            "    {\r\n" +
-            "        \r\n" +
-            "    }\r\n" +
-            "}";
-
         public static bool IsAvailable(string title)
         {
             return string.Equals(title, StarterProblemTitle, StringComparison.Ordinal);
