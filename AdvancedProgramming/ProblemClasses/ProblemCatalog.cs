@@ -11,7 +11,19 @@ namespace AdvancedProgramming.ProblemClasses
 
         public static bool IsAvailable(string title)
         {
-            return true;
+            if (string.IsNullOrWhiteSpace(title))
+                return false;
+
+            var loader = new ProblemLoadReadJs();
+            return IsAvailable(loader.getProblemByName(title));
+        }
+
+        public static bool IsAvailable(Problem problem)
+        {
+            if (problem == null)
+                return false;
+
+            return string.Equals(problem.level?.Trim(), "easy", StringComparison.OrdinalIgnoreCase);
         }
 
         public static string GetListLabel(string title)

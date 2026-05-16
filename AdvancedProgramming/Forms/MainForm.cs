@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using AdvancedProgramming.Forms;
+using AdvancedProgramming.ProblemClasses;
 
 namespace AdvancedProgramming
 {
@@ -125,19 +126,13 @@ namespace AdvancedProgramming
         private void NavigateToHome()
         {
             backStack.Push(() => NavigateToHome());
-            var page = new HomeForm();
-            page.UserRequested += (s, e) => NavigateToUser();
-            page.ProblemsRequested += (s, e) => NavigateToLevelProblem();
-            ShowPage(page);
-        }
-
-        private void NavigateToLevelProblem()
-        {
-            backStack.Push(() => NavigateToLevelProblem());
             var page = new LevelProblemForm();
-            page.ProblemSelected += (s, problem) => NavigateToProblemDisplay(problem);
-            page.BackRequested += (s, e) => GoBack();
-            page.HomeRequested += (s, e) => NavigateToHome();
+            page.ProblemSelected += (s, problem) =>
+            {
+                if (ProblemCatalog.IsAvailable(problem))
+                    NavigateToProblemDisplay(problem);
+            };
+            page.ProfileRequested += (s, e) => NavigateToUser();
             ShowPage(page);
         }
 
@@ -179,7 +174,6 @@ namespace AdvancedProgramming
         {
             backStack.Push(() => NavigateToUser());
             var page = new UserForm();
-            page.BackRequested += (s, e) => GoBack();
             page.HomeRequested += (s, e) => NavigateToHome();
             ShowPage(page);
         }

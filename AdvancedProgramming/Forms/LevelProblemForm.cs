@@ -12,8 +12,7 @@ namespace AdvancedProgramming.Forms
     public class LevelProblemForm : UserControl
     {
         public event EventHandler<string> ProblemSelected;
-        public event EventHandler BackRequested;
-        public event EventHandler HomeRequested;
+        public event EventHandler ProfileRequested;
 
         private Toolbar toolbar;
         private FlowLayoutPanel cardPanel;
@@ -40,9 +39,8 @@ namespace AdvancedProgramming.Forms
 
             toolbar.CloseRequested += (s, e) => Application.Exit();
 
-            PageBackButton.AddTo(this,
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
-                (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
+            PageBackButton.AddProfile(this,
+                (s, e) => ProfileRequested?.Invoke(this, EventArgs.Empty));
 
             int cx = this.Width / 2;
 
@@ -176,6 +174,7 @@ namespace AdvancedProgramming.Forms
 
         private Panel CreateModernCard(Problem problem)
         {
+            bool isAvailable = ProblemCatalog.IsAvailable(problem);
             Color difficultyColor = GetDifficultyColor(problem.level);
 
             Panel card = new Panel
@@ -184,7 +183,7 @@ namespace AdvancedProgramming.Forms
                 Height = 220,
                 Margin = new Padding(16),
                 BackColor = Color.FromArgb(17, 24, 39),
-                Cursor = Cursors.Hand,
+                Cursor = isAvailable ? Cursors.Hand : Cursors.Default,
             };
 
             card.Paint += (s, e) =>
@@ -206,7 +205,10 @@ namespace AdvancedProgramming.Forms
                         g.FillPath(brush, path);
                     }
 
-                    using (Pen pen = new Pen(Color.FromArgb(50, difficultyColor), 2))
+                    Color borderColor = isAvailable
+                        ? Color.FromArgb(50, difficultyColor)
+                        : Color.FromArgb(40, 55, 75);
+                    using (Pen pen = new Pen(borderColor, 2))
                     {
                         g.DrawPath(pen, path);
                     }
@@ -217,7 +219,7 @@ namespace AdvancedProgramming.Forms
             {
                 Text = problem.title,
                 Font = new Font("Segoe UI", 13, FontStyle.Bold),
-                ForeColor = Color.White,
+                ForeColor = isAvailable ? Color.White : Color.FromArgb(140, 150, 165),
                 Location = new Point(20, 20),
                 Size = new Size(280, 35),
                 BackColor = Color.Transparent
@@ -246,40 +248,122 @@ namespace AdvancedProgramming.Forms
                 BackColor = Color.Transparent
             };
 
-            Button solveButton = new Button
-            {
-                Text = "Solve →",
-                FlatStyle = FlatStyle.Flat,
-                ForeColor = Color.White,
-                BackColor = Color.FromArgb(30, 41, 59),
-                Size = new Size(95, 34),
-                Location = new Point(220, 160),
-                Cursor = Cursors.Hand
-            };
-
-            solveButton.FlatAppearance.BorderSize = 0;
+            string actionText = isAvailable ? "Solve →" : "Coming Soon";
+            Panel actionPill = CreateCardActionPill(actionText, isAvailable, difficultyColor);
+            actionPill.Location = new Point(card.Width - actionPill.Width - 20, 168);
+            actionPill.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
 
             string selectedTitle = problem.title;
 
-            EventHandler clickHandler = (s, e) =>
+            if (isAvailable)
             {
-                ProblemSelected?.Invoke(this, selectedTitle);
-            };
+                EventHandler clickHandler = (s, e) =>
+                {
+                    ProblemSelected?.Invoke(this, selectedTitle);
+                };
 
-            card.Click += clickHandler;
-            title.Click += clickHandler;
-            description.Click += clickHandler;
-            solveButton.Click += clickHandler;
+                card.Click += clickHandler;
+                title.Click += clickHandler;
+                description.Click += clickHandler;
+                actionPill.Click += clickHandler;
+                foreach (Control child in actionPill.Controls)
+                    child.Click += clickHandler;
 
-            AddHoverEffect(card);
+                AddHoverEffect(card);
+            }
 
             card.Controls.Add(title);
             card.Controls.Add(description);
             card.Controls.Add(badge);
             card.Controls.Add(typeLabel);
-            card.Controls.Add(solveButton);
+            card.Controls.Add(actionPill);
 
             return card;
+        }
+
+        private sealed class PillVisual
+        {
+            public Color Fill;
+            public Color Border;
+        }
+
+        private Panel CreateCardActionPill(string text, bool isAvailable, Color accentColor)
+        {
+            const int pillHeight = 28;
+            const int pillRadius = 14;
+            var font = new Font("Segoe UI", 8, FontStyle.Bold);
+
+            int pillWidth = Math.Max(88, TextRenderer.MeasureText(text, font).Width + 28);
+
+            var normal = new PillVisual
+            {
+                Fill = isAvailable ? Color.FromArgb(18, 42, 34) : Color.FromArgb(22, 30, 48),
+                Border = isAvailable ? Color.FromArgb(80, accentColor) : Color.FromArgb(45, 58, 80),
+            };
+            var hover = new PillVisual
+            {
+                Fill = Color.FromArgb(24, 58, 46),
+                Border = Color.FromArgb(120, accentColor),
+            };
+
+            var pill = new Panel
+            {
+                Size = new Size(pillWidth, pillHeight),
+                BackColor = Color.Transparent,
+                Cursor = isAvailable ? Cursors.Hand : Cursors.Default,
+                Tag = normal,
+            };
+
+            pill.Paint += (s, e) => PaintCardActionPill(e.Graphics, pill, (PillVisual)pill.Tag, pillRadius);
+
+            var label = new Label
+            {
+                Text = text,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = font,
+                ForeColor = isAvailable ? Color.FromArgb(220, 255, 240) : Color.FromArgb(120, 135, 155),
+                BackColor = Color.Transparent,
+                Cursor = pill.Cursor,
+            };
+
+            pill.Controls.Add(label);
+
+            if (isAvailable)
+            {
+                EventHandler onEnter = (s, e) =>
+                {
+                    pill.Tag = hover;
+                    pill.Invalidate();
+                };
+                EventHandler onLeave = (s, e) =>
+                {
+                    pill.Tag = normal;
+                    pill.Invalidate();
+                };
+
+                pill.MouseEnter += onEnter;
+                pill.MouseLeave += onLeave;
+                label.MouseEnter += onEnter;
+                label.MouseLeave += onLeave;
+            }
+
+            return pill;
+        }
+
+        private void PaintCardActionPill(Graphics g, Panel pill, PillVisual style, int radius)
+        {
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            Rectangle rect = new Rectangle(0, 0, pill.Width - 1, pill.Height - 1);
+            using (GraphicsPath path = RoundedRect(rect, radius))
+            {
+                using (SolidBrush brush = new SolidBrush(style.Fill))
+                    g.FillPath(brush, path);
+
+                using (Pen pen = new Pen(style.Border, 1.5f))
+                    g.DrawPath(pen, path);
+            }
         }
 
         private Panel CreateDifficultyBadge(string level)

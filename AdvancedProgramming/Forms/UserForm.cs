@@ -10,7 +10,6 @@ namespace AdvancedProgramming.Forms
 {
     public class UserForm : UserControl
     {
-        public event EventHandler BackRequested;
         public event EventHandler HomeRequested;
 
         private Label labelScore;
@@ -28,8 +27,7 @@ namespace AdvancedProgramming.Forms
             toolbar = new Toolbar(this, "MiniCamp Puzzle");
             this.Controls.Add(toolbar);
             toolbar.CloseRequested += (s, e) => Application.Exit();
-            PageBackButton.AddTo(this,
-                (s, e) => BackRequested?.Invoke(this, EventArgs.Empty),
+            PageBackButton.AddHome(this,
                 (s, e) => HomeRequested?.Invoke(this, EventArgs.Empty));
             Theme.StylePage(this);
         }

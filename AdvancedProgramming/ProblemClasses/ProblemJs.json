@@ -163,6 +163,7 @@
           "explanation": "The floor of 5 is 2, which is the largest number less than or equal to 5 in the array."
         },
         "type": "array",
+        "level": "medium",
         "Constraints": "Array size ( 1 _ to 10 elements) ",
         "TestCase": [
           {
@@ -212,7 +213,7 @@
       {
         "title": "T-primes",
         "description": "Find all T-primes in a given range.",
-        "type": "number theory",
+        "type": "number",
         "Constraints": "Range size (1 to 10)",
         "level": "medium",
         "Example": {
